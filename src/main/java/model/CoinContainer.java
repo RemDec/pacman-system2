@@ -13,7 +13,7 @@ import model.exception.ObjectAlreadyInListException;
 
 import java.util.Vector;
 import java.util.Iterator;
-import java.util.Vector;
+
 
 /**
  * The container of all coins on the map.
@@ -46,6 +46,7 @@ public class CoinContainer implements Container<Coin> {
      * @throws ListFullException            When the list is already filled with {@link CoinContainer#max} elements.
      * @throws ObjectAlreadyInListException When the object is already in the list.
      */
+    @Override
     public void add(Coin coin) {
         if (!this.coins.contains(coin)) {
             if (this.coins.size() < max) {
@@ -78,6 +79,7 @@ public class CoinContainer implements Container<Coin> {
      *
      * @return The coin object on the index.
      */
+    @Override
     public Coin get(int i) {
         return this.coins.get(i);
     }
@@ -100,6 +102,7 @@ public class CoinContainer implements Container<Coin> {
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public Vector<Coin> getAll() {
         return (Vector<Coin>) this.coins.clone();
     }
@@ -109,6 +112,7 @@ public class CoinContainer implements Container<Coin> {
      *
      * @param el The element to remove.
      */
+    @Override
     public void remove(Coin el) {
         this.coins.remove(el);
     }
@@ -133,6 +137,7 @@ public class CoinContainer implements Container<Coin> {
         return coins.iterator();
     }
 
+    @Override
     public boolean contains(Coin mO) {
         return this.coins.contains(mO);
     }

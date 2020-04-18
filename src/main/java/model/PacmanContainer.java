@@ -15,6 +15,8 @@ import java.util.Vector;
 import java.util.Iterator;
 
 /**
+ * Container for all played {@link Pacman} in a {@link Game} (maximum 2 players so 2 Pacmans).
+ *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
@@ -32,6 +34,7 @@ public class PacmanContainer implements Container<Pacman> {
         this.pacmans = new Vector<>(max);
     }
 
+    @Override
     public void add(Pacman pacman) {
         if (!this.pacmans.contains(pacman)) {
             if (this.pacmans.size() < this.max) {
@@ -56,12 +59,13 @@ public class PacmanContainer implements Container<Pacman> {
         }
     }
 
+    @Override
     public Pacman get(int i) {
         return this.pacmans.get(i);
     }
 
     public Vector<Pacman> get(Position pos) {
-        Vector<Pacman> pacmansOnPosition = new Vector<>(2);
+        Vector<Pacman> pacmansOnPosition = new Vector<>(max);
 
         for (Pacman p : this.pacmans) {
             if (p.isOnPosition(pos)) {
@@ -87,10 +91,12 @@ public class PacmanContainer implements Container<Pacman> {
         this.pacmans.remove(el);
     }
 
+    @Override
     public Iterator<Pacman> iterator() {
         return pacmans.iterator();
     }
 
+    @Override
     public boolean contains(Pacman p) {
         return this.pacmans.contains(p);
     }

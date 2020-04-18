@@ -9,6 +9,8 @@
 package model;
 
 /**
+ * A {@link Target} is a {@link MapObject} that can be eaten by another.
+ *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz

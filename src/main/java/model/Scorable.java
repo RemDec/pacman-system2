@@ -9,12 +9,14 @@
 package model;
 
 /**
+ * A scorable object has an associated score value considered when eaten
+ *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
  */
 public interface Scorable {
 
-    public int getScore();
+    int getScore();
 
 }

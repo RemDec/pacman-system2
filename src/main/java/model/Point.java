@@ -9,11 +9,16 @@
 package model;
 
 /**
+ * A {@link Point} can be eaten by {@link Pacman} to get a fixed amount of score. It is a {@link StaticTarget} placed
+ * on a fixed {@link Position}.
+ *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
  */
 public class Point extends StaticTarget implements Scorable {
+
+    private static final int SCORE_VALUE = 10;
 
     public Point(Position pos) {
         this.state = State.AVAILABLE;
@@ -39,7 +44,7 @@ public class Point extends StaticTarget implements Scorable {
 
     @Override
     public int getScore() {
-        return 10;
+        return SCORE_VALUE;
     }
 
     @Override
@@ -50,4 +55,5 @@ public class Point extends StaticTarget implements Scorable {
     public String toString() {
         return "Point [" + position + ", " + state + ", visible: " + visible + "]";
     }
+
 }

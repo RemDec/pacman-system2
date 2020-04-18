@@ -9,6 +9,10 @@
 package model;
 
 /**
+ * A Level coupled with a Game instance determines the number of the current level and the difficulty parameters
+ * associated with. As the level increases, difficulty does it as well through a modification of these parameters.
+ * The transition between two levels and the evolution of parameters is handled here.
+ *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
@@ -17,9 +21,20 @@ public class Level {
 
     private static Level instance;
 
+    /**
+     * The current level (correlated with difficulty)
+     */
     private int level = 1;
 
     private double secondsPerCoin = 7;
+
+    private static final double TIME_PER_COIN_FACTOR = 0.85;
+
+    private static final double PROBA_NEW_LIFE = 0.3;
+
+    private Level() {
+
+    }
 
     public static Level getInstance() {
         if (Level.instance == null) {
@@ -31,11 +46,12 @@ public class Level {
 
     public void nextLevel() {
         // Reduce the amount of time the user has to munch a ghost
-        this.secondsPerCoin *= 0.85;
+        this.secondsPerCoin *= TIME_PER_COIN_FACTOR;
 
         this.level++;
 
-        if(Math.random() >= 0.7) {
+        // Pacman has a chance to get a new life
+        if(Math.random() <= PROBA_NEW_LIFE) {
             Game.getInstance().increasePlayerLifes();
         }
 
@@ -54,18 +70,6 @@ public class Level {
         Game.getInstance().getEventHandlerManager().restartExecution();
     }
 
-    public int getLevel() {
-        return this.level;
-    }
-
-    private Level() {
-
-    }
-
-    public double getSecondsPerCoin() {
-        return secondsPerCoin;
-    }
-
     public boolean equals(Object o) {
         if (o != null) {
             if (o instanceof Level) {
@@ -76,8 +80,16 @@ public class Level {
         return false;
     }
 
-
     public static void reset() {
         Level.instance = new Level();
     }
+
+    public int getLevel() {
+        return this.level;
+    }
+
+    public double getSecondsPerCoin() {
+        return secondsPerCoin;
+    }
+
 }

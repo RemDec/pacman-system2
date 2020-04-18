@@ -12,6 +12,8 @@ import java.util.Vector;
 import java.util.Iterator;
 
 /**
+ * Container for all object located on a {@link Position} of the {@link Map}.
+ *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
@@ -24,6 +26,7 @@ public class MapObjectContainer implements Container<MapObject> {
         this.mapObjects = new Vector<>();
     }
 
+    @Override
     public MapObject get(int i) {
         return this.mapObjects.get(i);
     }
@@ -61,6 +64,7 @@ public class MapObjectContainer implements Container<MapObject> {
         }
     }
 
+    @Override
     public Iterator<MapObject> iterator() {
         return mapObjects.iterator();
     }
@@ -78,6 +82,7 @@ public class MapObjectContainer implements Container<MapObject> {
         return false;
     }
 
+    @Override
     public boolean contains(MapObject mO) {
         return this.mapObjects.contains(mO);
     }

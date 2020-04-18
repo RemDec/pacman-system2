@@ -9,7 +9,7 @@
 package model;
 
 /**
- * Placeholder
+ * Placeholder concrete class for a MapObject, linked to a specific {@link Position}.
  *
  * @author Philipp Winter
  */

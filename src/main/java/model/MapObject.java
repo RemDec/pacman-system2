@@ -9,11 +9,13 @@
 package model;
 
 /**
+ * An object on the {@link Map} necessarily has a {@link Position} on it and a visibility status.
+ *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
  */
-@SuppressWarnings("unused")
+
 public abstract class MapObject {
 
     protected Position position;
@@ -35,9 +37,11 @@ public abstract class MapObject {
         Position oldPos = this.position;
         if (oldPos != null) {
             oldPos.remove(this);
+            // Object has moved from its old position so render of it should be updated
             Map.positionsToRender.add(oldPos);
         }
         this.position = pos;
+        // Register itself as located at the new position
         this.position.add(this);
     }
 

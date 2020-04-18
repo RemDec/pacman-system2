@@ -8,7 +8,6 @@
 
 package model.event;
 
-import model.Game;
 
 import java.util.ArrayList;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -32,6 +31,11 @@ public class Timer {
         this.executor = new ScheduledThreadPoolExecutor(startPoolSize);
     }
 
+    /**
+     * Register a new process in the pool
+     * @param p A process
+     * @return true if the process has been registered successfully, false il any exception occurred (handled)
+     */
     public boolean register(Process p) {
         try {
             this.eventObjects.add(p);
@@ -44,6 +48,9 @@ public class Timer {
         }
     }
 
+    /**
+     * Start execution of processes in the pool at a rate defined for each through {@link Process} interface
+     */
     public void startExecution() {
         if (this.executor == null) {
             this.executor = new ScheduledThreadPoolExecutor(startPoolSize);
@@ -56,6 +63,9 @@ public class Timer {
         }
     }
 
+    /**
+     * Pause execution of all polled processes, meaning shutdown each
+     */
     public void pauseExecution() {
         if(this.executor != null) {
             this.executor.shutdown();
@@ -63,6 +73,9 @@ public class Timer {
         }
     }
 
+    /**
+     * Shutdown processes in current pool and reinstantiate a fresh empty one
+     */
     public void restartExecution() {
         if(this.executor != null){
             this.executor.shutdownNow();

@@ -48,6 +48,7 @@ public class GhostContainer implements Container<Ghost> {
      * @throws model.exception.ListFullException            When the list is already filled with {@link #max} ghosts.
      * @throws model.exception.ObjectAlreadyInListException When the submitted ghost is already in the list.
      */
+    @Override
     public void add(Ghost ghost) {
         if (!this.ghosts.contains(ghost)) {
             if (this.ghosts.size() < this.max) {
@@ -79,6 +80,7 @@ public class GhostContainer implements Container<Ghost> {
      *
      * @return The ghost at position <i>i</i>.
      */
+    @Override
     public Ghost get(int i) {
         return this.ghosts.get(i);
     }
@@ -137,6 +139,7 @@ public class GhostContainer implements Container<Ghost> {
      * @return An iterator over all elements in this container.
      * @see java.util.Vector#iterator()
      */
+    @Override
     public Iterator<Ghost> iterator() {
         return ghosts.iterator();
     }
@@ -151,6 +154,7 @@ public class GhostContainer implements Container<Ghost> {
         return false;
     }
 
+    @Override
     public boolean contains(Ghost g) {
         return this.ghosts.contains(g);
     }

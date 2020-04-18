@@ -9,7 +9,7 @@
 package model;
 
 /**
- * The position class represents a point on the map. IT SHOULD NOT BE CONSTRUCTED OUTSIDE THE {@link Map} CLASS.
+ * The position class represents a point on the map (x, y). IT SHOULD NOT BE CONSTRUCTED OUTSIDE THE {@link Map} CLASS.
  *
  * @author Philipp Winter
  * @author Jonas Heidecke
@@ -37,21 +37,35 @@ public class Position {
         return y;
     }
 
+    /**
+     * Get MapObjects located at this position
+     * @return Container of {@link MapObject}s located at this position
+     */
     public MapObjectContainer getOnPosition() {
         return onPosition;
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Add a {@link MapObject} as located at this position
+     * @param mapObject the object to add
+     */
     public void add(MapObject mapObject) {
         assert mapObject.getPosition() != null;
         this.onPosition.add(mapObject);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Remove an object from this position by reference
+     * @param mapObject the object to remove from the container associated with this position
+     */
     public void remove(MapObject mapObject) {
         this.onPosition.remove(mapObject);
     }
 
+    /**
+     * Test whether there is a {@link Wall} among {@link MapObject}s associated with this position
+     * @return true if no {@link Wall} at this position
+     */
     public boolean isMoveableTo() {
         for (MapObject mO : this.onPosition) {
             if (mO instanceof Wall) {
@@ -59,17 +73,6 @@ public class Position {
             }
         }
         return true;
-    }
-
-    public double calcDistance(Position pos) {
-        if (pos == null) {
-            throw new IllegalArgumentException("Position cannot be null");
-        }
-        // A little bit of math, using Pythagoras' Theorem
-        return Math.sqrt(
-                Math.pow(this.getX() - pos.getX(), 2) +
-                        Math.pow(this.getY() - pos.getY(), 2)
-        );
     }
 
     @Override

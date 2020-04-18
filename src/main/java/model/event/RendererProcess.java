@@ -19,15 +19,19 @@ import model.Map;
  */
 public class RendererProcess implements Process {
 
+    private static final long BASE_TIME = 1000;
+
+    private static final int STARTUP_DELAY = 15;
+
     @Override
     public long getTiming() {
         long refreshRate = (long) Game.getInstance().getRefreshRate();
-        return 1000/refreshRate;
+        return BASE_TIME/refreshRate;
     }
 
     @Override
     public long getStartupDelay() {
-        return 15;
+        return STARTUP_DELAY;
     }
 
     @Override
@@ -35,6 +39,7 @@ public class RendererProcess implements Process {
         Map.getInstance().markAllForRendering();
     }
 
+    @Override
     public void run() {
         MainController.getInstance().getGui().getRenderer().markReady();
     }

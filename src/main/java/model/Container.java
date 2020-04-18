@@ -17,7 +17,7 @@ import java.util.Vector;
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
  */
-@SuppressWarnings("unused")
+
 public interface Container<E> extends Iterable<E> {
 
     /**

@@ -19,7 +19,7 @@ import java.util.Date;
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
  */
-@SuppressWarnings("unused")
+
 public class Score implements Serializable, Comparable<Score>{
 
     /**
@@ -30,7 +30,7 @@ public class Score implements Serializable, Comparable<Score>{
     private Date time;
 
     /**
-     * Constructs a new Highscore.
+     * Construct a new score and register it to Highscore to be written.
      */
     public Score() {
         Highscore.getInstance().add(this);
@@ -38,16 +38,7 @@ public class Score implements Serializable, Comparable<Score>{
     }
 
     /**
-     * Gets the score.
-     *
-     * @return The current score.
-     */
-    public long getScore() {
-        return score;
-    }
-
-    /**
-     * Adds an amount of points to the highscore.
+     * Adds an amount of points to the current score.
      *
      * @param i A positive integer.
      *
@@ -63,6 +54,15 @@ public class Score implements Serializable, Comparable<Score>{
 
     public void addToScore(Scorable s) {
         this.addToScore(s.getScore());
+    }
+
+    /**
+     * Gets the score.
+     *
+     * @return The current score.
+     */
+    public long getScore() {
+        return score;
     }
 
     public boolean equals(Object o) {

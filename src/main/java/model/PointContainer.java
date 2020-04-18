@@ -14,6 +14,9 @@ import java.util.Vector;
 import java.util.Iterator;
 
 /**
+ * A Container for all {@link Point}s available in a {@link Game}. Theoretically bound by the number of available
+ * cases in the {@link Map} minus the number of {@link Coin}s.
+ *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
@@ -22,11 +25,8 @@ public class PointContainer implements Container<Point> {
 
     private Vector<Point> points;
 
-    public final int max;
-
     public PointContainer() {
-        this.max = 4;
-        this.points = new Vector<>(max);
+        this.points = new Vector<>();
     }
 
     public void add(Point point) {
@@ -49,6 +49,7 @@ public class PointContainer implements Container<Point> {
         }
     }
 
+    @Override
     public Point get(int i) {
         return this.points.get(i);
     }
@@ -78,10 +79,12 @@ public class PointContainer implements Container<Point> {
         this.points.remove(el);
     }
 
+    @Override
     public Iterator<Point> iterator() {
         return points.iterator();
     }
 
+    @Override
     public boolean contains(Point p) {
         return this.points.contains(p);
     }
@@ -94,7 +97,7 @@ public class PointContainer implements Container<Point> {
         for (Point p : this) {
             p.deSpawn();
         }
-
         this.points.clear();
     }
+
 }

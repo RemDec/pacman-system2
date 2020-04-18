@@ -41,6 +41,9 @@ public class MainController extends Thread {
      */
     private MainGui gui;
 
+    /**
+     * State of the game
+     */
     private boolean gameActive = false;
 
     /**
@@ -62,6 +65,10 @@ public class MainController extends Thread {
         reset(true);
     }
 
+    /**
+     * Assign a new Controller instance
+     * @param prepare Reset the game and create new game instance and GUI
+     */
     public static void reset(boolean prepare) {
         MainController.instance = new MainController();
         if (prepare) {
@@ -96,6 +103,9 @@ public class MainController extends Thread {
         this.game.start();
     }
 
+    /**
+     * Stop the game until next start.
+     */
     public void pauseGame() {
         this.gameActive = false;
         this.gui.showPreGame();

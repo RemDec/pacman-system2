@@ -23,14 +23,29 @@ public class Coin extends StaticTarget implements Scorable {
 
     private static double activeSeconds = PACMAN_AINT_EATER;
 
+    private static final int SCORE_PER_COIN = 50;
+
+    /**
+     * Reset state to the fact that Coin effect isn't active, ie it does not give invincibility to Pacman
+     */
     public static void resetActiveSeconds() {
         Coin.activeSeconds = PACMAN_AINT_EATER;
     }
 
+    /**
+     * Get the number of seconds remaining while Coin effect is active, global to all Coins (eating any Coin increase
+     * the common remaining time)
+     * @return the number of seconds the effect is still active or -1 if it is not
+     */
     public static double getActiveSeconds() {
         return activeSeconds;
     }
 
+    /**
+     * Reduce current invincibility time due to this Coin by an amount of time (seconds), leading to a <= 0 value
+     * implies the effect is no longer active.
+     * @param value A number of seconds
+     */
     public static void reduceActiveSeconds(double value) {
         double result = activeSeconds - value;
         if (result <= 0) {
@@ -40,7 +55,7 @@ public class Coin extends StaticTarget implements Scorable {
     }
 
     public Coin(Position pos) {
-        this.state = State.AVAILABLE;
+        this.state = State.AVAILABLE; // State from StaticTarget
         this.setPosition(pos);
     }
 
@@ -64,14 +79,7 @@ public class Coin extends StaticTarget implements Scorable {
             } else {
                 Coin.activeSeconds += SECONDS_PER_COIN;
             }
-            for (Pacman p : Game.getInstance().getPacmanContainer()) {
-                p.changeState(DynamicTarget.State.HUNTER);
-            }
-            for (Ghost g : Game.getInstance().getGhostContainer()) {
-                if (g.getState() == DynamicTarget.State.HUNTER) {
-                    g.changeState(DynamicTarget.State.HUNTED);
-                }
-            }
+            this.makePacmansHunters();
         } else if (state == State.AVAILABLE) {
             setVisible(true);
         }
@@ -86,7 +94,7 @@ public class Coin extends StaticTarget implements Scorable {
      */
     @Override
     public int getScore() {
-        return 50;
+        return SCORE_PER_COIN;
     }
 
     @Override
@@ -104,8 +112,22 @@ public class Coin extends StaticTarget implements Scorable {
         return false;
     }
 
+    /**
+     * From {@link Target#gotEaten()}, a Coin being eaten switch to EATEN State.
+     */
     public void gotEaten() {
         this.changeState(State.EATEN);
+    }
+
+    private void makePacmansHunters(){
+        for (Pacman p : Game.getInstance().getPacmanContainer()) {
+            p.changeState(DynamicTarget.State.HUNTER);
+        }
+        for (Ghost g : Game.getInstance().getGhostContainer()) {
+            if (g.getState() == DynamicTarget.State.HUNTER) {
+                g.changeState(DynamicTarget.State.HUNTED);
+            }
+        }
     }
 
     @Override

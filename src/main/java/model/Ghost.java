@@ -17,6 +17,8 @@ package model;
  */
 public class Ghost extends DynamicTarget implements Scorable {
 
+    private final static int SCORE_VALUE = 200;
+
     /**
      * The current colour of this ghost.
      */
@@ -27,14 +29,17 @@ public class Ghost extends DynamicTarget implements Scorable {
      */
     private String name;
 
-    private double waitingSeconds = -1;
+    private double waitingSeconds = -1.;
+
+    private final static double WAIT_SECONDS = 4.;
 
     private double speed = 1;
+
+    private final static double SPEED_FACTOR = 2.;
 
     private boolean movedInLastTurn = false;
 
     public Ghost(Position pos, Colour colour) {
-        this.colour = colour;
         switch (colour) {
             case RED:
                 this.setName("Blinky");
@@ -51,7 +56,7 @@ public class Ghost extends DynamicTarget implements Scorable {
             default:
                 throw new IllegalArgumentException("You cannot construct a ghost with the colour " + colour);
         }
-        this.setName(name);
+        this.colour = colour;
         this.state = State.HUNTER;
         this.setPosition(pos);
     }
@@ -97,32 +102,37 @@ public class Ghost extends DynamicTarget implements Scorable {
      *
      * @param target The object to be eaten.
      */
+    @Override
     public void eat(Target target) {
         if (target instanceof Pacman) {
-            ((Pacman) target).changeState(State.MUNCHED);
+            target.gotEaten();
         }
     }
 
     /**
-     * Changes the state of the ghost and performs needed operations.
+     * Changes the state of the ghost and performs needed operations related to new state.
      *
      * @param state The new state.
      */
     public void changeState(State state) {
         if (state == State.WAITING) {
-            this.speed *= 0.5;
-            if(this.waitingSeconds == 0){
-                this.waitingSeconds = 4.;
+            this.speed *= 1. / SPEED_FACTOR;
+            if(this.waitingSeconds == -1.){
+                this.waitingSeconds = WAIT_SECONDS;
             } else {
-                this.waitingSeconds += 4.;
+                this.waitingSeconds += WAIT_SECONDS;
             }
         } else if (state == State.HUNTER) {
-            this.speed *= 2;
+            this.speed *= SPEED_FACTOR;
             this.waitingSeconds = -1.;
         }
         this.state = state;
     }
 
+    /**
+     * @return The number of remaining seconds before ghost stops waiting
+     * or -1. if he's in Hunter {@link model.DynamicTarget.State#HUNTER} State
+     */
     public double getWaitingSeconds() {
         return waitingSeconds;
     }
@@ -137,7 +147,7 @@ public class Ghost extends DynamicTarget implements Scorable {
 
     @Override
     public int getScore() {
-        return 200;
+        return SCORE_VALUE;
     }
 
     @Override
@@ -145,6 +155,10 @@ public class Ghost extends DynamicTarget implements Scorable {
         this.changeState(State.MUNCHED);
     }
 
+    /**
+     * Reduce the still remaining time the ghost has to wait until be freed
+     * @param amount The number of seconds to reduce the counter
+     */
     public void reduceWaitingSeconds(double amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("The amount has to be positive");
@@ -160,13 +174,14 @@ public class Ghost extends DynamicTarget implements Scorable {
         if (o != null) {
             if (o instanceof Ghost) {
                 Ghost g = (Ghost) o;
-                return this.getWaitingSeconds() == g.getWaitingSeconds()
-                        && this.getPosition().equals(g.getPosition())
-                        && this.getState().equals(g.getState())
-                        && this.getMovedInLastTurn() == (g.getMovedInLastTurn())
-                        && this.getColour().equals(g.getColour())
-                        && this.getName().equals(g.getName())
-                        && this.getHeadingTo().equals(g.getHeadingTo());
+                boolean sameWait = this.getWaitingSeconds() == g.getWaitingSeconds();
+                boolean samePos = this.getPosition().equals(g.getPosition());
+                boolean sameState = this.getState().equals(g.getState());
+                boolean sameMoved = this.getMovedInLastTurn() == (g.getMovedInLastTurn());
+                boolean sameHeading = this.getHeadingTo().equals(g.getHeadingTo());
+                boolean sameColor = this.getColour().equals(g.getColour());
+                boolean sameName = this.getName().equals(g.getName());
+                return sameName && sameColor && samePos && sameState && sameMoved && sameWait && sameHeading;
             }
         }
         return false;

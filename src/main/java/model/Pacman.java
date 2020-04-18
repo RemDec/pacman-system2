@@ -9,6 +9,8 @@
 package model;
 
 /**
+ * Pacman is playable as male/female and both can be played in the same time in MULTIPLAYER mode
+ *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
@@ -46,16 +48,8 @@ public class Pacman extends DynamicTarget {
         this.changeState(State.MUNCHED);
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Score getScore() {
-        return score;
     }
 
     /**
@@ -99,26 +93,35 @@ public class Pacman extends DynamicTarget {
     public boolean equals(Object o) {
         if (o != null) {
             if (o instanceof Pacman) {
-                return this.getScore().equals(((Pacman) o).getScore())
-                        && this.getPosition().equals(((Pacman) o).getPosition())
-                        && this.getState().equals(((Pacman) o).getState())
-                        && this.getHeadingTo().equals(((Pacman) o).getHeadingTo())
-                        && this.getName().equals(((Pacman) o).getName());
+                boolean sameScore = this.getScore().equals(((Pacman) o).getScore());
+                boolean samePos = this.getPosition().equals(((Pacman) o).getPosition());
+                boolean sameState = this.getState().equals(((Pacman) o).getState());
+                boolean sameHeading = this.getHeadingTo().equals(((Pacman) o).getHeadingTo());
+                boolean sameName = this.getName().equals(((Pacman) o).getName());
+                return sameName && samePos && sameState && sameScore && sameHeading;
             }
         }
         return false;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Sex getSex() {
         return sex;
     }
 
-    public enum Sex {
-        MALE, FEMALE
+    public Score getScore() {
+        return score;
     }
 
     public String toString() {
         return "Pacman [" + position + ", " + state + ", " + sex + ", " + score + ", visible: " + visible + "]";
+    }
+
+    public enum Sex {
+        MALE, FEMALE
     }
 
 }

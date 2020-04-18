@@ -9,7 +9,7 @@
 package model.exception;
 
 /**
- * BasicUncaughtExceptionHandler
+ * BasicUncaughtExceptionHandler serves as a handler for exception occurring in threads
  *
  * @author Philipp Winter
  */

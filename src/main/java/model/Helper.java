@@ -13,7 +13,7 @@ import java.util.Comparator;
 import java.util.Random;
 
 /**
- * Helper
+ * Helper : diverse utilities
  *
  * @author Philipp Winter
  */

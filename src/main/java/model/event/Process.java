@@ -9,14 +9,14 @@
 package model.event;
 
 /**
- * Process
+ * Process, stating for an event that have to be processed at a given time
  *
  * @author Philipp Winter
  */
 public interface Process extends Runnable {
 
-    public long getTiming();
-    public long getStartupDelay();
+    long getTiming();
+    long getStartupDelay();
 
     void onLoad();
     void run();

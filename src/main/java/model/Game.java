@@ -27,8 +27,6 @@ public class Game {
         Game.reset();
     }
 
-    public static final double BASIC_REFRESH_RATE = 4.;
-
     public final static Settings settings = Settings.getInstance();
 
     /**
@@ -71,11 +69,15 @@ public class Game {
      */
     private Map map;
 
+    public static final double BASIC_REFRESH_RATE = 4.;
+
     /**
-     * The amount of time, our UI will be repainted.
+     * The amount of time our UI will be repainted.
      * Also how often the user is able to interact with it's character, e.g. by pressing a key.
      */
     private double refreshRate = BASIC_REFRESH_RATE;
+
+    private static final double REFRESH_RATE_POW = 5. / 7.;
 
     /**
      * The level of the game.
@@ -91,6 +93,15 @@ public class Game {
      */
     private Game() {
 
+    }
+
+    /**
+     * Returns the singleton instance.
+     *
+     * @return The game singleton.
+     */
+    public static Game getInstance() {
+        return Game.instance;
     }
 
     /**
@@ -132,14 +143,96 @@ public class Game {
         return Game.initialized;
     }
 
-    public int getPlayerLifes() {
-        return playerLifes;
-    }
-
+    /**
+     * Decrease remaining player's life counter by one
+     */
     public void reducePLayerLifes() {
         this.playerLifes -= 1;
     }
 
+    /**
+     * Increase remaining player's life counter by one
+     */
+    public void increasePlayerLifes() {
+        this.playerLifes++;
+    }
+
+    /**
+     * Changes the refresh rate depending on the level.
+     * Can be expressed by the equation <code>RefreshRate(level) = (level^5)^(1/7)</code>.
+     *
+     * @param l The level which is used as a parameter in the mathematical equation to generate a new refresh rate.
+     */
+    public void changeRefreshRate(Level l) {
+        // f(x) = (x^5)^(1/7) or "The refresh rate per second is the 7th root of the level raised to 5"
+        this.refreshRate = Math.pow(l.getLevel(), REFRESH_RATE_POW) + BASIC_REFRESH_RATE;
+    }
+
+    /**
+     * Starts the game, in detail it causes all {@link model.event.WorkerProcess}'s to start working.
+     *
+     * @see model.event.Timer#startExecution()
+     */
+    public void start() {
+        if(pointContainer.size() == 0){
+            this.map.placeObjects();
+        }
+        this.eventHandlerManager.startExecution();
+    }
+
+    /**
+     * Pauses the game, by stopping/pausing all {@link model.event.WorkerProcess}'s.
+     *
+     * @see model.event.Timer#pauseExecution()
+     */
+    public void pause() {
+        this.eventHandlerManager.pauseExecution();
+    }
+
+    /**
+     * Compares two objects for equality.
+     *
+     * @param o The other object.
+     *
+     * @return Whether both objects are equal.
+     */
+    public boolean equals(Object o) {
+        if (o != null) {
+            if (o instanceof Game) {
+                // As it is a singleton, checking for reference equality is enough
+                return this == o;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Make the current game over
+     */
+    public void gameOver() {
+        this.isOver = true;
+        Game.getInstance().getEventHandlerManager().pauseExecution();
+        MainController.getInstance().getGui().onGameOver();
+        MainController.getInstance().getGui().getRenderer().markReady();
+    }
+
+    public void onPacmanGotEaten() {
+        Map.getInstance().onPacmanGotEaten();
+    }
+
+    public int getPlayerLifes() {
+        return playerLifes;
+    }
+
+    public boolean isGameOver() {
+        return this.isOver;
+    }
+
+    /**
+     * Gets the current difficulty Level
+     *
+     * @return The {@link Level} instance parametrizing game difficulty
+     */
     public Level getLevel() {
         return level;
     }
@@ -190,17 +283,6 @@ public class Game {
     }
 
     /**
-     * Changes the refresh rate depending on the level.
-     * Can be expressed by the equation <code>RefreshRate(level) = (level^5)^(1/7)</code>.
-     *
-     * @param l The level which is used as a parameter in the mathematical equation to generate a new refresh rate.
-     */
-    public void changeRefreshRate(Level l) {
-        // f(x) = (x^5)^(1/7) or "The refresh rate per second is the 7th root of the level raised to 5"
-        this.refreshRate = Math.pow(Math.pow(l.getLevel(), 5), 1 / 7) + BASIC_REFRESH_RATE;
-    }
-
-    /**
      * Gets the refresh rate.
      *
      * @return The refresh rate.
@@ -209,74 +291,8 @@ public class Game {
         return this.refreshRate;
     }
 
-    /**
-     * Starts the game, in detail it causes all {@link model.event.WorkerProcess}'s to start working.
-     *
-     * @see model.event.Timer#startExecution()
-     */
-    public void start() {
-        if(pointContainer.size() == 0){
-            this.map.placeObjects();
-        }
-        this.eventHandlerManager.startExecution();
-    }
-
-    /**
-     * Pauses the game, by stopping/pausing all {@link model.event.WorkerProcess}'s.
-     *
-     * @see model.event.Timer#pauseExecution()
-     */
-    public void pause() {
-        this.eventHandlerManager.pauseExecution();
-    }
-
-    /**
-     * Compares two objects for equality.
-     *
-     * @param o The other object.
-     *
-     * @return Whether both objects are equal.
-     */
-    public boolean equals(Object o) {
-        if (o != null) {
-            if (o instanceof Game) {
-                // As it is a singleton, checking for reference equality is enough
-                return this == o;
-            }
-        }
-        return false;
-    }
-
-    public void gameOver() {
-        this.isOver = true;
-        Game.getInstance().getEventHandlerManager().pauseExecution();
-        MainController.getInstance().getGui().onGameOver();
-        MainController.getInstance().getGui().getRenderer().markReady();
-    }
-
     public Timer getEventHandlerManager() {
         return eventHandlerManager;
-    }
-
-    /**
-     * Returns the singleton instance.
-     *
-     * @return The game singleton.
-     */
-    public static Game getInstance() {
-        return Game.instance;
-    }
-
-    public boolean isGameOver() {
-        return this.isOver;
-    }
-
-    public void onPacmanGotEaten() {
-        Map.getInstance().onPacmanGotEaten();
-    }
-
-    public void increasePlayerLifes() {
-        this.playerLifes++;
     }
 
     public enum Mode {

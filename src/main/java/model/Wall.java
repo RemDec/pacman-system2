@@ -9,13 +9,13 @@
 package model;
 
 /**
- * A wall is limiting the area an {@link Target} can move to.
+ * A wall is limiting the area a {@link Target} can move to.
  *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
  */
-@SuppressWarnings("unused")
+
 public class Wall extends MapObject {
 
     public Wall(Position position) {

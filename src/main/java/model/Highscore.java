@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
- * Highscore
+ * Highscore : read, sort and write Scores in persistent file
  *
  * @author Philipp Winter
  */
@@ -22,6 +22,8 @@ public class Highscore implements Serializable {
     private static final long serialVersionUID = -5739894473572621875L;
 
     private static Highscore instance = null;
+
+    private static final int NBRMAX = 3;
 
     private static final File file = new File("highscore.dat");
 
@@ -45,7 +47,7 @@ public class Highscore implements Serializable {
                     }
                 });
 
-                while(scores.size() > 3){
+                while(scores.size() > NBRMAX){
                     scores.remove(0);
                 }
             } catch(IOException | ClassNotFoundException e) {

@@ -19,7 +19,7 @@ import model.Map.Direction;
  * @see Ghost
  * @see Pacman
  */
-@SuppressWarnings("unused")
+
 public abstract class DynamicTarget extends Target {
 
     protected State state = State.WAITING;
@@ -37,11 +37,13 @@ public abstract class DynamicTarget extends Target {
     public void move(Position pos) {
         boolean placeholderOnPosition = false;
         for(MapObject m : pos.getOnPosition()){
-            if(m instanceof Placeholder){
+            if (m instanceof Placeholder) {
                 placeholderOnPosition = true;
+                break;
             }
         }
         if(!placeholderOnPosition || this.isHeadingTo(Map.Direction.NORTH)){
+            // if Position is free for moving to or ???
             this.setPosition(pos);
         }
     }
@@ -52,6 +54,18 @@ public abstract class DynamicTarget extends Target {
      * @param target The object to be eaten.
      */
     protected abstract void eat(Target target);
+
+    /**
+     *  This dynamic target got eaten, should implement behaviour from its point of view (changing current State)
+     */
+    public abstract void gotEaten();
+
+    /**
+     * Change the state and perform necessary actions in order to do this.
+     *
+     * @param state The new state.
+     */
+    public abstract void changeState(State state);
 
     /**
      * Return the direction this object is heading to.
@@ -83,13 +97,6 @@ public abstract class DynamicTarget extends Target {
         this.headingTo = direction;
     }
 
-    /**
-     * Change the state and perform necessary actions in order to do this.
-     *
-     * @param state The new state.
-     */
-    public abstract void changeState(State state);
-
     public State getState() {
         return this.state;
     }
@@ -97,9 +104,10 @@ public abstract class DynamicTarget extends Target {
     public boolean equals(Object o) {
         if (o != null) {
             if (o instanceof DynamicTarget) {
-                return this.getHeadingTo().equals(((DynamicTarget) o).getHeadingTo())
-                        && this.getState().equals(((DynamicTarget) o).getState())
-                        && this.getPosition().equals(((DynamicTarget) o).getPosition());
+                boolean sameHeading = this.getHeadingTo().equals(((DynamicTarget) o).getHeadingTo());
+                boolean sameState = this.getState().equals(((DynamicTarget) o).getState());
+                boolean samePos = this.getPosition().equals(((DynamicTarget) o).getPosition());
+                return sameHeading && sameState && samePos;
             }
         }
         return false;

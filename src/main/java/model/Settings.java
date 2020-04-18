@@ -9,7 +9,7 @@
 package model;
 
 /**
- * Settings
+ * Global Settings for the gameplay of the {@link Game}.
  *
  * @author Philipp Winter
  */
@@ -20,7 +20,7 @@ public class Settings {
     private static Settings instance = new Settings();
 
     public Settings() {
-        // TODO Implement class
+
     }
 
     public static Settings getInstance() {
