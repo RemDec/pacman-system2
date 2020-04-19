@@ -47,6 +47,14 @@ public class MainGui extends JFrame {
 
     private boolean initialized;
 
+    // Factor related to leftSpace and topSpace padding
+    private final static int WINDOW_WIDTH_FACTOR = 2;
+    private final static int WINDOW_HEIGHT_FACTOR = 3;
+
+    private final Dimension fillerPreGame = new Dimension(200, 0);
+
+    private final static int BTN_FONT_SIZE = 22;
+
     public MainGui() {
         controller = MainController.getInstance();
         imgOrganizer = ImageOrganizer.getInstance();
@@ -70,8 +78,8 @@ public class MainGui extends JFrame {
                 MainController.uncaughtExceptionHandler.uncaught(e);
             }
 
-            int windowWidth = renderer.mapWidth + (renderer.leftSpace * 2);
-            int windowHeight = renderer.mapHeight + (renderer.topSpace * 3);
+            int windowWidth = renderer.mapWidth + (renderer.leftSpace * WINDOW_WIDTH_FACTOR);
+            int windowHeight = renderer.mapHeight + (renderer.topSpace * WINDOW_HEIGHT_FACTOR);
 
             System.out.println(windowWidth + "x" + windowHeight);
 
@@ -105,7 +113,7 @@ public class MainGui extends JFrame {
         pnlButtons.setLayout(new FlowLayout());
         pnlButtons.setOpaque(false);
 
-        Font fontBtn = new Font("Agency FB", Font.PLAIN, 22);
+        Font fontBtn = new Font("Agency FB", Font.PLAIN, BTN_FONT_SIZE);
 
         btnPlaySingleplayer = new JButton("Singleplayer");
         btnPlaySingleplayer.setFont(fontBtn);
@@ -119,8 +127,8 @@ public class MainGui extends JFrame {
         pnlGame.add(btnPause);
 
         pnlButtons.add(btnPlaySingleplayer);
-        Dimension dim = new Dimension(200, 0);
-        pnlButtons.add(new Box.Filler(dim, dim, dim));
+
+        pnlButtons.add(new Box.Filler(fillerPreGame, fillerPreGame, fillerPreGame));
         pnlButtons.add(btnPlayMultiplayer);
 
         lblBackground.add(pnlButtons);
@@ -134,6 +142,7 @@ public class MainGui extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                // Write Highscores at leaving
                 Highscore.getInstance().writeToFile();
                 super.windowClosing(e);
             }

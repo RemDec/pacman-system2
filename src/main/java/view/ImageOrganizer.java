@@ -27,6 +27,8 @@ public class ImageOrganizer {
 
     private static ImageOrganizer instance;
 
+    private final static int NBR_IMAGES = 30;
+
     private final HashMap<String, BufferedImage> images;
 
     public static ImageOrganizer getInstance() {
@@ -36,6 +38,11 @@ public class ImageOrganizer {
         return instance;
     }
 
+    /**
+     * From any {@link MapObject} retrieve its graphical representation
+     * @param mO The object to get corresponding {@link BufferedImage}
+     * @return the {@link BufferedImage} considering m0 type and internal state
+     */
     public BufferedImage get(MapObject mO) {
         String key;
         if (mO != null) {
@@ -44,6 +51,8 @@ public class ImageOrganizer {
             key = null;
         }
 
+        // Ghost as HUNTER : color of the ghost + looking at direction heading to, HUNTED : alternating BLUE/WHITE
+        //          WAITING : stays BLUE
         if (mO instanceof Ghost) {
             Ghost g = (Ghost) mO;
             if (g.getState() == DynamicTarget.State.HUNTER) {
@@ -68,8 +77,12 @@ public class ImageOrganizer {
         }
     }
 
+    /**
+     * Load images from paths and fill the map {@link #images} with it, buffered and resized. They are indexed by
+     * Strings formed from the {@link MapObject}s class name and maybe additional state like the direction heading to.
+     */
     private ImageOrganizer() {
-        images = new HashMap<>(30);
+        images = new HashMap<>(NBR_IMAGES);
 
         Class<?> c = this.getClass();
 

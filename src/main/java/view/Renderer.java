@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 import java.util.Vector;
 
 /**
- * Renderer
+ * Renderer, paint the GUI panel and add texts for Highscore, Player Lifes and current Level, adjusted
  *
  * @author Philipp Winter
  */
@@ -35,6 +35,9 @@ public class Renderer {
     public final int leftSpace;
 
     public final int multiplier = 20;
+    private final int TOP_SPACE_FACTOR = 2;
+    private final int LEFT_SPACE_FACTOR = 4;
+    private final int LEFT_PADDING = 15;
 
     private final ImageOrganizer imgOrganizer;
 
@@ -46,12 +49,12 @@ public class Renderer {
         this.mapHeight = (Map.getInstance().height * multiplier);
         this.mapWidth = (Map.getInstance().width * multiplier);
 
-        this.topSpace = (mapHeight / 2);
-        this.leftSpace = (mapWidth / 4);
+        this.topSpace = (mapHeight / TOP_SPACE_FACTOR);
+        this.leftSpace = (mapWidth / LEFT_SPACE_FACTOR);
     }
 
     private void render() {
-        if (!controller.isGameActive() || !readyForReRendering) {
+        if (!controller.isGameActive() || !this.readyForReRendering) {
             System.out.println("Returned without rendering: " + System.currentTimeMillis());
             return;
         }
@@ -69,11 +72,14 @@ public class Renderer {
     protected void drawString(Graphics2D target, String s, int offset) {
         target.drawString(
                 s,
-                15 + leftSpace,
+                LEFT_PADDING + leftSpace,
                 (Map.getInstance().height * multiplier) + (offset * multiplier) + topSpace
         );
     }
 
+    /**
+     * Set ready for an fresh new rendering and execute it
+     */
     public void markReady() {
         if (readyForReRendering) {
             System.out.println("Rendering must be completed before rendering again");

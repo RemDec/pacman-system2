@@ -9,6 +9,9 @@
 package model;
 
 /**
+ * A Map holds all available {@link Position}s in the stage, every {@link Position} references a {@link MapObjectContainer}
+ * containing all {@link MapObject} placed on it. Semantically, {@link Wall}s are {@link MapObject} where no
+ *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
@@ -27,6 +30,9 @@ public class Map {
 
     private boolean objectsPlaced = false;
 
+    private static final int DFLT_MAP_WIDTH = 20;
+    private static final int DFLT_MAP_HEIGHT = 10;
+
     public static final StartingPosition startingPositions = new StartingPosition();
 
     public static Map getInstance() {
@@ -42,7 +48,7 @@ public class Map {
     }
 
     private Map() {
-        this(20, 10);
+        this(DFLT_MAP_WIDTH, DFLT_MAP_HEIGHT);
     }
 
     private Map(int width, int height) {
@@ -73,6 +79,14 @@ public class Map {
         return count;
     }
 
+    /**
+     * From an actual previous {@link Position} and a {@link Direction} to move to, return the resulting
+     * {@link Position} considered a one-step movement.
+     *
+     * @param prevPos The starting position
+     * @param movingTo The movement direction
+     * @return The resulting {@link Position} considering the movement or null if there is no way to move to (wall)
+     */
     public static Position getPositionByDirectionIfMovableTo(Position prevPos, Direction movingTo) {
         Position p = null;
         if (prevPos == null) {
@@ -99,16 +113,21 @@ public class Map {
         }
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o != null) {
             if (o instanceof Map) {
-                return this.getPositionContainer().equals(((Map) o).getPositionContainer())
-                        && this.objectsPlaced == ((Map) o).isObjectsPlaced();
+                boolean samePosContainer = this.getPositionContainer().equals(((Map) o).getPositionContainer());
+                boolean samePlacedObjects = this.objectsPlaced == ((Map) o).isObjectsPlaced();
+                return samePosContainer && samePlacedObjects;
             }
         }
         return false;
     }
 
+    /**
+     * Place all objects in {@link Game}'s containers and mark them for rendering
+     */
     public void placeObjects() {
         placeDynamicObjects();
         placeStaticObjects();
@@ -131,13 +150,14 @@ public class Map {
 
         // --------- GHOSTS ---------
         GhostContainer gC = g.getGhostContainer();
-        gC.add(new Ghost(positionContainer.get(8, 3), Ghost.Colour.BLUE));
-        gC.add(new Ghost(positionContainer.get(9, 3), Ghost.Colour.ORANGE));
-        gC.add(new Ghost(positionContainer.get(10, 3), Ghost.Colour.PINK));
-        gC.add(new Ghost(positionContainer.get(11, 3), Ghost.Colour.RED));
+        gC.add(new Ghost(startingPositions.GHOST_BLUE, Ghost.Colour.BLUE));
+        gC.add(new Ghost(startingPositions.GHOST_ORANGE, Ghost.Colour.ORANGE));
+        gC.add(new Ghost(startingPositions.GHOST_PINK, Ghost.Colour.PINK));
+        gC.add(new Ghost(startingPositions.GHOST_RED, Ghost.Colour.RED));
     }
 
     private void placeStaticObjects() {
+        // Origin is leftmost upper point
         // --------- WALLS ---------
 
         PositionContainer wallPositions = new PositionContainer(width, height);
@@ -234,6 +254,7 @@ public class Map {
                 positionContainer.get(12, 8)
         ));
 
+        // USELESS ???
         for (Position p : wallPositions) {
             new Wall(p);
         }
@@ -304,6 +325,7 @@ public class Map {
                 )
         );
 
+        // USELESS ???
         for (Position p : placeholderPositions) {
             new Placeholder(p);
         }
@@ -313,6 +335,7 @@ public class Map {
     }
 
     public void spawnStaticTargets() {
+        // Origin is leftmost upper point
         // --------- COINS ---------
         CoinContainer cC = Game.getInstance().getCoinContainer();
         PointContainer pC = Game.getInstance().getPointContainer();
@@ -337,10 +360,11 @@ public class Map {
                 positionsToRender.add(p);
             }
         }
-
-
     }
 
+    /**
+     * Replace all dynamic objects to restart a new level, mark all as to render
+     */
     public void onNextLevel() {
         this.replaceDynamicObjects();
 
@@ -376,7 +400,6 @@ public class Map {
 
     private void replaceDynamicObjects() {
         GhostContainer gC = Game.getInstance().getGhostContainer();
-
         for(Ghost g : gC) {
             switch(g.getColour()) {
                 case RED: g.move(startingPositions.GHOST_RED);
@@ -393,7 +416,6 @@ public class Map {
         }
 
         PacmanContainer pC = Game.getInstance().getPacmanContainer();
-
         for(Pacman p : pC) {
             switch(p.getSex()) {
                 case MALE:
@@ -405,7 +427,6 @@ public class Map {
             }
             positionsToRender.add(p.getPosition());
         }
-
     }
 
     public boolean isObjectsPlaced() {
@@ -420,6 +441,11 @@ public class Map {
 
         NORTH, WEST, EAST, SOUTH;
 
+        /**
+         * Guess a random Direction to go among available considered current {@link Position} of m0
+         * @param mO the Object to guess a {@link Direction} for
+         * @return an valid {@link Direction} to move to
+         */
         public static Direction guessDirection(MapObject mO) {
             Direction[] directions = Direction.values();
             Position guessedPosition = null;
@@ -435,7 +461,7 @@ public class Map {
                 }
             }
             if (guessedPosition == null) {
-                throw new RuntimeException("Couldn't find any free position :(");
+                throw new RuntimeException("Couldn't find any free position, blocked object :" + mO.toString());
             } else {
                 return guessedDirection;
             }
