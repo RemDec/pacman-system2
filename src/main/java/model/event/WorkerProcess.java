@@ -24,7 +24,7 @@ public class WorkerProcess implements Process {
 
     private CoinContainer coins;
 
-    private GhostContainer ghosts;
+    private GhostContainerOld ghosts;
 
     private PacmanContainer pacmans;
 

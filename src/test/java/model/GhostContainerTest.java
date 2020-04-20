@@ -10,7 +10,7 @@ package model;
 
 import controller.MainController;
 import model.Ghost.Colour;
-import model.container.GhostContainer;
+import model.container.GhostContainerOld;
 import model.exception.ObjectAlreadyInListException;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
  */
 public class GhostContainerTest {
 
-    private GhostContainer instance;
+    private GhostContainerOld instance;
 
     private Ghost g1;
     private Ghost g2;
@@ -40,7 +40,7 @@ public class GhostContainerTest {
     @Before
     public void setUp() {
         MainController.reset();
-        instance = new GhostContainer();
+        instance = new GhostContainerOld();
 
         pos1 = Game.getInstance().getMap().getPositionContainer().get(0, 0);
         pos2 = Game.getInstance().getMap().getPositionContainer().get(0, 1);
@@ -121,6 +121,6 @@ public class GhostContainerTest {
 
     @Test
     public void testEquals() {
-        assertEquals(instance, new GhostContainer());
+        assertEquals(instance, new GhostContainerOld());
     }
 }

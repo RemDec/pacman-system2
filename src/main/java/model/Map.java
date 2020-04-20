@@ -151,7 +151,7 @@ public class Map {
         }
 
         // --------- GHOSTS ---------
-        GhostContainer gC = g.getGhostContainer();
+        GhostContainerOld gC = g.getGhostContainer();
         gC.add(new Ghost(startingPositions.GHOST_BLUE, Ghost.Colour.BLUE));
         gC.add(new Ghost(startingPositions.GHOST_ORANGE, Ghost.Colour.ORANGE));
         gC.add(new Ghost(startingPositions.GHOST_PINK, Ghost.Colour.PINK));
@@ -401,7 +401,7 @@ public class Map {
     }
 
     private void replaceDynamicObjects() {
-        GhostContainer gC = Game.getInstance().getGhostContainer();
+        GhostContainerOld gC = Game.getInstance().getGhostContainer();
         for(Ghost g : gC) {
             switch(g.getColour()) {
                 case RED: g.move(startingPositions.GHOST_RED);

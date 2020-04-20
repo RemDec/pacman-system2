@@ -10,7 +10,7 @@ package model;
 
 import controller.MainController;
 import model.container.CoinContainer;
-import model.container.GhostContainer;
+import model.container.GhostContainerOld;
 import model.container.PacmanContainer;
 import model.container.PointContainerOld;
 import model.event.RendererProcess;
@@ -45,7 +45,7 @@ public class Game {
     /**
      * A container of all ghosts.
      */
-    private GhostContainer ghostContainer;
+    private GhostContainerOld ghostContainer;
 
     /**
      * A container of all coins.
@@ -127,7 +127,7 @@ public class Game {
 
         this.map = Map.getInstance();
 
-        this.ghostContainer = new GhostContainer();
+        this.ghostContainer = new GhostContainerOld();
         this.coinContainer = new CoinContainer();
         this.pointContainer = new PointContainerOld();
         this.pacmanContainer = new PacmanContainer();
@@ -245,7 +245,7 @@ public class Game {
      *
      * @return The container used to manage all instance of {@link Ghost}'s in the object tree.
      */
-    public GhostContainer getGhostContainer() {
+    public GhostContainerOld getGhostContainer() {
         return ghostContainer;
     }
 

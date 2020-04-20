@@ -33,4 +33,16 @@ public class LimitedObjectContainer<E> extends ObjectContainer<E> {
         return this.max;
     }
 
+    @SuppressWarnings("unchecked")
+    public boolean equals(Object o) {
+        if (o != null) {
+            if (o instanceof LimitedObjectContainer) {
+                LimitedObjectContainer<E> other = (LimitedObjectContainer<E>) o;
+                boolean sameContent = this.getAll().equals(other.getAll());
+                return sameContent && other.getMax() == this.getMax();
+            }
+        }
+        return false;
+    }
+
 }

@@ -16,7 +16,7 @@ public class Containers {
         return new ObjectContainer<MapObject>();
     }
 
-    public static ObjectContainer<Point> getPointContainer(){
+    public static PointContainer getPointContainer(){
         return new PointContainer();
     }
 
@@ -26,6 +26,10 @@ public class Containers {
 
     public static LimitedObjectContainer<Pacman> getPacmanContainer(){
         return new LimitedObjectContainer<Pacman>(2);
+    }
+
+    public static GhostContainer getGhostContainer(){
+        return new GhostContainer(4);
     }
 
 }

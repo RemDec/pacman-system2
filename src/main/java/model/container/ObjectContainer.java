@@ -19,6 +19,12 @@ public class ObjectContainer<E> implements Container<E> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public Vector<E> getAll() {
+        return (Vector<E>) this.elmts.clone();
+    }
+
+    @Override
     public void add(E el) {
         if (!this.elmts.contains(el)) {
             this.elmts.add(el);
@@ -32,12 +38,6 @@ public class ObjectContainer<E> implements Container<E> {
         for (E elmt : container){
             this.add(elmt);
         }
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Vector<E> getAll() {
-        return (Vector<E>) this.elmts.clone();
     }
 
     @Override
@@ -65,10 +65,11 @@ public class ObjectContainer<E> implements Container<E> {
         return this.elmts.iterator();
     }
 
+    @SuppressWarnings("unchecked")
     public boolean equals(Object o) {
         if (o != null) {
             if (o instanceof ObjectContainer) {
-                return this.getAll().equals(((ObjectContainer) o).getAll());
+                return this.getAll().equals(((ObjectContainer<E>) o).getAll());
             }
         }
         return false;
