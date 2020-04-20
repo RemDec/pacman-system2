@@ -23,7 +23,7 @@ import java.util.Iterator;
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
  */
-public class GhostContainer implements Container<Ghost> {
+public class GhostContainerOld implements Container<Ghost> {
 
     /**
      * The ghosts.
@@ -38,7 +38,7 @@ public class GhostContainer implements Container<Ghost> {
     /**
      * Constructs a new GhostContainer.
      */
-    public GhostContainer() {
+    public GhostContainerOld() {
         this.ghosts = new Vector<>(max);
     }
 
@@ -126,6 +126,11 @@ public class GhostContainer implements Container<Ghost> {
         this.ghosts.remove(el);
     }
 
+    @Override
+    public void removeAll() {
+        this.ghosts.clear();
+    }
+
     /**
      * Gets the maximal amount of ghosts, fitting in this container.
      *
@@ -148,9 +153,9 @@ public class GhostContainer implements Container<Ghost> {
 
     public boolean equals(Object o) {
         if (o != null) {
-            if (o instanceof GhostContainer) {
-                return this.getAll().equals(((GhostContainer) o).getAll())
-                        && this.getMax() == ((GhostContainer) o).getMax();
+            if (o instanceof GhostContainerOld) {
+                return this.getAll().equals(((GhostContainerOld) o).getAll())
+                        && this.getMax() == ((GhostContainerOld) o).getMax();
             }
         }
         return false;
