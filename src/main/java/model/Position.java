@@ -8,6 +8,8 @@
 
 package model;
 
+import model.container.MapObjectContainer;
+
 /**
  * The position class represents a point on the map (x, y). IT SHOULD NOT BE CONSTRUCTED OUTSIDE THE {@link Map} CLASS.
  *

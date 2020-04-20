@@ -10,6 +10,7 @@ package model;
 
 import controller.MainController;
 import model.Ghost.Colour;
+import model.container.GhostContainer;
 import model.exception.ObjectAlreadyInListException;
 import org.junit.Before;
 import org.junit.Test;

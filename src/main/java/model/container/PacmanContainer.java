@@ -6,8 +6,11 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.container;
 
+import model.Game;
+import model.Pacman;
+import model.Position;
 import model.exception.ListFullException;
 import model.exception.ObjectAlreadyInListException;
 
@@ -99,6 +102,11 @@ public class PacmanContainer implements Container<Pacman> {
     @Override
     public boolean contains(Pacman p) {
         return this.pacmans.contains(p);
+    }
+
+    @Override
+    public int size() {
+        return this.pacmans.size();
     }
 
 }

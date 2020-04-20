@@ -8,13 +8,15 @@
 
 package model.exception;
 
+import model.container.Container;
+
 /**
  * The exception thrown if someone is trying to add a value to a list with a fixed maximal size.
  *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
- * @see model.Container
+ * @see Container
  */
 public class ListFullException extends ListException {
 

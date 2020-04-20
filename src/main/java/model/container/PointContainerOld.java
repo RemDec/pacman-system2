@@ -6,8 +6,9 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.container;
 
+import model.*;
 import model.exception.ObjectAlreadyInListException;
 
 import java.util.Vector;
@@ -21,11 +22,11 @@ import java.util.Iterator;
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
  */
-public class PointContainer implements Container<Point> {
+public class PointContainerOld implements Container<Point> {
 
     private Vector<Point> points;
 
-    public PointContainer() {
+    public PointContainerOld() {
         this.points = new Vector<>();
     }
 

@@ -10,6 +10,7 @@ package model;
 
 import model.Ghost.Colour;
 import model.Map.Direction;
+import model.container.MapObjectContainer;
 import org.junit.Before;
 import org.junit.Test;
 

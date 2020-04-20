@@ -6,8 +6,10 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.container;
 
+import model.Coin;
+import model.Position;
 import model.exception.ListFullException;
 import model.exception.ObjectAlreadyInListException;
 
@@ -140,6 +142,11 @@ public class CoinContainer implements Container<Coin> {
     @Override
     public boolean contains(Coin mO) {
         return this.coins.contains(mO);
+    }
+
+    @Override
+    public int size() {
+        return this.coins.size();
     }
 
     public boolean equals(Object o) {

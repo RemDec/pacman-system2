@@ -9,7 +9,7 @@
 package model.exception;
 
 import model.Pacman;
-import model.PacmanContainer;
+import model.container.PacmanContainer;
 import model.Position;
 import org.junit.Test;
 

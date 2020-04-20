@@ -8,6 +8,8 @@
 
 package model;
 
+import model.container.*;
+
 /**
  * A Map holds all available {@link Position}s in the stage, every {@link Position} references a {@link MapObjectContainer}
  * containing all {@link MapObject} placed on it. Semantically, {@link Wall}s are {@link MapObject} where no
@@ -338,7 +340,7 @@ public class Map {
         // Origin is leftmost upper point
         // --------- COINS ---------
         CoinContainer cC = Game.getInstance().getCoinContainer();
-        PointContainer pC = Game.getInstance().getPointContainer();
+        PointContainerOld pC = Game.getInstance().getPointContainer();
 
         cC.removeAll();
         pC.removeAll();

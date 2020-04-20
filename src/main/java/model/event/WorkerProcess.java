@@ -11,9 +11,7 @@ package model.event;
 import controller.MainController;
 import model.*;
 import model.Map.Direction;
-
-import javax.swing.*;
-import java.util.ArrayList;
+import model.container.*;
 
 /**
  * @author Philipp Winter
@@ -22,7 +20,7 @@ import java.util.ArrayList;
  */
 public class WorkerProcess implements Process {
 
-    private PointContainer points;
+    private PointContainerOld points;
 
     private CoinContainer coins;
 
@@ -85,7 +83,7 @@ public class WorkerProcess implements Process {
         boolean performFurtherActions;
 
         // Check whether level is completed
-        PointContainer pC = Game.getInstance().getPointContainer();
+        PointContainerOld pC = Game.getInstance().getPointContainer();
         int pointsEaten = 0;
 
         for (Point p : pC) {

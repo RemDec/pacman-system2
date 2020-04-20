@@ -9,10 +9,13 @@
 package model;
 
 import controller.MainController;
+import model.container.CoinContainer;
+import model.container.GhostContainer;
+import model.container.PacmanContainer;
+import model.container.PointContainerOld;
 import model.event.RendererProcess;
 import model.event.Timer;
 import model.event.WorkerProcess;
-import view.MainGui;
 
 /**
  * The Game class is kind of a <i>master</i>-class, organizing all other business logic objects.
@@ -52,7 +55,7 @@ public class Game {
     /**
      * A container of all points.
      */
-    private PointContainer pointContainer;
+    private PointContainerOld pointContainer;
 
     /**
      * A container of all pacmans.
@@ -126,7 +129,7 @@ public class Game {
 
         this.ghostContainer = new GhostContainer();
         this.coinContainer = new CoinContainer();
-        this.pointContainer = new PointContainer();
+        this.pointContainer = new PointContainerOld();
         this.pacmanContainer = new PacmanContainer();
         this.level = Level.getInstance();
 
@@ -260,7 +263,7 @@ public class Game {
      *
      * @return The container used to manage all instance of {@link Point}'s in the object tree.
      */
-    public PointContainer getPointContainer() {
+    public PointContainerOld getPointContainer() {
         return pointContainer;
     }
 

@@ -11,7 +11,7 @@ package model.exception;
 import controller.MainController;
 import model.Game;
 import model.Pacman;
-import model.PacmanContainer;
+import model.container.PacmanContainer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

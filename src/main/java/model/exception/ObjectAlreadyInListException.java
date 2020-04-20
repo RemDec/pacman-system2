@@ -8,13 +8,15 @@
 
 package model.exception;
 
+import model.container.Container;
+
 /**
  * The exception thrown if an object is already in a list and this is permitted.
  *
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
- * @see model.Container
+ * @see Container
  */
 public class ObjectAlreadyInListException extends ListException {
 

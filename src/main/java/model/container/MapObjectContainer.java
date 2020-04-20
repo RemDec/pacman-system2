@@ -6,7 +6,11 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.container;
+
+import model.Map;
+import model.MapObject;
+import model.Position;
 
 import java.util.Vector;
 import java.util.Iterator;

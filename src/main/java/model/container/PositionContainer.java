@@ -6,7 +6,10 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.container;
+
+import model.Map;
+import model.Position;
 
 import java.util.Vector;
 import java.util.Iterator;
@@ -90,7 +93,7 @@ public class PositionContainer implements Container<Position> {
         return x + "#" + y;
     }
 
-    public String generateKey(Position pos) {
+    private String generateKey(Position pos) {
         return generateKey(pos.getX(), pos.getY());
     }
 
@@ -116,6 +119,11 @@ public class PositionContainer implements Container<Position> {
     @Override
     public boolean contains(Position p) {
         return this.positions.containsKey(this.generateKey(p));
+    }
+
+    @Override
+    public int size() {
+        return this.positions.size();
     }
 
     /**

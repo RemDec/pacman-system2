@@ -6,8 +6,10 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.container;
 
+import model.Ghost;
+import model.Position;
 import model.exception.ListFullException;
 import model.exception.ObjectAlreadyInListException;
 
@@ -157,6 +159,11 @@ public class GhostContainer implements Container<Ghost> {
     @Override
     public boolean contains(Ghost g) {
         return this.ghosts.contains(g);
+    }
+
+    @Override
+    public int size() {
+        return this.ghosts.size();
     }
 
 }
