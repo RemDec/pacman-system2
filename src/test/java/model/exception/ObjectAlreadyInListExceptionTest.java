@@ -8,6 +8,7 @@
 
 package model.exception;
 
+import controller.MainController;
 import model.mapobject.Pacman;
 import model.Position;
 import model.container.Containers;
@@ -25,6 +26,7 @@ public class ObjectAlreadyInListExceptionTest {
 
     @Test(expected = ObjectAlreadyInListException.class)
     public void testConstruct() {
+        MainController.reset();
         Pacman p = new Pacman(new Position(0, 0), Pacman.Sex.MALE);
         LimitedObjectContainer<Pacman> pC = Containers.getPacmanContainer();
 

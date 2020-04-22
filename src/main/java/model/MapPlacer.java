@@ -254,8 +254,9 @@ public class MapPlacer {
                 case FEMALE:
                     p.move(startingPositions.PACMAN_FEMALE);
                     break;
+                default:
+                    throw new RuntimeException("Unknown Pacman sex");
             }
-
         }
     }
 

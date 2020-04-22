@@ -64,7 +64,7 @@ public class ObjectContainer<E extends MapObject> implements Container<E> {
         if (!this.elmts.contains(el)) {
             this.elmts.add(el);
         } else {
-            throw new ObjectAlreadyInListException(elmts.getClass().getCanonicalName());
+            throw new ObjectAlreadyInListException(el.getClass().getCanonicalName());
         }
     }
 
@@ -108,5 +108,9 @@ public class ObjectContainer<E extends MapObject> implements Container<E> {
             }
         }
         return false;
+    }
+
+    public String toString(){
+        return "Container of size " + size() + " : " + this.elmts;
     }
 }

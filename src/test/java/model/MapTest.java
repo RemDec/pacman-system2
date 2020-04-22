@@ -29,7 +29,6 @@ public class MapTest {
     @Before
     public void setUp() {
         MainController.reset();
-
         this.instance = Map.getInstance();
     }
 

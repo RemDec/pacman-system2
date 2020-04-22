@@ -59,7 +59,8 @@ public class Timer {
             // Given the refreshRate 5, our handler has to be run 5 times in one second, so 5 times in 1000 milliseconds.
             // 1000 / 5 = 200
             e.onLoad();
-            this.executor.scheduleAtFixedRate(e, e.getStartupDelay(), e.getTiming(), TimeUnit.MILLISECONDS);
+            if(this.executor != null)
+                this.executor.scheduleAtFixedRate(e, e.getStartupDelay(), e.getTiming(), TimeUnit.MILLISECONDS);
         }
     }
 

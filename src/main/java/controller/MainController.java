@@ -70,6 +70,8 @@ public class MainController extends Thread {
      * @param prepare Reset the game and create new game instance and GUI
      */
     public static void reset(boolean prepare) {
+        if (MainController.instance != null)
+            MainController.instance.pauseGame(); // shutdown event handler manager
         MainController.instance = new MainController();
         if (prepare) {
             MainController.instance.prepare();
@@ -108,8 +110,10 @@ public class MainController extends Thread {
      */
     public void pauseGame() {
         this.gameActive = false;
-        this.gui.showPreGame();
-        this.game.pause();
+        if (this.gui != null)
+            this.gui.showPreGame();
+        if (this.game != null)
+            this.game.pause();
     }
 
     public boolean isGameActive() {

@@ -83,7 +83,7 @@ public class MainGui extends JFrame {
             int windowWidth = renderer.mapWidth + (renderer.leftSpace * WINDOW_WIDTH_FACTOR);
             int windowHeight = renderer.mapHeight + (renderer.topSpace * WINDOW_HEIGHT_FACTOR);
 
-            System.out.println(windowWidth + "x" + windowHeight);
+            //System.out.println(windowWidth + "x" + windowHeight);
 
             setSize(windowWidth, windowHeight);
             setLocationRelativeTo(null);

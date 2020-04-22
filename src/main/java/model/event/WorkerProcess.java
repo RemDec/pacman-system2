@@ -98,8 +98,8 @@ public class WorkerProcess implements Process {
         int size = Game.getInstance().getPointContainer().size();
 
         performFurtherActions = (pointsEaten != size) && (!Game.getInstance().isGameOver());
-
         if (pointsEaten == size) {
+            // All points were eaten, go next level
             Level.getInstance().nextLevel();
         }
 

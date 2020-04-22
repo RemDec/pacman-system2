@@ -8,6 +8,7 @@
 
 package controller;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,6 +25,11 @@ public class MainControllerTest {
 
     @Before
     public void beforeTest() {
+        MainController.reset();
+    }
+
+    @After
+    public void afterTest() {
         MainController.reset();
     }
 

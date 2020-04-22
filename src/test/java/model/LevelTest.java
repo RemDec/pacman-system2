@@ -9,8 +9,11 @@
 package model;
 
 import controller.MainController;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -29,8 +32,12 @@ public class LevelTest {
     @Before
     public void setUp() {
         MainController.reset();
-
         this.instance = Level.getInstance();
+    }
+
+    @After
+    public void tearDown() {
+        MainController.reset();
     }
 
     @Test
@@ -39,25 +46,30 @@ public class LevelTest {
     }
 
     @Test
-    public void testNextLevel() {
-        assertEquals(1, instance.getLevel());
-        instance.nextLevel();
-        assertTrue("Assert that " + Game.getInstance().getRefreshRate() + " is greater than " + Game.BASIC_REFRESH_RATE, Game.getInstance().getRefreshRate() > Game.BASIC_REFRESH_RATE);
-        assertEquals(2, instance.getLevel());
-    }
-
-    @Test
     public void testGetLevel() {
         assertEquals(1, instance.getLevel());
     }
 
     @Test
+    public void testNextLevel() {
+        // Need to place objects manually since we didnt call GameController.start() that does it normally. If we don't
+        // the nbr of Points is 0, and the WorkerProcess relaunched by Level.nextLevel() will fall in the condition
+        // coins = 0, meaning player finished the level and will so get player to next levels indefinitely.
+        Map.getInstance().placeObjects();
+        assertEquals(1, instance.getLevel());
+        instance.nextLevel();
+        assertEquals(2, instance.getLevel());
+        assertTrue("Assert that " + Game.getInstance().getRefreshRate() + " > than " + Game.BASIC_REFRESH_RATE,
+                Game.getInstance().getRefreshRate() > Game.BASIC_REFRESH_RATE);
+    }
+
+    @Test
     public void testGetSecondsPerCoin() {
-        assertThat(instance.getSecondsPerCoin(), is(7.0));
+        assertEquals(instance.getSecondsPerCoin(), 7.0, 0);
     }
 
     @Test
     public void testEquals() {
-        assertThat(instance, is(instance));
+        assertEquals(instance, instance);
     }
 }

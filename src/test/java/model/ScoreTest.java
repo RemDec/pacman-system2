@@ -11,6 +11,7 @@ package model;
 import controller.MainController;
 import model.mapobject.Ghost;
 import model.mapobject.Pacman;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,10 +34,14 @@ public class ScoreTest {
     @Before
     public void setUp() {
         MainController.reset();
-
         pos = Game.getInstance().getMap().getPositionContainer().get(0, 0);
         pac = new Pacman(pos, Pacman.Sex.MALE);
         instance = pac.getScore();
+    }
+
+    @After
+    public void tearDown() {
+        MainController.reset();
     }
 
     @Test

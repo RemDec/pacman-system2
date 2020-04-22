@@ -36,7 +36,7 @@ public class Map {
     private static final int DFLT_MAP_WIDTH = 20;
     private static final int DFLT_MAP_HEIGHT = 10;
 
-    public static final StartingPosition startingPositions = new StartingPosition();
+    public static StartingPosition startingPositions = new StartingPosition();
 
     public static Map getInstance() {
         if (Map.instance == null) {
@@ -48,6 +48,11 @@ public class Map {
 
     public static void reset() {
         Map.instance = new Map();
+        /*
+        System.out.println("BFR RESET START POS PACMAN HAS " + startingPositions.PACMAN_MALE.toString());
+        startingPositions = new StartingPosition();
+        System.out.println("AFTER RESET START POS PACMAN HAS " + startingPositions.PACMAN_MALE.toString());
+         */
     }
 
     private Map() {
@@ -75,7 +80,7 @@ public class Map {
         MapPlacer.placeDynamicObjects();
         MapPlacer.placeStaticObjects(this.positionContainer);
         MapPlacer.spawnStaticTargets(this.positionContainer);
-
+        this.objectsPlaced = true;
         this.markAllForRendering();
     }
 
@@ -95,7 +100,6 @@ public class Map {
                 p.changeState(StaticTarget.State.AVAILABLE);
             }
         }
-
         this.markAllForRendering();
     }
 

@@ -13,6 +13,7 @@ import model.container.*;
 import model.event.RendererProcess;
 import model.event.Timer;
 import model.event.WorkerProcess;
+import model.exception.ObjectAlreadyInListException;
 import model.mapobject.Coin;
 import model.mapobject.Ghost;
 import model.mapobject.Pacman;
@@ -179,7 +180,14 @@ public class Game {
      */
     public void start() {
         if(pointContainer.size() == 0){
-            this.map.placeObjects();
+            String sOld = "ok";
+            try {
+                sOld = this.toString();
+                this.map.placeObjects();
+            }catch (ObjectAlreadyInListException e){
+                System.out.println(e.getMessage() + "\n" + sOld);
+                throw e;
+            }
         }
         this.eventHandlerManager.startExecution();
     }
@@ -191,23 +199,6 @@ public class Game {
      */
     public void pause() {
         this.eventHandlerManager.pauseExecution();
-    }
-
-    /**
-     * Compares two objects for equality.
-     *
-     * @param o The other object.
-     *
-     * @return Whether both objects are equal.
-     */
-    public boolean equals(Object o) {
-        if (o != null) {
-            if (o instanceof Game) {
-                // As it is a singleton, checking for reference equality is enough
-                return this == o;
-            }
-        }
-        return false;
     }
 
     /**
@@ -297,6 +288,34 @@ public class Game {
 
     public Timer getEventHandlerManager() {
         return eventHandlerManager;
+    }
+
+    /**
+     * Compares two objects for equality.
+     *
+     * @param o The other object.
+     *
+     * @return Whether both objects are equal.
+     */
+    public boolean equals(Object o) {
+        if (o != null) {
+            if (o instanceof Game) {
+                // As it is a singleton, checking for reference equality is enough
+                return this == o;
+            }
+        }
+        return false;
+    }
+
+    public String toString(){
+        String s = "Object GAME (lifes :" + this.playerLifes + " RefrRate :" + this.refreshRate + ")\n";
+        s += "\n + current level " + this.level;
+        s += "\n +- Pacmans : " + this.pacmanContainer;
+        s += "\n +- Ghosts : " + this.ghostContainer;
+        s += "\n +- Coins : " + this.coinContainer;
+        s += "\n +- Points : " + this.pointContainer;
+        s += "\n + current map\n" + this.map;
+        return s;
     }
 
     public enum Mode {

@@ -49,7 +49,7 @@ public class Level {
     }
 
     public void nextLevel() {
-        // Reduce the amount of time the user has to munch a ghost
+        // Reduce the amount of time the user has to munch a ghost once Coin eaten
         this.secondsPerCoin *= TIME_PER_COIN_FACTOR;
 
         this.level++;
