@@ -68,10 +68,70 @@ public class Map {
         }
     }
 
+    /**
+     * Place all objects in {@link Game}'s containers and mark them for rendering
+     */
+    public void placeObjects() {
+        MapPlacer.placeDynamicObjects();
+        MapPlacer.placeStaticObjects(this.positionContainer);
+        MapPlacer.spawnStaticTargets(this.positionContainer);
+
+        this.markAllForRendering();
+    }
+
+    /**
+     * Replace all dynamic objects to restart a new level, mark all as to render
+     */
+    public void onNextLevel() {
+        MapPlacer.replaceDynamicObjects();
+
+        for(Coin c : Game.getInstance().getCoinContainer()){
+            if(c.getState() == StaticTarget.State.EATEN) {
+                c.changeState(StaticTarget.State.AVAILABLE);
+            }
+        }
+        for(Point p : Game.getInstance().getPointContainer()){
+            if(p.getState() == StaticTarget.State.EATEN){
+                p.changeState(StaticTarget.State.AVAILABLE);
+            }
+        }
+
+        this.markAllForRendering();
+    }
+
+    public void onPacmanGotEaten() {
+        MapPlacer.replaceDynamicObjects();
+    }
+
+    public void markAllForRendering() {
+        positionsToRender.add(positionContainer);
+    }
+
+    public boolean isObjectsPlaced() {
+        return objectsPlaced;
+    }
+
     public PositionContainer getPositionContainer() {
         return this.positionContainer;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o != null) {
+            if (o instanceof Map) {
+                boolean samePosContainer = this.getPositionContainer().equals(((Map) o).getPositionContainer());
+                boolean samePlacedObjects = this.objectsPlaced == ((Map) o).isObjectsPlaced();
+                return samePosContainer && samePlacedObjects;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get the number of free adjacent positions from a given one, meaning whether it is movable to.
+     * @param pos The position to look for neighbouring free positions (so max. 4)
+     * @return The number of adjacent free positions
+     */
     public static int freeNeighbourFields(Position pos) {
         int count = 0;
         for (Direction d : Direction.values()) {
@@ -116,278 +176,6 @@ public class Map {
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o != null) {
-            if (o instanceof Map) {
-                boolean samePosContainer = this.getPositionContainer().equals(((Map) o).getPositionContainer());
-                boolean samePlacedObjects = this.objectsPlaced == ((Map) o).isObjectsPlaced();
-                return samePosContainer && samePlacedObjects;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Place all objects in {@link Game}'s containers and mark them for rendering
-     */
-    public void placeObjects() {
-        placeDynamicObjects();
-        placeStaticObjects();
-        spawnStaticTargets();
-
-        this.markAllForRendering();
-    }
-
-    private void placeDynamicObjects() {
-        Game g = Game.getInstance();
-
-        // --------- PACMANS ---------
-        LimitedObjectContainer<Pacman> pacC = g.getPacmanContainer();
-
-        pacC.add(new Pacman(startingPositions.PACMAN_MALE, Pacman.Sex.MALE));
-
-        if (Settings.getInstance().getGameMode() == Game.Mode.MULTIPLAYER) {
-            pacC.add(new Pacman(startingPositions.PACMAN_FEMALE, Pacman.Sex.FEMALE));
-        }
-
-        // --------- GHOSTS ---------
-        LimitedObjectContainer<Ghost> gC = g.getGhostContainer();
-        gC.add(new Ghost(startingPositions.GHOST_BLUE, Ghost.Colour.BLUE));
-        gC.add(new Ghost(startingPositions.GHOST_ORANGE, Ghost.Colour.ORANGE));
-        gC.add(new Ghost(startingPositions.GHOST_PINK, Ghost.Colour.PINK));
-        gC.add(new Ghost(startingPositions.GHOST_RED, Ghost.Colour.RED));
-    }
-
-    private void placeStaticObjects() {
-        // Origin is leftmost upper point
-        // --------- WALLS ---------
-
-        PositionContainer wallPositions = Containers.getPositionContainer(width, height);
-        // Top border
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(0, 0),
-                positionContainer.get(19, 0)
-        ));
-        // Left border
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(0, 1),
-                positionContainer.get(0, 9)
-        ));
-        // Bottom border
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(1, 9),
-                positionContainer.get(19, 9)
-        ));
-        // Right border
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(19, 1),
-                positionContainer.get(19, 8)
-        ));
-
-        // Left Side
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(2, 2),
-                positionContainer.get(2, 5)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(3, 2),
-                positionContainer.get(5, 2)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(5, 3),
-                positionContainer.get(5, 5)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(3, 5),
-                positionContainer.get(4, 5)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(2, 7),
-                positionContainer.get(5, 7)
-        ));
-
-        // Right Side
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(14, 2),
-                positionContainer.get(14, 5)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(15, 2),
-                positionContainer.get(17, 2)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(17, 3),
-                positionContainer.get(17, 5)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(15, 5),
-                positionContainer.get(16, 5)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(14, 7),
-                positionContainer.get(17, 7)
-        ));
-
-        // Center Top
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(7, 2),
-                positionContainer.get(7, 4)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(8, 4),
-                positionContainer.get(12, 4)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(12, 2),
-                positionContainer.get(12, 3)
-        ));
-
-        // Center Bottom
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(7, 6),
-                positionContainer.get(7, 8)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(8, 6),
-                positionContainer.get(12, 6)
-        ));
-        wallPositions.add(positionContainer.getRange(
-                positionContainer.get(12, 7),
-                positionContainer.get(12, 8)
-        ));
-
-        // USELESS ???
-        for (Position p : wallPositions) {
-            new Wall(p);
-        }
-
-        // ------- PLACEHOLDER -------
-
-        PositionContainer placeholderPositions = Containers.getPositionContainer(width, height);
-
-        // LEFT
-        placeholderPositions.add(
-                positionContainer.getRange(
-                        positionContainer.get(3, 3),
-                        positionContainer.get(3, 4)
-                )
-        );
-
-        placeholderPositions.add(
-                positionContainer.getRange(
-                        positionContainer.get(4, 3),
-                        positionContainer.get(4, 4)
-                )
-        );
-
-        // RIGHT
-
-        placeholderPositions.add(
-                positionContainer.getRange(
-                        positionContainer.get(15, 3),
-                        positionContainer.get(15, 4)
-                )
-        );
-
-        placeholderPositions.add(
-                positionContainer.getRange(
-                        positionContainer.get(16, 3),
-                        positionContainer.get(16, 4)
-                )
-        );
-
-        // TOP
-
-        placeholderPositions.add(
-                positionContainer.getRange(
-                        positionContainer.get(8, 2),
-                        positionContainer.get(11, 2)
-                )
-        );
-        placeholderPositions.add(
-                positionContainer.getRange(
-                        positionContainer.get(8, 3),
-                        positionContainer.get(11, 3)
-                )
-        );
-
-        // BOTTOM
-
-        placeholderPositions.add(
-                positionContainer.getRange(
-                        positionContainer.get(8, 7),
-                        positionContainer.get(11, 7)
-                )
-        );
-
-        placeholderPositions.add(
-                positionContainer.getRange(
-                        positionContainer.get(8, 8),
-                        positionContainer.get(11, 8)
-                )
-        );
-
-        // USELESS ???
-        for (Position p : placeholderPositions) {
-            new Placeholder(p);
-        }
-
-        Map.positionsToRender.add(wallPositions);
-        Map.positionsToRender.add(placeholderPositions);
-    }
-
-    public void spawnStaticTargets() {
-        // Origin is leftmost upper point
-        // --------- COINS ---------
-        LimitedObjectContainer<Coin> cC = Game.getInstance().getCoinContainer();
-        PointContainer pC = Game.getInstance().getPointContainer();
-
-        cC.removeAll();
-        pC.removeAll();
-
-        positionsToRender.add((positionContainer.get(1, 1)));
-        positionsToRender.add((positionContainer.get(1, 8)));
-        positionsToRender.add((positionContainer.get(18, 1)));
-        positionsToRender.add((positionContainer.get(18, 8)));
-
-        cC.add(new Coin(positionContainer.get(1, 1)));
-        cC.add(new Coin(positionContainer.get(1, 8)));
-        cC.add(new Coin(positionContainer.get(18, 1)));
-        cC.add(new Coin(positionContainer.get(18, 8)));
-
-        // --------- POINTS ---------
-        for (Position p : positionContainer) {
-            if (p.getOnPosition().size() == 0) {
-                pC.add(new Point(p));
-                positionsToRender.add(p);
-            }
-        }
-    }
-
-    /**
-     * Replace all dynamic objects to restart a new level, mark all as to render
-     */
-    public void onNextLevel() {
-        this.replaceDynamicObjects();
-
-        for(Coin c : Game.getInstance().getCoinContainer()){
-            if(c.getState() == StaticTarget.State.EATEN) {
-                c.changeState(StaticTarget.State.AVAILABLE);
-            }
-        }
-        for(Point p : Game.getInstance().getPointContainer()){
-            if(p.getState() == StaticTarget.State.EATEN){
-                p.changeState(StaticTarget.State.AVAILABLE);
-            }
-        }
-
-        this.markAllForRendering();
-    }
-
-    public void onPacmanGotEaten() {
-        this.replaceDynamicObjects();
-    }
 
     public static class StartingPosition {
 
@@ -401,44 +189,6 @@ public class Map {
 
     }
 
-    private void replaceDynamicObjects() {
-        LimitedObjectContainer<Ghost> gC = Game.getInstance().getGhostContainer();
-        for(Ghost g : gC) {
-            switch(g.getColour()) {
-                case RED: g.move(startingPositions.GHOST_RED);
-                    break;
-                case PINK: g.move(startingPositions.GHOST_PINK);
-                    break;
-                case BLUE: g.move(startingPositions.GHOST_BLUE);
-                    break;
-                case ORANGE: g.move(startingPositions.GHOST_ORANGE);
-                    break;
-                default:
-                    throw new RuntimeException("Bla");
-            }
-        }
-
-        LimitedObjectContainer<Pacman> pC = Game.getInstance().getPacmanContainer();
-        for(Pacman p : pC) {
-            switch(p.getSex()) {
-                case MALE:
-                    p.move(startingPositions.PACMAN_MALE);
-                    break;
-                case FEMALE:
-                    p.move(startingPositions.PACMAN_FEMALE);
-                    break;
-            }
-            positionsToRender.add(p.getPosition());
-        }
-    }
-
-    public boolean isObjectsPlaced() {
-        return objectsPlaced;
-    }
-
-    public void markAllForRendering() {
-        positionsToRender.add(positionContainer);
-    }
 
     public enum Direction {
 
@@ -469,7 +219,6 @@ public class Map {
                 return guessedDirection;
             }
         }
-
     }
 
 }
