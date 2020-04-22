@@ -8,7 +8,10 @@
 
 package model;
 
-import model.container.MapObjectContainer;
+import model.container.Containers;
+import model.container.ObjectContainer;
+import model.mapobject.MapObject;
+import model.mapobject.Wall;
 
 /**
  * The position class represents a point on the map (x, y). IT SHOULD NOT BE CONSTRUCTED OUTSIDE THE {@link Map} CLASS.
@@ -23,12 +26,12 @@ public class Position {
 
     private final int y;
 
-    private MapObjectContainer onPosition;
+    private ObjectContainer<MapObject> onPosition;
 
     public Position(int x, int y) {
         this.x = x;
         this.y = y;
-        this.onPosition = new MapObjectContainer();
+        this.onPosition = Containers.getMapObjectsContainer();
     }
 
     public int getX() {
@@ -43,7 +46,7 @@ public class Position {
      * Get MapObjects located at this position
      * @return Container of {@link MapObject}s located at this position
      */
-    public MapObjectContainer getOnPosition() {
+    public ObjectContainer<MapObject> getOnPosition() {
         return onPosition;
     }
 

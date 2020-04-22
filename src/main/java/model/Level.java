@@ -8,6 +8,10 @@
 
 package model;
 
+import model.mapobject.DynamicTarget;
+import model.mapobject.Ghost;
+import model.mapobject.Pacman;
+
 /**
  * A Level coupled with a Game instance determines the number of the current level and the difficulty parameters
  * associated with. As the level increases, difficulty does it as well through a modification of these parameters.

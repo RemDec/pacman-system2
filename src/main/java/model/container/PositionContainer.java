@@ -7,14 +7,14 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class IndexedContainer implements Container<Position> {
+public class PositionContainer implements Container<Position> {
 
     private ConcurrentHashMap<String, Position> positions;
 
     private final int width;
     private final int height;
 
-    public IndexedContainer(int width, int height){
+    public PositionContainer(int width, int height){
         this.width = width;
         this.height = height;
         this.positions = new ConcurrentHashMap<>(width * height);

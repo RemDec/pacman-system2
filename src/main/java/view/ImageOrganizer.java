@@ -8,7 +8,7 @@
 
 package view;
 
-import model.*;
+import model.mapobject.*;
 
 import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;

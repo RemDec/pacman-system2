@@ -8,9 +8,14 @@
 
 package model;
 
-import model.Ghost.Colour;
+import controller.MainController;
+import model.mapobject.Coin;
+import model.mapobject.Ghost;
+import model.mapobject.Ghost.Colour;
 import model.Map.Direction;
-import model.container.MapObjectContainer;
+import model.container.ObjectContainer;
+import model.mapobject.MapObject;
+import model.mapobject.Pacman;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +30,7 @@ import static org.junit.Assert.*;
  */
 public class MapObjectContainerTest {
 
-    private MapObjectContainer instance;
+    private ObjectContainer<MapObject> instance;
     private Position pos;
     private Position otherPos;
     private Pacman pac;
@@ -33,11 +38,12 @@ public class MapObjectContainerTest {
 
     @Before
     public void setUp() {
+        MainController.reset();
         this.pos = Map.getInstance().getPositionContainer().get(1, 1);
         this.otherPos = Map.getPositionByDirectionIfMovableTo(pos, Direction.EAST);
         this.pac = new Pacman(pos, Pacman.Sex.MALE);
         this.ghost = new Ghost(pos, Colour.PINK);
-        this.instance = pos.getOnPosition();
+        this.instance = pos.getOnPosition();  // Container of MapObjects at this pos (the pacman and the ghost for now).
     }
 
 
@@ -52,6 +58,11 @@ public class MapObjectContainerTest {
     }
 
     @Test
+    public void testSize() {
+        assertEquals(2, instance.size()); // Pacman and a ghost
+    }
+
+    @Test
     public void testRemove() {
         pac.move(otherPos);
         assertFalse(instance.contains(pac));
@@ -59,6 +70,14 @@ public class MapObjectContainerTest {
 
     @Test
     public void testAdd() {
+        new Ghost(pos, Colour.BLUE);
+        new Ghost(pos, Colour.RED);
+        new Coin(pos);
+        assertEquals(5, instance.size());
+    }
+
+    @Test(expected = model.exception.ObjectAlreadyInListException.class)
+    public void testAddAlreadyPresent() {
         new Pacman(pos, Pacman.Sex.MALE);
     }
 

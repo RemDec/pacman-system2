@@ -9,8 +9,10 @@
 package model;
 
 import controller.MainController;
-import model.Ghost.Colour;
-import model.container.GhostContainerOld;
+import model.mapobject.Ghost;
+import model.mapobject.Ghost.Colour;
+import model.container.Containers;
+import model.container.LimitedObjectContainer;
 import model.exception.ObjectAlreadyInListException;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +31,7 @@ import static org.junit.Assert.*;
  */
 public class GhostContainerTest {
 
-    private GhostContainerOld instance;
+    private LimitedObjectContainer<Ghost> instance;
 
     private Ghost g1;
     private Ghost g2;
@@ -40,7 +42,7 @@ public class GhostContainerTest {
     @Before
     public void setUp() {
         MainController.reset();
-        instance = new GhostContainerOld();
+        instance = Containers.getGhostContainer();
 
         pos1 = Game.getInstance().getMap().getPositionContainer().get(0, 0);
         pos2 = Game.getInstance().getMap().getPositionContainer().get(0, 1);
@@ -74,7 +76,7 @@ public class GhostContainerTest {
             System.out.println(gg);
         }
 
-        Vector<Ghost> retrieved = instance.get(g1.getPosition());
+        Vector<Ghost> retrieved = instance.getAll(g1.getPosition());
 
         assertTrue(retrieved.contains(g1));
         assertEquals(1, retrieved.size());
@@ -121,6 +123,6 @@ public class GhostContainerTest {
 
     @Test
     public void testEquals() {
-        assertEquals(instance, new GhostContainerOld());
+        assertEquals(instance, Containers.getGhostContainer());
     }
 }

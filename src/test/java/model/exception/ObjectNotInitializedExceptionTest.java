@@ -17,7 +17,7 @@ import org.junit.Test;
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
  */
-@SuppressWarnings("unused")
+
 public class ObjectNotInitializedExceptionTest {
 
     @Test(expected = ObjectNotInitializedException.class)

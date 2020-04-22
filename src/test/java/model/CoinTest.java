@@ -9,6 +9,8 @@
 package model;
 
 import controller.MainController;
+import model.mapobject.Coin;
+import model.mapobject.StaticTarget;
 import org.junit.Before;
 import org.junit.Test;
 

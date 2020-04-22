@@ -1,11 +1,12 @@
 package model.container;
 
+import model.mapobject.MapObject;
 import model.exception.ListFullException;
 import model.exception.ObjectAlreadyInListException;
 
 import java.util.Vector;
 
-public class LimitedObjectContainer<E> extends ObjectContainer<E> {
+public class LimitedObjectContainer<E extends MapObject> extends ObjectContainer<E> {
 
     public final int max;
 

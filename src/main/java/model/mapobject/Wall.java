@@ -6,7 +6,9 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.mapobject;
+
+import model.Position;
 
 /**
  * A wall is limiting the area a {@link Target} can move to.

@@ -6,7 +6,9 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.mapobject;
+
+import model.*;
 
 /**
  * Pacman is playable as male/female and both can be played in the same time in MULTIPLAYER mode

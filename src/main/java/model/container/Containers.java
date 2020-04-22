@@ -1,15 +1,15 @@
 package model.container;
 
-import model.Coin;
-import model.MapObject;
-import model.Pacman;
-import model.Point;
+import model.mapobject.Coin;
+import model.mapobject.Ghost;
+import model.mapobject.MapObject;
+import model.mapobject.Pacman;
 
 
 public class Containers {
 
-    public static IndexedContainer getPositionContainer(int width, int height){
-        return new IndexedContainer(width, height);
+    public static PositionContainer getPositionContainer(int width, int height){
+        return new PositionContainer(width, height);
     }
 
     public static ObjectContainer<MapObject> getMapObjectsContainer(){
@@ -28,8 +28,8 @@ public class Containers {
         return new LimitedObjectContainer<Pacman>(2);
     }
 
-    public static GhostContainer getGhostContainer(){
-        return new GhostContainer(4);
+    public static LimitedObjectContainer<Ghost> getGhostContainer(){
+        return new LimitedObjectContainer<Ghost>(4);
     }
 
 }

@@ -6,7 +6,10 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.mapobject;
+
+import model.Position;
+import model.Scorable;
 
 /**
  * A {@link Point} can be eaten by {@link Pacman} to get a fixed amount of score. It is a {@link StaticTarget} placed

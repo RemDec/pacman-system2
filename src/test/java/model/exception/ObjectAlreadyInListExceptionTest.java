@@ -8,9 +8,10 @@
 
 package model.exception;
 
-import model.Pacman;
-import model.container.PacmanContainer;
+import model.mapobject.Pacman;
 import model.Position;
+import model.container.Containers;
+import model.container.LimitedObjectContainer;
 import org.junit.Test;
 
 /**
@@ -25,7 +26,7 @@ public class ObjectAlreadyInListExceptionTest {
     @Test(expected = ObjectAlreadyInListException.class)
     public void testConstruct() {
         Pacman p = new Pacman(new Position(0, 0), Pacman.Sex.MALE);
-        PacmanContainer pC = new PacmanContainer();
+        LimitedObjectContainer<Pacman> pC = Containers.getPacmanContainer();
 
         // Add the same object two times to cause the expected exception to be thrown.
         pC.add(p);

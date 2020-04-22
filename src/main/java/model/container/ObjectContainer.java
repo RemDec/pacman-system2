@@ -1,11 +1,13 @@
 package model.container;
 
+import model.mapobject.MapObject;
+import model.Position;
 import model.exception.ObjectAlreadyInListException;
 
 import java.util.Iterator;
 import java.util.Vector;
 
-public class ObjectContainer<E> implements Container<E> {
+public class ObjectContainer<E extends MapObject> implements Container<E> {
 
     protected Vector<E> elmts;
 
@@ -18,10 +20,43 @@ public class ObjectContainer<E> implements Container<E> {
         return this.elmts.get(i);
     }
 
+    /**
+     * Returns a {@link MapObject} element on the position among contained ones (first matching).
+     *
+     * @param pos The position.
+     *
+     * @return The {@link MapObject} on the {@link Position} pos or none if no one matches.
+     */
+    public E get(Position pos) {
+        for (E mapObject : this.elmts) {
+            if (mapObject.isOnPosition(pos)) {
+                return mapObject;
+            }
+        }
+        return null;
+    }
+    
     @Override
     @SuppressWarnings("unchecked")
     public Vector<E> getAll() {
         return (Vector<E>) this.elmts.clone();
+    }
+
+    /**
+     * Returns {@link MapObject}s elements on the position among contained ones (all matching).
+     *
+     * @param pos The position.
+     *
+     * @return A
+     */
+    public Vector<E> getAll(Position pos) {
+        Vector<E> onPosition = new Vector<>();
+        for (E mapObject : this.elmts) {
+            if (mapObject.isOnPosition(pos)) {
+                onPosition.add(mapObject);
+            }
+        }
+        return onPosition;
     }
 
     @Override

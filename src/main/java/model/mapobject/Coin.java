@@ -6,7 +6,11 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.mapobject;
+
+import model.Game;
+import model.Position;
+import model.Scorable;
 
 /**
  * A coin represents the object our Pacman has to eat in order to be able to hunt the ghosts.

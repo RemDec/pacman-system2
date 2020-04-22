@@ -6,7 +6,10 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.mapobject;
+
+import model.Position;
+import model.Scorable;
 
 /**
  * Ghosts are the little beasts {@link Pacman} can hunt after eating a {@link Coin}.
@@ -131,7 +134,7 @@ public class Ghost extends DynamicTarget implements Scorable {
 
     /**
      * @return The number of remaining seconds before ghost stops waiting
-     * or -1. if he's in Hunter {@link model.DynamicTarget.State#HUNTER} State
+     * or -1. if he's in Hunter {@link DynamicTarget.State#HUNTER} State
      */
     public double getWaitingSeconds() {
         return waitingSeconds;

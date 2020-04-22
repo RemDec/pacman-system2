@@ -9,9 +9,10 @@
 package model;
 
 import model.container.*;
+import model.mapobject.*;
 
 /**
- * A Map holds all available {@link Position}s in the stage, every {@link Position} references a {@link MapObjectContainer}
+ * A Map holds all available {@link Position}s in the stage, every {@link Position} references a {@link ObjectContainer<MapObject>}
  * containing all {@link MapObject} placed on it. Semantically, {@link Wall}s are {@link MapObject} where no
  *
  * @author Philipp Winter
@@ -20,7 +21,7 @@ import model.container.*;
  */
 public class Map {
 
-    public static final PositionContainer positionsToRender = new PositionContainer(Map.getInstance().width, Map.getInstance().height);
+    public static final PositionContainer positionsToRender = Containers.getPositionContainer(Map.getInstance().width, Map.getInstance().height);
 
     private static Map instance;
 
@@ -57,7 +58,7 @@ public class Map {
         this.width = width;
         this.height = height;
 
-        this.positionContainer = new PositionContainer(width, height);
+        this.positionContainer = Containers.getPositionContainer(width, height);
 
         // Create all position instances for this map
         for (int actX = 0; actX < width; actX++) {
@@ -142,7 +143,7 @@ public class Map {
         Game g = Game.getInstance();
 
         // --------- PACMANS ---------
-        PacmanContainer pacC = g.getPacmanContainer();
+        LimitedObjectContainer<Pacman> pacC = g.getPacmanContainer();
 
         pacC.add(new Pacman(startingPositions.PACMAN_MALE, Pacman.Sex.MALE));
 
@@ -151,7 +152,7 @@ public class Map {
         }
 
         // --------- GHOSTS ---------
-        GhostContainerOld gC = g.getGhostContainer();
+        LimitedObjectContainer<Ghost> gC = g.getGhostContainer();
         gC.add(new Ghost(startingPositions.GHOST_BLUE, Ghost.Colour.BLUE));
         gC.add(new Ghost(startingPositions.GHOST_ORANGE, Ghost.Colour.ORANGE));
         gC.add(new Ghost(startingPositions.GHOST_PINK, Ghost.Colour.PINK));
@@ -162,7 +163,7 @@ public class Map {
         // Origin is leftmost upper point
         // --------- WALLS ---------
 
-        PositionContainer wallPositions = new PositionContainer(width, height);
+        PositionContainer wallPositions = Containers.getPositionContainer(width, height);
         // Top border
         wallPositions.add(positionContainer.getRange(
                 positionContainer.get(0, 0),
@@ -263,7 +264,7 @@ public class Map {
 
         // ------- PLACEHOLDER -------
 
-        PositionContainer placeholderPositions = new PositionContainer(width, height);
+        PositionContainer placeholderPositions = Containers.getPositionContainer(width, height);
 
         // LEFT
         placeholderPositions.add(
@@ -339,8 +340,8 @@ public class Map {
     public void spawnStaticTargets() {
         // Origin is leftmost upper point
         // --------- COINS ---------
-        CoinContainer cC = Game.getInstance().getCoinContainer();
-        PointContainerOld pC = Game.getInstance().getPointContainer();
+        LimitedObjectContainer<Coin> cC = Game.getInstance().getCoinContainer();
+        PointContainer pC = Game.getInstance().getPointContainer();
 
         cC.removeAll();
         pC.removeAll();
@@ -401,7 +402,7 @@ public class Map {
     }
 
     private void replaceDynamicObjects() {
-        GhostContainerOld gC = Game.getInstance().getGhostContainer();
+        LimitedObjectContainer<Ghost> gC = Game.getInstance().getGhostContainer();
         for(Ghost g : gC) {
             switch(g.getColour()) {
                 case RED: g.move(startingPositions.GHOST_RED);
@@ -417,7 +418,7 @@ public class Map {
             }
         }
 
-        PacmanContainer pC = Game.getInstance().getPacmanContainer();
+        LimitedObjectContainer<Pacman> pC = Game.getInstance().getPacmanContainer();
         for(Pacman p : pC) {
             switch(p.getSex()) {
                 case MALE:

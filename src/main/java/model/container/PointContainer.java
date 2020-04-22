@@ -1,6 +1,6 @@
 package model.container;
 
-import model.Point;
+import model.mapobject.Point;
 
 public class PointContainer extends ObjectContainer<Point> {
 

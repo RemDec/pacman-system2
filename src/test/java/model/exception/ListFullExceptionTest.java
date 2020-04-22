@@ -10,8 +10,9 @@ package model.exception;
 
 import controller.MainController;
 import model.Game;
-import model.Pacman;
-import model.container.PacmanContainer;
+import model.mapobject.Pacman;
+import model.container.Containers;
+import model.container.LimitedObjectContainer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -23,14 +24,14 @@ import static org.junit.Assert.assertEquals;
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
  */
-@SuppressWarnings("unused")
+
 public class ListFullExceptionTest {
 
     @Test(expected = model.exception.ListFullException.class)
     public void testConstruct() {
         MainController.reset();
 
-        PacmanContainer container = new PacmanContainer();
+        LimitedObjectContainer<Pacman> container = Containers.getPacmanContainer();
 
         assertEquals(2, container.max);
         container.add(new Pacman(Game.getInstance().getMap().getPositionContainer().get(0, 0), Pacman.Sex.MALE));

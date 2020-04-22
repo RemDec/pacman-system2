@@ -12,6 +12,7 @@ import controller.MainController;
 import model.*;
 import model.Map.Direction;
 import model.container.*;
+import model.mapobject.*;
 
 /**
  * @author Philipp Winter
@@ -20,21 +21,23 @@ import model.container.*;
  */
 public class WorkerProcess implements Process {
 
-    private PointContainerOld points;
+    private PointContainer points;
 
-    private CoinContainer coins;
+    private LimitedObjectContainer<Coin> coins;
 
-    private GhostContainerOld ghosts;
+    private LimitedObjectContainer<Ghost> ghosts;
 
-    private PacmanContainer pacmans;
+    private LimitedObjectContainer<Pacman> pacmans;
 
     private Map map;
+
+    private final int TIME_SEC_FACTOR = 1000;
 
     private boolean checkCoinSeconds = false;
 
     @Override
     public long getTiming() {
-        return (long) (1000 / Game.getInstance().getRefreshRate());
+        return (long) (TIME_SEC_FACTOR / Game.getInstance().getRefreshRate());
     }
 
     @Override
@@ -83,7 +86,7 @@ public class WorkerProcess implements Process {
         boolean performFurtherActions;
 
         // Check whether level is completed
-        PointContainerOld pC = Game.getInstance().getPointContainer();
+        PointContainer pC = Game.getInstance().getPointContainer();
         int pointsEaten = 0;
 
         for (Point p : pC) {
@@ -104,7 +107,7 @@ public class WorkerProcess implements Process {
     }
 
     private void handlePacmans() {
-        PacmanContainer pacmans = Game.getInstance().getPacmanContainer();
+        LimitedObjectContainer<Pacman> pacmans = Game.getInstance().getPacmanContainer();
 
         for (Pacman p : pacmans) {
             this.handlePacman(p);
@@ -158,7 +161,7 @@ public class WorkerProcess implements Process {
     }
 
     private void performCollision(Pacman pac) {
-        MapObjectContainer mapObjectsOnPos = pac.getPosition().getOnPosition();
+        ObjectContainer<MapObject> mapObjectsOnPos = pac.getPosition().getOnPosition();
 
         for (MapObject mO : mapObjectsOnPos.getAll()) {
             if (mO instanceof StaticTarget) {

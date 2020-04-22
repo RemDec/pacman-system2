@@ -9,6 +9,8 @@
 package model;
 
 import controller.MainController;
+import model.mapobject.Ghost;
+import model.mapobject.Pacman;
 import org.junit.Before;
 import org.junit.Test;
 

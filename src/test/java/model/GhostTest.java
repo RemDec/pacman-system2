@@ -9,11 +9,14 @@
 package model;
 
 import controller.MainController;
+import model.mapobject.DynamicTarget;
+import model.mapobject.Ghost;
+import model.mapobject.Pacman;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static model.Ghost.Colour;
+import static model.mapobject.Ghost.Colour;
 import static org.junit.Assert.*;
 
 /**

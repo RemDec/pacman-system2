@@ -6,7 +6,10 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.mapobject;
+
+import model.Map;
+import model.Position;
 
 /**
  * An object on the {@link Map} necessarily has a {@link Position} on it and a visibility status.

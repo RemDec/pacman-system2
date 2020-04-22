@@ -6,17 +6,19 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.mapobject;
+
+import model.Position;
 
 /**
- * A {@link Target} is a {@link MapObject} that can be eaten by another.
+ * Placeholder concrete class for a MapObject, linked to a specific {@link Position}.
  *
  * @author Philipp Winter
- * @author Jonas Heidecke
- * @author Niklas Kaddatz
  */
-public abstract class Target extends MapObject {
+public class Placeholder extends MapObject {
 
-    public abstract void gotEaten();
+    public Placeholder(Position pos) {
+        this.setPosition(pos);
+    }
 
 }

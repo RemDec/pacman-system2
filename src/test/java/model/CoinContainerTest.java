@@ -9,7 +9,9 @@
 package model;
 
 import controller.MainController;
-import model.container.CoinContainer;
+import model.container.Containers;
+import model.container.LimitedObjectContainer;
+import model.mapobject.Coin;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +29,7 @@ import static org.junit.Assert.*;
  */
 public class CoinContainerTest {
 
-    private CoinContainer instance;
+    private LimitedObjectContainer<Coin> instance;
     private Position pos;
     private Position pos2;
 
@@ -35,7 +37,7 @@ public class CoinContainerTest {
     public void setUp() {
         MainController.reset();
 
-        this.instance = new CoinContainer();
+        this.instance = Containers.getCoinContainer();
         this.pos = Game.getInstance().getMap().getPositionContainer().get(1, 2);
         this.pos2 = Game.getInstance().getMap().getPositionContainer().get(2, 2);
     }
@@ -58,7 +60,7 @@ public class CoinContainerTest {
 
         instance.add(c);
         Coin retrievedCoin = instance.get(0);
-        assertTrue(retrievedCoin != null);
+        assertNotNull(retrievedCoin);
         assertEquals(pos, retrievedCoin.getPosition());
     }
 
@@ -115,6 +117,6 @@ public class CoinContainerTest {
 
     @Test
     public void testEquals() {
-        assertEquals(new CoinContainer(), new CoinContainer());
+        assertEquals(Containers.getCoinContainer(), Containers.getCoinContainer());
     }
 }

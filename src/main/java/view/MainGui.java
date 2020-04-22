@@ -10,6 +10,8 @@ package view;
 
 import controller.MainController;
 import model.*;
+import model.mapobject.MapObject;
+import model.mapobject.Pacman;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

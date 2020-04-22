@@ -9,13 +9,14 @@
 package model;
 
 import controller.MainController;
-import model.container.CoinContainer;
-import model.container.GhostContainerOld;
-import model.container.PacmanContainer;
-import model.container.PointContainerOld;
+import model.container.*;
 import model.event.RendererProcess;
 import model.event.Timer;
 import model.event.WorkerProcess;
+import model.mapobject.Coin;
+import model.mapobject.Ghost;
+import model.mapobject.Pacman;
+import model.mapobject.Point;
 
 /**
  * The Game class is kind of a <i>master</i>-class, organizing all other business logic objects.
@@ -45,22 +46,22 @@ public class Game {
     /**
      * A container of all ghosts.
      */
-    private GhostContainerOld ghostContainer;
+    private LimitedObjectContainer<Ghost> ghostContainer;
 
     /**
      * A container of all coins.
      */
-    private CoinContainer coinContainer;
+    private LimitedObjectContainer<Coin> coinContainer;
 
     /**
      * A container of all points.
      */
-    private PointContainerOld pointContainer;
+    private PointContainer pointContainer;
 
     /**
      * A container of all pacmans.
      */
-    private PacmanContainer pacmanContainer;
+    private LimitedObjectContainer<Pacman> pacmanContainer;
 
     /**
      * The event handler reacts on events happening in the game.
@@ -127,10 +128,10 @@ public class Game {
 
         this.map = Map.getInstance();
 
-        this.ghostContainer = new GhostContainerOld();
-        this.coinContainer = new CoinContainer();
-        this.pointContainer = new PointContainerOld();
-        this.pacmanContainer = new PacmanContainer();
+        this.ghostContainer = Containers.getGhostContainer();
+        this.coinContainer = Containers.getCoinContainer();
+        this.pointContainer = Containers.getPointContainer();
+        this.pacmanContainer = Containers.getPacmanContainer();
         this.level = Level.getInstance();
 
         this.eventHandlerManager = new Timer();
@@ -245,7 +246,7 @@ public class Game {
      *
      * @return The container used to manage all instance of {@link Ghost}'s in the object tree.
      */
-    public GhostContainerOld getGhostContainer() {
+    public LimitedObjectContainer<Ghost> getGhostContainer() {
         return ghostContainer;
     }
 
@@ -254,7 +255,7 @@ public class Game {
      *
      * @return The container used to manage all instance of {@link Coin}'s in the object tree.
      */
-    public CoinContainer getCoinContainer() {
+    public LimitedObjectContainer<Coin> getCoinContainer() {
         return coinContainer;
     }
 
@@ -263,7 +264,7 @@ public class Game {
      *
      * @return The container used to manage all instance of {@link Point}'s in the object tree.
      */
-    public PointContainerOld getPointContainer() {
+    public PointContainer getPointContainer() {
         return pointContainer;
     }
 
@@ -272,7 +273,7 @@ public class Game {
      *
      * @return The container used to manage all instance of {@link Pacman}'s in the object tree.
      */
-    public PacmanContainer getPacmanContainer() {
+    public LimitedObjectContainer<Pacman> getPacmanContainer() {
         return pacmanContainer;
     }
 

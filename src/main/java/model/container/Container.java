@@ -38,6 +38,15 @@ public interface Container<E> extends Iterable<E> {
      * @throws model.exception.ObjectAlreadyInListException When the object <i>el</i> is already in the list.
      * @throws model.exception.ListFullException            When the list is already filled with the maximum amount of elements.
      */
+
+    /**
+     * Returns an Vector instance with all elements.
+     *
+     * @return A clone of the internal used ArrayList, so it can be mutated securely.
+     * @see java.util.Vector#clone()
+     */
+    Vector<E> getAll();
+
     void add(E el);
 
     /**
@@ -46,14 +55,6 @@ public interface Container<E> extends Iterable<E> {
      * @param container The other container.
      */
     void add(Container<E> container);
-
-    /**
-     * Returns an ArrayList instance with all elements.
-     *
-     * @return A clone of the internal used ArrayList, so it can be mutated securely.
-     * @see java.util.Vector#clone()
-     */
-    Vector<E> getAll();
 
     /**
      * Removes an element from the container.

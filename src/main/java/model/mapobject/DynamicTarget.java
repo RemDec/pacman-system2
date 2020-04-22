@@ -6,9 +6,11 @@
  * Copyright (c) 2013 Philipp Winter, Jonas Heidecke & Niklas Kaddatz         *
  ******************************************************************************/
 
-package model;
+package model.mapobject;
 
+import model.Map;
 import model.Map.Direction;
+import model.Position;
 
 /**
  * The parent class of all MapObjects that can move by themselves.

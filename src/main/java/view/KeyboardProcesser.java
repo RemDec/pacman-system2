@@ -10,7 +10,8 @@ package view;
 
 import controller.MainController;
 import model.*;
-import model.container.PacmanContainer;
+import model.container.LimitedObjectContainer;
+import model.mapobject.Pacman;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -44,7 +45,7 @@ public class KeyboardProcesser implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (MainController.getInstance().isGameActive()) {
-            PacmanContainer pacmanContainer = Game.getInstance().getPacmanContainer();
+            LimitedObjectContainer<Pacman> pacmanContainer = Game.getInstance().getPacmanContainer();
             Pacman mrPacman = null;
             Pacman mrsPacman = null;
             for (Pacman p : pacmanContainer) {
