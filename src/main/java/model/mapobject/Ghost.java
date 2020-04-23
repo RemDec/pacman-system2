@@ -119,7 +119,7 @@ public class Ghost extends DynamicTarget implements Scorable {
      */
     public void changeState(State state) {
         if (state == State.WAITING) { // TODO : No treatment of case state becomes HUNTED, this is where speed should be lowered also, not here...
-            this.speed *= 1. / SPEED_FACTOR;
+            //this.speed *= 1. / SPEED_FACTOR;
             if(this.waitingSeconds == -1.){
                 this.waitingSeconds = WAIT_SECONDS;
             } else {
@@ -128,6 +128,8 @@ public class Ghost extends DynamicTarget implements Scorable {
         } else if (state == State.HUNTER) {
             this.speed *= SPEED_FACTOR;
             this.waitingSeconds = -1.;
+        } else if (state == State.HUNTED) {
+            this.speed *= 1. / SPEED_FACTOR;
         } else if (state == State.MUNCHED){
             // Has been eaten, increase the number of ghosts caught in a row by pacman for the current Coin time
             Coin.nbr_ghosts_eaten_in_a_row++;

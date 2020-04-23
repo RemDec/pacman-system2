@@ -45,7 +45,7 @@ public abstract class DynamicTarget extends Target {
             }
         }
         if(!placeholderOnPosition || this.isHeadingTo(Map.Direction.NORTH)){
-            // if Position is free for moving to or ???
+            // TODO : Case ghost to make spawn where there is no placeholder, heading to NORTH ???
             this.setPosition(pos);
         }
     }

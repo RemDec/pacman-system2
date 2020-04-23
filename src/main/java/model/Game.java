@@ -11,7 +11,8 @@ package model;
 import controller.MainController;
 import model.container.*;
 import model.event.RendererProcess;
-import model.event.Timer;
+import model.event.Scheduler;
+import model.event.TimerProcess;
 import model.event.WorkerProcess;
 import model.exception.ObjectAlreadyInListException;
 import model.mapobject.Coin;
@@ -45,6 +46,11 @@ public class Game {
     private static boolean initialized;
 
     /**
+     * A timer used in game
+     */
+    private Timer timer;
+
+    /**
      * A container of all ghosts.
      */
     private LimitedObjectContainer<Ghost> ghostContainer;
@@ -67,7 +73,7 @@ public class Game {
     /**
      * The event handler reacts on events happening in the game.
      */
-    private Timer eventHandlerManager;
+    private Scheduler eventHandlerManager;
 
     /**
      * The map is like a two dimensional array of positions, containing all map objects
@@ -123,9 +129,12 @@ public class Game {
      * The internal initialization method.
      */
     private synchronized void initializeInternal() {
+        Timer.reset();
         Map.reset();
         Coin.resetCoinsState();
         Level.reset();
+
+        this.timer = Timer.getInstance();
 
         this.map = Map.getInstance();
 
@@ -135,9 +144,10 @@ public class Game {
         this.pacmanContainer = Containers.getPacmanContainer();
         this.level = Level.getInstance();
 
-        this.eventHandlerManager = new Timer();
+        this.eventHandlerManager = new Scheduler();
         this.eventHandlerManager.register(new WorkerProcess());
         this.eventHandlerManager.register(new RendererProcess());
+        this.eventHandlerManager.register(new TimerProcess());
 
     }
 
@@ -176,28 +186,23 @@ public class Game {
     /**
      * Starts the game, in detail it causes all {@link model.event.WorkerProcess}'s to start working.
      *
-     * @see model.event.Timer#startExecution()
+     * @see Scheduler#startExecution()
      */
     public void start() {
         if(pointContainer.size() == 0){
-            String sOld = "ok";
-            try {
-                sOld = this.toString();
-                this.map.placeObjects();
-            }catch (ObjectAlreadyInListException e){
-                System.out.println(e.getMessage() + "\n" + sOld);
-                throw e;
-            }
+            this.map.placeObjects();
         }
+        this.timer.resume_increment();
         this.eventHandlerManager.startExecution();
     }
 
     /**
      * Pauses the game, by stopping/pausing all {@link model.event.WorkerProcess}'s.
      *
-     * @see model.event.Timer#pauseExecution()
+     * @see Scheduler#pauseExecution()
      */
     public void pause() {
+        this.timer.pause_increment();
         this.eventHandlerManager.pauseExecution();
     }
 
@@ -221,6 +226,10 @@ public class Game {
 
     public boolean isGameOver() {
         return this.isOver;
+    }
+
+    public Timer getTimer(){
+        return timer;
     }
 
     /**
@@ -286,7 +295,7 @@ public class Game {
         return this.refreshRate;
     }
 
-    public Timer getEventHandlerManager() {
+    public Scheduler getEventHandlerManager() {
         return eventHandlerManager;
     }
 

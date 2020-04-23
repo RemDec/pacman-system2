@@ -267,8 +267,10 @@ public class MainGui extends JFrame {
 
             int i = 0;
 
+            renderer.drawString(g, "Time " + Game.getInstance().getTimer(), ++i);
+
             for (Pacman p : Game.getInstance().getPacmanContainer()) {
-                renderer.drawString(g, "Highscore of " + p.getName() + ":\t" + p.getScore().getScore(), ++i);
+                renderer.drawString(g, "Score of " + p.getName() + ":\t" + p.getScore().getScore(), ++i);
             }
 
             renderer.drawString(g, "Player Lifes: " + Game.getInstance().getPlayerLifes(), ++i);
