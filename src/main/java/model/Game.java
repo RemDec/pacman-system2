@@ -124,7 +124,7 @@ public class Game {
      */
     private synchronized void initializeInternal() {
         Map.reset();
-        Coin.resetActiveSeconds();
+        Coin.resetCoinsState();
         Level.reset();
 
         this.map = Map.getInstance();

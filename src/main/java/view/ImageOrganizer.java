@@ -61,7 +61,7 @@ public class ImageOrganizer {
             } else if (g.getState() == DynamicTarget.State.HUNTED) {
                 key += ">SCARE>" + (g.getMovedInLastTurn() ? "BLUE" : "WHITE");
             } else if (g.getState() == DynamicTarget.State.WAITING) {
-                key += ">SCARE>" + "BLUE";
+                key += ">WAITING";
             }
         }
 
@@ -111,6 +111,11 @@ public class ImageOrganizer {
         );
         data.add(
                 new String[]{"/graphics/resized/ghosts/scared/white.png", Ghost.class.getCanonicalName() + ">SCARE>WHITE"}
+        );
+
+        //WAITING GHOST
+        data.add(
+                new String[]{"/graphics/resized/ghosts/scared/waiting.png", Ghost.class.getCanonicalName() + ">WAITING"}
         );
 
         // BLINKY
@@ -189,26 +194,26 @@ public class ImageOrganizer {
                 new String[]{"/graphics/primitive/white_big.png", Placeholder.class.getCanonicalName()}
         );
 
-            for (String[] d : data) {
-                //Load image
-                try {
-                    BufferedImage before = ImageIO.read(c.getResource(d[0]));
-                    //Scale it
-                    int w = before.getWidth();
-                    int h = before.getHeight();
-                    BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-                    AffineTransform at = new AffineTransform();
-                    at.scale(1, 1);
-                    AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-                    after = scaleOp.filter(before, after);
-                    //Put it in the list
-                    images.put(d[1], after);
-                } catch(IllegalArgumentException e) {
-                    System.out.println("Failed to load resource picture for path " + d[0] + " and key " + d[1]);
-                    e.printStackTrace();
-                } catch(IOException e) {
-                    e.printStackTrace();
-                }
+        for (String[] d : data) {
+            //Load image
+            try {
+                BufferedImage before = ImageIO.read(c.getResource(d[0]));
+                //Scale it
+                int w = before.getWidth();
+                int h = before.getHeight();
+                BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+                AffineTransform at = new AffineTransform();
+                at.scale(1, 1);
+                AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+                after = scaleOp.filter(before, after);
+                //Put it in the list
+                images.put(d[1], after);
+            } catch(IllegalArgumentException e) {
+                System.out.println("Failed to load resource picture for path " + d[0] + " and key " + d[1]);
+                e.printStackTrace();
+            } catch(IOException e) {
+                e.printStackTrace();
             }
+        }
     }
 }

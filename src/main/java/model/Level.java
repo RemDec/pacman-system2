@@ -8,10 +8,6 @@
 
 package model;
 
-import model.mapobject.DynamicTarget;
-import model.mapobject.Ghost;
-import model.mapobject.Pacman;
-
 /**
  * A Level coupled with a Game instance determines the number of the current level and the difficulty parameters
  * associated with. As the level increases, difficulty does it as well through a modification of these parameters.
@@ -30,10 +26,6 @@ public class Level {
      */
     private int level = 1;
 
-    private double secondsPerCoin = 7;
-
-    private static final double TIME_PER_COIN_FACTOR = 0.85;
-
     private static final double PROBA_NEW_LIFE = 0.3;
 
     private Level() {
@@ -49,8 +41,6 @@ public class Level {
     }
 
     public void nextLevel() {
-        // Reduce the amount of time the user has to munch a ghost once Coin eaten
-        this.secondsPerCoin *= TIME_PER_COIN_FACTOR;
 
         this.level++;
 
@@ -62,23 +52,14 @@ public class Level {
         // Change the refresh rate = How fast is the pacman moving
         Game.getInstance().changeRefreshRate(this);
 
-        for (Ghost g : Game.getInstance().getGhostContainer()) {
-            g.changeState(DynamicTarget.State.HUNTER);
-        }
-
-        for (Pacman p : Game.getInstance().getPacmanContainer()) {
-            p.changeState(DynamicTarget.State.HUNTED);
-        }
-
-        Map.getInstance().onNextLevel();
+        Map.getInstance().onNextLevel(); // Reset all mapobjets states and positions
         Game.getInstance().getEventHandlerManager().restartExecution();
     }
 
     public boolean equals(Object o) {
         if (o != null) {
             if (o instanceof Level) {
-                return this.getLevel() == ((Level) o).getLevel()
-                        && this.getSecondsPerCoin() == ((Level) o).getSecondsPerCoin();
+                return this.getLevel() == ((Level) o).getLevel();
             }
         }
         return false;
@@ -90,10 +71,6 @@ public class Level {
 
     public int getLevel() {
         return this.level;
-    }
-
-    public double getSecondsPerCoin() {
-        return secondsPerCoin;
     }
 
 }

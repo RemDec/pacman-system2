@@ -78,10 +78,20 @@ public class Map {
     }
 
     /**
-     * Replace all dynamic objects to restart a new level, mark all as to render
+     * Replace all dynamic objects to restart a new level, reset all mapobjects states and mark all as to render
      */
     public void onNextLevel() {
+        // Replace Pacman and Ghosts
         MapPlacer.replaceDynamicObjects();
+
+        // Reset states
+        for (Ghost g : Game.getInstance().getGhostContainer()) {
+            g.changeState(DynamicTarget.State.HUNTER);
+        }
+
+        for (Pacman p : Game.getInstance().getPacmanContainer()) {
+            p.changeState(DynamicTarget.State.HUNTED);
+        }
 
         for(Coin c : Game.getInstance().getCoinContainer()){
             if(c.getState() == StaticTarget.State.EATEN) {
@@ -93,6 +103,10 @@ public class Map {
                 p.changeState(StaticTarget.State.AVAILABLE);
             }
         }
+
+        //Reset the current state handled about amount of eaten Coins
+        Coin.resetCoinsState();
+
         this.markAllForRendering();
     }
 

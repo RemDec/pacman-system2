@@ -23,11 +23,24 @@ public class Coin extends StaticTarget implements Scorable {
 
     public static final double PACMAN_AINT_EATER = -1;
 
-    public static final double SECONDS_PER_COIN = 5.;
+    public static final double SECONDS_PER_2_FIRST_COIN = 7.;
+    public static final double SECONDS_PER_2_LAST_COIN = 5.;
+    public static int nbr_eaten = 0;
 
     private static double activeSeconds = PACMAN_AINT_EATER;
 
+    public static int nbr_ghosts_eaten_in_a_row = 0;
+
     private static final int SCORE_PER_COIN = 50;
+
+    /**
+     * Reset global state related to coins, as it should be set at the beginning of a new level
+     */
+    public static void resetCoinsState(){
+        Coin.resetActiveSeconds();
+        Coin.nbr_eaten = 0;
+        Coin.nbr_ghosts_eaten_in_a_row = 0;
+    }
 
     /**
      * Reset state to the fact that Coin effect isn't active, ie it does not give invincibility to Pacman
@@ -54,6 +67,7 @@ public class Coin extends StaticTarget implements Scorable {
         double result = activeSeconds - value;
         if (result <= 0) {
             result = PACMAN_AINT_EATER;
+            Coin.nbr_ghosts_eaten_in_a_row = 0;
         }
         activeSeconds = result;
     }
@@ -75,13 +89,16 @@ public class Coin extends StaticTarget implements Scorable {
         } else if (state == this.state) {
             throw new IllegalArgumentException("State must differ from previous one");
         }
-
         if (state == State.EATEN) {
+            Coin.nbr_eaten++;
+            double seconds_gain = SECONDS_PER_2_FIRST_COIN;
+            if (Coin.nbr_eaten > 2)
+                seconds_gain = SECONDS_PER_2_LAST_COIN;
             setVisible(false);
             if (Coin.activeSeconds == Coin.PACMAN_AINT_EATER) {
-                Coin.activeSeconds = SECONDS_PER_COIN;
+                Coin.activeSeconds = seconds_gain;
             } else {
-                Coin.activeSeconds += SECONDS_PER_COIN;
+                Coin.activeSeconds += seconds_gain;
             }
             this.makePacmansHunters();
         } else if (state == State.AVAILABLE) {
@@ -128,7 +145,7 @@ public class Coin extends StaticTarget implements Scorable {
             p.changeState(DynamicTarget.State.HUNTER);
         }
         for (Ghost g : Game.getInstance().getGhostContainer()) {
-            if (g.getState() == DynamicTarget.State.HUNTER) {
+            if (g.getState() == DynamicTarget.State.HUNTER) { // TODO : Waiting ghosts won't be hunted if went out Waiting state before end of hunting by pacman
                 g.changeState(DynamicTarget.State.HUNTED);
             }
         }

@@ -64,11 +64,6 @@ public class LevelTest {
     }
 
     @Test
-    public void testGetSecondsPerCoin() {
-        assertEquals(instance.getSecondsPerCoin(), 7.0, 0);
-    }
-
-    @Test
     public void testEquals() {
         assertEquals(instance, instance);
     }
