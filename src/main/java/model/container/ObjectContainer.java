@@ -64,7 +64,7 @@ public class ObjectContainer<E extends MapObject> implements Container<E> {
         if (!this.elmts.contains(el)) {
             this.elmts.add(el);
         } else {
-            throw new ObjectAlreadyInListException(el.getClass().getCanonicalName());
+            throw new ObjectAlreadyInListException(el.getClass().getCanonicalName(), this.getClass().getCanonicalName());
         }
     }
 

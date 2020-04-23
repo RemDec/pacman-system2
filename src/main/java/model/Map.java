@@ -36,8 +36,6 @@ public class Map {
     private static final int DFLT_MAP_WIDTH = 20;
     private static final int DFLT_MAP_HEIGHT = 10;
 
-    public static StartingPosition startingPositions = new StartingPosition();
-
     public static Map getInstance() {
         if (Map.instance == null) {
             Map.instance = new Map();
@@ -48,11 +46,6 @@ public class Map {
 
     public static void reset() {
         Map.instance = new Map();
-        /*
-        System.out.println("BFR RESET START POS PACMAN HAS " + startingPositions.PACMAN_MALE.toString());
-        startingPositions = new StartingPosition();
-        System.out.println("AFTER RESET START POS PACMAN HAS " + startingPositions.PACMAN_MALE.toString());
-         */
     }
 
     private Map() {
@@ -131,6 +124,11 @@ public class Map {
         return false;
     }
 
+    public String toString(){
+        String s = "Map " + width + "x" + height + "  " + super.toString() + "\n" + positionContainer;
+        return s;
+    }
+
     /**
      * Get the number of free adjacent positions from a given one, meaning whether it is movable to.
      * @param pos The position to look for neighbouring free positions (so max. 4)
@@ -180,17 +178,8 @@ public class Map {
         }
     }
 
-
-    public static class StartingPosition {
-
-        public final Position GHOST_RED = Map.getInstance().positionContainer.get(11, 3);
-        public final Position GHOST_PINK = Map.getInstance().positionContainer.get(10, 3);
-        public final Position GHOST_BLUE = Map.getInstance().positionContainer.get(8, 3);
-        public final Position GHOST_ORANGE = Map.getInstance().positionContainer.get(9, 3);
-
-        public final Position PACMAN_MALE = Map.getInstance().positionContainer.get(13, 8);
-        public final Position PACMAN_FEMALE = Map.getInstance().positionContainer.get(6, 8);
-
+    public Position getStartingPos(Position pos){
+        return MapPlacer.getActualStartingPosition(this.positionContainer, pos);
     }
 
 

@@ -10,25 +10,73 @@ public class MapPlacer {
 
     public static void placeDynamicObjects() {
         Game g = Game.getInstance();
-        Map.StartingPosition startingPositions = Map.startingPositions;
+        Map m = Map.getInstance();
 
         // --------- PACMANS ---------
         LimitedObjectContainer<Pacman> pacC = g.getPacmanContainer();
 
-        pacC.add(new Pacman(startingPositions.PACMAN_MALE, Pacman.Sex.MALE));
+        pacC.add(new Pacman(m.getStartingPos(StartingPositions.PACMAN_MALE), Pacman.Sex.MALE));
 
         if (Settings.getInstance().getGameMode() == Game.Mode.MULTIPLAYER) {
-            pacC.add(new Pacman(startingPositions.PACMAN_FEMALE, Pacman.Sex.FEMALE));
+            pacC.add(new Pacman(m.getStartingPos(StartingPositions.PACMAN_FEMALE), Pacman.Sex.FEMALE));
         }
 
         // --------- GHOSTS ---------
         LimitedObjectContainer<Ghost> gC = g.getGhostContainer();
-        gC.add(new Ghost(startingPositions.GHOST_BLUE, Ghost.Colour.BLUE));
-        gC.add(new Ghost(startingPositions.GHOST_ORANGE, Ghost.Colour.ORANGE));
-        gC.add(new Ghost(startingPositions.GHOST_PINK, Ghost.Colour.PINK));
-        gC.add(new Ghost(startingPositions.GHOST_RED, Ghost.Colour.RED));
+        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_BLUE), Ghost.Colour.BLUE));
+        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_ORANGE), Ghost.Colour.ORANGE));
+        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_PINK), Ghost.Colour.PINK));
+        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_RED), Ghost.Colour.RED));
     }
 
+    public static Position getActualStartingPosition(PositionContainer positionContainer, Position sPos){
+        return positionContainer.get(sPos.getX(), sPos.getY());
+    }
+
+    public static class StartingPositions {
+
+        public static final Position GHOST_RED = new Position(11, 3);
+        public static final Position GHOST_PINK = new Position(10, 3);
+        public static final Position GHOST_BLUE = new Position(8, 3);
+        public static final Position GHOST_ORANGE = new Position(9, 3);
+
+        public static final Position PACMAN_MALE = new Position(13, 8);
+        public static final Position PACMAN_FEMALE = new Position(6, 8);
+
+    }
+
+    public static void replaceDynamicObjects() {
+        Map m = Map.getInstance();
+        LimitedObjectContainer<Ghost> gC = Game.getInstance().getGhostContainer();
+        for(Ghost g : gC) {
+            switch(g.getColour()) {
+                case RED: g.move(m.getStartingPos(StartingPositions.GHOST_RED));
+                    break;
+                case PINK: g.move(m.getStartingPos(StartingPositions.GHOST_PINK));
+                    break;
+                case BLUE: g.move(m.getStartingPos(StartingPositions.GHOST_BLUE));
+                    break;
+                case ORANGE: g.move(m.getStartingPos(StartingPositions.GHOST_ORANGE));
+                    break;
+                default:
+                    throw new RuntimeException("Unknown ghost color");
+            }
+        }
+
+        LimitedObjectContainer<Pacman> pC = Game.getInstance().getPacmanContainer();
+        for(Pacman p : pC) {
+            switch(p.getSex()) {
+                case MALE:
+                    p.move(m.getStartingPos(StartingPositions.PACMAN_MALE));
+                    break;
+                case FEMALE:
+                    p.move(m.getStartingPos(StartingPositions.PACMAN_FEMALE));
+                    break;
+                default:
+                    throw new RuntimeException("Unknown Pacman sex");
+            }
+        }
+    }
 
     public static void placeStaticObjects(PositionContainer positionContainer) {
         // Origin is leftmost upper point
@@ -200,8 +248,6 @@ public class MapPlacer {
         for (Position p : placeholderPositions) {
             new Placeholder(p);
         }
-
-
     }
 
     public static void spawnStaticTargets(PositionContainer positionContainer) {
@@ -223,39 +269,6 @@ public class MapPlacer {
             if (p.getOnPosition().size() == 0) {
                 pC.add(new Point(p));
 
-            }
-        }
-    }
-
-    public static void replaceDynamicObjects() {
-        Map.StartingPosition startingPositions = Map.startingPositions;
-        LimitedObjectContainer<Ghost> gC = Game.getInstance().getGhostContainer();
-        for(Ghost g : gC) {
-            switch(g.getColour()) {
-                case RED: g.move(startingPositions.GHOST_RED);
-                    break;
-                case PINK: g.move(startingPositions.GHOST_PINK);
-                    break;
-                case BLUE: g.move(startingPositions.GHOST_BLUE);
-                    break;
-                case ORANGE: g.move(startingPositions.GHOST_ORANGE);
-                    break;
-                default:
-                    throw new RuntimeException("Unknown ghost color");
-            }
-        }
-
-        LimitedObjectContainer<Pacman> pC = Game.getInstance().getPacmanContainer();
-        for(Pacman p : pC) {
-            switch(p.getSex()) {
-                case MALE:
-                    p.move(startingPositions.PACMAN_MALE);
-                    break;
-                case FEMALE:
-                    p.move(startingPositions.PACMAN_FEMALE);
-                    break;
-                default:
-                    throw new RuntimeException("Unknown Pacman sex");
             }
         }
     }

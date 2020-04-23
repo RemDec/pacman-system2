@@ -32,4 +32,14 @@ public class ObjectAlreadyInListException extends ListException {
         super("The Object of class " + className + " is already in the list");
     }
 
+    /**
+     * Constructs a new ObjectAlreadyInListException.
+     *
+     * @param className The class name of the list that is already full.
+     *                  Should be retrieved by {@link Class#getCanonicalName()}.
+     */
+    public ObjectAlreadyInListException(String className, String listType) {
+        super("The Object of class " + className + " is already in the container of type " + listType);
+    }
+
 }

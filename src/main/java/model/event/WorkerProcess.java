@@ -203,19 +203,19 @@ public class WorkerProcess implements Process {
             if (g.getWaitingSeconds() > 0) {
                 g.reduceWaitingSeconds(1 / Game.getInstance().getRefreshRate());
             } else if (g.getWaitingSeconds() == 0) {
-                Map.StartingPosition startingPositions = Map.startingPositions;
+                Map m = Map.getInstance();
                 switch (g.getColour()) {
                     case RED:
-                        g.move(startingPositions.GHOST_RED);
+                        g.move(m.getStartingPos(MapPlacer.StartingPositions.GHOST_RED));
                         break;
                     case BLUE:
-                        g.move(startingPositions.GHOST_BLUE);
+                        g.move(m.getStartingPos(MapPlacer.StartingPositions.GHOST_BLUE));
                         break;
                     case ORANGE:
-                        g.move(startingPositions.GHOST_ORANGE);
+                        g.move(m.getStartingPos(MapPlacer.StartingPositions.GHOST_ORANGE));
                         break;
                     case PINK:
-                        g.move(startingPositions.GHOST_PINK);
+                        g.move(m.getStartingPos(MapPlacer.StartingPositions.GHOST_PINK));
                 }
                 g.changeState(DynamicTarget.State.HUNTER);
             }

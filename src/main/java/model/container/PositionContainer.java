@@ -144,4 +144,8 @@ public class PositionContainer implements Container<Position> {
     public int getWidth(){return this.width;}
 
     public int getHeight(){return this.height;}
+
+    public String toString(){
+        return this.positions.toString();
+    }
 }

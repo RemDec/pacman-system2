@@ -26,7 +26,7 @@ public class LimitedObjectContainer<E extends MapObject> extends ObjectContainer
                 throw new ListFullException(elmts.getClass().getCanonicalName());
             }
         } else {
-            throw new ObjectAlreadyInListException(elmts.getClass().getCanonicalName());
+            throw new ObjectAlreadyInListException(el.getClass().getCanonicalName(), this.getClass().getCanonicalName());
         }
     }
 

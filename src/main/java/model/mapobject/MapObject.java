@@ -58,7 +58,7 @@ public abstract class MapObject {
 
     public boolean equals(Object o) {
         if (o != null) {
-            if (o instanceof MapObject) {
+            if (o instanceof MapObject && this.getClass() == o.getClass()) {
                 MapObject mO = (MapObject) o;
                 return this.getPosition().equals(mO.getPosition());
             }
