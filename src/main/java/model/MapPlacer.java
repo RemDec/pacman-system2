@@ -12,25 +12,25 @@ public class MapPlacer {
      * Place new instances of actors in the game (Pacmans and Ghosts) in the current {@link Map}, at the predefined
      * {@link StartingPositions}.
      */
-    public static void placeDynamicObjects() {
+    public static void placeAllDynamicObjects() {
         Game g = Game.getInstance();
         Map m = Map.getInstance();
 
         // --------- PACMANS ---------
         LimitedObjectContainer<Pacman> pacC = g.getPacmanContainer();
 
-        pacC.add(new Pacman(m.getStartingPos(StartingPositions.PACMAN_MALE), Pacman.Sex.MALE));
+        pacC.add(new Pacman(m.getActualPosition(StartingPositions.PACMAN_MALE), Pacman.Sex.MALE));
 
         if (Settings.getInstance().getGameMode() == Game.Mode.MULTIPLAYER) {
-            pacC.add(new Pacman(m.getStartingPos(StartingPositions.PACMAN_FEMALE), Pacman.Sex.FEMALE));
+            pacC.add(new Pacman(m.getActualPosition(StartingPositions.PACMAN_FEMALE), Pacman.Sex.FEMALE));
         }
 
         // --------- GHOSTS ---------
         LimitedObjectContainer<Ghost> gC = g.getGhostContainer();
-        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_BLUE), Ghost.Colour.BLUE));
-        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_ORANGE), Ghost.Colour.ORANGE));
-        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_PINK), Ghost.Colour.PINK));
-        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_RED), Ghost.Colour.RED));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_BLUE), Ghost.Colour.BLUE));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_ORANGE), Ghost.Colour.ORANGE));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_PINK), Ghost.Colour.PINK));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_RED), Ghost.Colour.RED));
     }
 
     /**
@@ -41,7 +41,7 @@ public class MapPlacer {
      * @param sPos An arbitrary position whose coordinates are looked up for corresponding entry
      * @return positionContainer.get(sPos.getX(), sPos.getY())
      */
-    public static Position getActualStartingPosition(PositionContainer positionContainer, Position sPos){
+    public static Position getActualPosition(PositionContainer positionContainer, Position sPos){
         return positionContainer.get(sPos.getX(), sPos.getY());
     }
 
@@ -60,60 +60,60 @@ public class MapPlacer {
         public static final Position PACMAN_MALE = new Position(13, 8);
         public static final Position PACMAN_FEMALE = new Position(6, 8);
 
+        public static Position getCoordStartingPosition(DynamicTarget t){
+            if(t instanceof Ghost){
+                switch(((Ghost)t).getColour()) {
+                    case RED: return GHOST_RED;
+                    case PINK: return GHOST_PINK;
+                    case BLUE: return GHOST_BLUE;
+                    case ORANGE: return GHOST_ORANGE;
+                    default:
+                        throw new RuntimeException("Unknown ghost color " + t);
+                }
+            } else if (t instanceof Pacman){
+                switch(((Pacman)t).getSex()) {
+                    case MALE: return PACMAN_MALE;
+                    case FEMALE: return PACMAN_FEMALE;
+                    default:
+                        throw new RuntimeException("Unknown Pacman sex " + t);
+                }
+            }
+            throw new RuntimeException("Unknown DynamicTarget " + t);
+        }
     }
 
     /**
-     * Replace a any actor to its {@link StartingPositions} for the current {@link Map}.
+     * Replace a any actor to its {@link StartingPositions} for the current {@link Map} (setting its heading
+     * to NORTH also).
+     *
      * @param t
      */
-    public static void respawnDynamicObject(DynamicTarget t){
+    public static void replaceDynamicObject(DynamicTarget t){
         Map m = Map.getInstance();
-        if(t instanceof Ghost){
-            switch(((Ghost)t).getColour()) {
-                case RED: t.setPosition(m.getStartingPos(StartingPositions.GHOST_RED));
-                    break;
-                case PINK: t.setPosition(m.getStartingPos(StartingPositions.GHOST_PINK));
-                    break;
-                case BLUE: t.setPosition(m.getStartingPos(StartingPositions.GHOST_BLUE));
-                    break;
-                case ORANGE: t.setPosition(m.getStartingPos(StartingPositions.GHOST_ORANGE));
-                    break;
-                default:
-                    throw new RuntimeException("Unknown ghost color");
-            }
-        } else if (t instanceof Pacman){
-            switch(((Pacman)t).getSex()) {
-                case MALE:
-                    t.setPosition(m.getStartingPos(StartingPositions.PACMAN_MALE));
-                    break;
-                case FEMALE:
-                    t.setPosition(m.getStartingPos(StartingPositions.PACMAN_FEMALE));
-                    break;
-                default:
-                    throw new RuntimeException("Unknown Pacman sex");
-            }
-        }
+        Position startingPos = StartingPositions.getCoordStartingPosition(t);
+        t.setPosition(m.getActualPosition(startingPos));
         // By default, every target must spawn heading to NORTH
         t.setHeadingTo(Map.Direction.NORTH);
     }
 
     /**
-     * Replace all actors of the game, see {@link #respawnDynamicObject}
+     * Replace all actors of the game, see {@link MapPlacer#replaceDynamicObject}
      */
     public static void replaceDynamicObjects() {
         LimitedObjectContainer<Ghost> gC = Game.getInstance().getGhostContainer();
         for(Ghost g : gC) {
-            respawnDynamicObject(g);
+            replaceDynamicObject(g);
         }
 
         LimitedObjectContainer<Pacman> pC = Game.getInstance().getPacmanContainer();
         for(Pacman p : pC) {
-            respawnDynamicObject(p);
+            replaceDynamicObject(p);
         }
     }
 
-    public static void placeAllStaticTargets(){
-
+    public static void placeAllStaticObjects(){
+        MapPlacer.placeStaticObjects();
+        MapPlacer.spawnStaticTargets();
     }
 
     /**

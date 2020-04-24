@@ -15,10 +15,9 @@ import model.event.Scheduler;
 import model.event.TimerProcess;
 import model.event.WorkerProcess;
 import model.exception.ObjectAlreadyInListException;
-import model.mapobject.Coin;
-import model.mapobject.Ghost;
-import model.mapobject.Pacman;
-import model.mapobject.Point;
+import model.mapobject.*;
+
+import java.util.ArrayList;
 
 /**
  * The Game class is kind of a <i>master</i>-class, organizing all other business logic objects.
@@ -298,6 +297,15 @@ public class Game {
 
     public Scheduler getEventHandlerManager() {
         return eventHandlerManager;
+    }
+
+    public ArrayList<ObjectContainer<? extends MapObject>> getAllMapobjecContainers(){
+        ArrayList<ObjectContainer<? extends MapObject>> all = new ArrayList<ObjectContainer<? extends MapObject>>();
+        all.add(pacmanContainer);
+        all.add(ghostContainer);
+        all.add(pointContainer);
+        all.add(coinContainer);
+        return all;
     }
 
     /**

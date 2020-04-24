@@ -70,9 +70,8 @@ public class Map {
      * Place all objects in {@link Game}'s containers and mark them for rendering
      */
     public void placeObjects() {
-        MapPlacer.placeDynamicObjects();
-        MapPlacer.placeStaticObjects();
-        MapPlacer.spawnStaticTargets();
+        MapPlacer.placeAllDynamicObjects();
+        MapPlacer.placeAllStaticObjects();
         this.objectsPlaced = true;
         this.markAllForRendering();
     }
@@ -210,7 +209,7 @@ public class Map {
      * @return true iif the Position referenced by t is the same as the starting position in the map (same instances)
      */
     public boolean isOnStartingPos(DynamicTarget t){
-        return getStartingPos(t.getPosition()) == t.getPosition();
+        return getStartingPosition(t) == t.getPosition();
     }
 
     /**
@@ -220,8 +219,12 @@ public class Map {
      * @param pos any {@link Position} whose only x and y fields are taken into account
      * @return The {@link Position} instance in the current {@link #positionContainer} of this Map, at (x, y)
      */
-    public Position getStartingPos(Position pos){
-        return MapPlacer.getActualStartingPosition(this.positionContainer, pos);
+    public Position getActualPosition(Position pos){
+        return MapPlacer.getActualPosition(this.positionContainer, pos);
+    }
+
+    public Position getStartingPosition(DynamicTarget t){
+        return getActualPosition(MapPlacer.StartingPositions.getCoordStartingPosition(t));
     }
 
 

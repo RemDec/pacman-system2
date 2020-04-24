@@ -201,7 +201,7 @@ public class WorkerProcess implements Process {
             g.move(newPosition);
         } else if (g.getState() == DynamicTarget.State.MUNCHED) {
             g.changeState(DynamicTarget.State.WAITING);
-            MapPlacer.respawnDynamicObject(g);
+            MapPlacer.replaceDynamicObject(g);
         } else if (g.getState() == DynamicTarget.State.WAITING) {
             if (g.getWaitingSeconds() > 0) {
                 g.reduceWaitingSeconds(1 / Game.getInstance().getRefreshRate());

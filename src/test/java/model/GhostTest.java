@@ -9,6 +9,7 @@
 package model;
 
 import controller.MainController;
+import model.event.WorkerProcess;
 import model.mapobject.*;
 import org.junit.After;
 import org.junit.Before;
@@ -155,7 +156,7 @@ public class GhostTest {
         Position newPos = Map.getInstance().getPositionContainer().get(0,1);
         assertTrue(newPos.isMoveableTo());
         Position wallPos = Map.getInstance().getPositionContainer().get(1, 0);
-        Wall wall = new Wall(wallPos);
+        new Wall(wallPos); // register Wall instance to Position
         assertFalse(wallPos.isMoveableTo());
 
         assertEquals(1, Map.freeNeighbourFields(pos));
@@ -171,12 +172,32 @@ public class GhostTest {
 
     @Test
     public void testMoveToStartingPos(){
-
+        MapPlacer.replaceDynamicObject(instance); // Reset the Ghost position to predefined one for regular spawning
+        assertNotSame(pos, instance.getPosition());
+        Map m = Map.getInstance();
+        assertSame(m.getStartingPosition(instance), instance.getPosition());
+        assertTrue(m.isOnStartingPos(instance));
     }
 
     @Test
     public void testMoveToStartingPosWhenEaten(){
+        Pacman p = new Pacman(pos, Pacman.Sex.MALE);
 
+        instance.changeState(DynamicTarget.State.HUNTED);
+        p.changeState(DynamicTarget.State.HUNTER);
+        assertSame(DynamicTarget.State.HUNTED, instance.getState()); // Ghost is running away, coward !
+        assertSame(DynamicTarget.State.HUNTER, p.getState());
+
+        Game.getInstance().getPointContainer().add(new Point(new Position(0,0))); // avoid passing to next lvl when running
+        Game.getInstance().getPacmanContainer().add(p);
+        Game.getInstance().getGhostContainer().add(instance);
+        WorkerProcess wp = new WorkerProcess();
+        wp.onLoad();
+        wp.run();
+        assertEquals(DynamicTarget.State.WAITING, instance.getState());
+
+        assertTrue(Map.getInstance().isOnStartingPos(instance)); // Ghost is sent back to his home, goodbye ghost !
+        assertSame(pos, p.getPosition()); // Pacman stays here, victorious !
     }
 
 }
