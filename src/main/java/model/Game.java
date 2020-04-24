@@ -33,8 +33,6 @@ public class Game {
         Game.reset();
     }
 
-    public final static Settings settings = Settings.getInstance();
-
     /**
      * The singleton instance.
      */
@@ -97,7 +95,7 @@ public class Game {
 
     private boolean isOver = false;
 
-    private int playerLifes = 3;
+    private int playerLifes;
 
     /**
      * Constructs a new Game object.
@@ -133,6 +131,8 @@ public class Game {
         Map.reset();
         Coin.resetCoinsState();
         Level.reset();
+
+        this.playerLifes = Settings.getInstance().getInitPlayerLifes();
 
         this.timer = Timer.getInstance();
 
@@ -192,6 +192,7 @@ public class Game {
         if(pointContainer.size() == 0){
             this.map.placeObjects();
         }
+        this.playerLifes = Settings.getInstance().getInitPlayerLifes();
         this.timer.resume_increment();
         this.eventHandlerManager.startExecution();
     }
@@ -323,7 +324,7 @@ public class Game {
         s += "\n +- Ghosts : " + this.ghostContainer;
         s += "\n +- Coins : " + this.coinContainer;
         s += "\n +- Points : " + this.pointContainer;
-        s += "\n + current map\n" + this.map;
+        s += "\n + current map\n" + this.map.toString(true);
         return s;
     }
 

@@ -9,9 +9,7 @@
 package model;
 
 import controller.MainController;
-import model.mapobject.DynamicTarget;
-import model.mapobject.Ghost;
-import model.mapobject.Pacman;
+import model.mapobject.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +32,7 @@ public class GhostTest {
     @Before
     public void setUp() {
         MainController.reset();
+        // We don't call MainController.start() so no objects are placed on Map, but Positions are instantiated in
         this.pos = Map.getInstance().getPositionContainer().get(0, 0);
         this.instance = new Ghost(pos, Colour.RED);
     }
@@ -46,6 +45,7 @@ public class GhostTest {
     @Test
     public void testGetColour() {
         assertNotNull(instance.getColour());
+        assertEquals(Colour.RED, instance.getColour());
     }
 
     @Test
@@ -61,36 +61,122 @@ public class GhostTest {
     }
 
     @Test
+    public void testGetScore() {
+        Pacman p = new Pacman(pos, Pacman.Sex.MALE);
+        assertEquals(200, instance.getScore()); // Should firstly give 200 score eaten once
+        p.changeState(DynamicTarget.State.HUNTER);
+        instance.changeState(DynamicTarget.State.HUNTED);
+        p.eat(instance);
+        assertEquals(200, p.getScore().getScore());
+        assertEquals(200, instance.getScore());
+        p.eat(instance);
+        assertEquals(200 + 400, p.getScore().getScore());
+        assertEquals(400, instance.getScore()); // Consecutive ghost increase given score value
+        p.eat(instance);
+        assertEquals(200 + 400 + 800, p.getScore().getScore());
+        assertEquals(800, instance.getScore());
+        p.eat(instance);
+        assertEquals(200 + 400 + 800 + 1600, p.getScore().getScore());
+        assertEquals(1600, instance.getScore());
+    }
+
+    @Test
+    public void testChangeState() {
+        // A Ghost spawn as hunter, see its constructor overloading DynamicTarget's one (which dflt WAITING)
+        assertEquals(DynamicTarget.State.HUNTER, instance.getState());
+        assertEquals(-1., instance.getWaitingSeconds(), 0);
+
+        instance.changeState(DynamicTarget.State.WAITING);
+        assertEquals(DynamicTarget.State.WAITING, instance.getState());
+        assertEquals(Ghost.WAIT_SECONDS, instance.getWaitingSeconds(), 0);
+
+        assertEquals(Coin.nbr_ghosts_eaten_in_a_row, 0);
+        instance.changeState(DynamicTarget.State.MUNCHED);
+        assertEquals(DynamicTarget.State.MUNCHED, instance.getState());
+        assertEquals(Coin.nbr_ghosts_eaten_in_a_row, 1);
+
+        instance.changeState(DynamicTarget.State.HUNTED);
+        assertEquals(DynamicTarget.State.HUNTED, instance.getState());
+    }
+
+    @Test
+    public void testReduceWaitingSeconds() {
+        assertEquals(-1., instance.getWaitingSeconds(), 0); // HUNTER State
+        instance.reduceWaitingSeconds(1.);
+        assertEquals(-1, instance.getWaitingSeconds(), 0);
+        instance.changeState(DynamicTarget.State.WAITING);
+        assertEquals(Ghost.WAIT_SECONDS, instance.getWaitingSeconds(),0);
+        instance.reduceWaitingSeconds(Ghost.WAIT_SECONDS);
+        assertEquals(0, instance.getWaitingSeconds(),0);
+        instance.reduceWaitingSeconds(Ghost.WAIT_SECONDS);
+        assertEquals(0, instance.getWaitingSeconds(),0);
+    }
+
+    @Test
     public void testEat() {
         Pacman p = new Pacman(pos, Pacman.Sex.MALE);
 
         assertSame(DynamicTarget.State.HUNTER, instance.getState());
         assertSame(DynamicTarget.State.HUNTED, p.getState());
-        instance.eat(p);
+        assertEquals(Settings.getInstance().getInitPlayerLifes(), Game.getInstance().getPlayerLifes());
+        instance.eat(p); // ghost eats pacman
         assertSame(DynamicTarget.State.HUNTER, instance.getState());
         assertSame(DynamicTarget.State.HUNTED, p.getState());
         // As our Pacman gets immediately respawned, it won't have a different state
-    }
-
-    @Test
-    public void testGetScore() {
-        assertEquals(200, instance.getScore());
-    }
-
-    // TODO Implement
-
-    @Test
-    public void testChangeState() {
-
+        assertEquals(Settings.getInstance().getInitPlayerLifes() - 1, Game.getInstance().getPlayerLifes());
     }
 
     @Test
     public void testGotEaten() {
+        Pacman p = new Pacman(pos, Pacman.Sex.MALE);
+
+        p.changeState(DynamicTarget.State.HUNTER);
+        instance.changeState(DynamicTarget.State.HUNTED);
+
+        assertEquals(Settings.getInstance().getInitPlayerLifes(), Game.getInstance().getPlayerLifes());
+        p.eat(instance); // pacman eats ghost
+        assertSame(DynamicTarget.State.MUNCHED, instance.getState());
+        assertSame(DynamicTarget.State.HUNTER, p.getState());
+        // Pacman keep all his lives
+        assertEquals(Settings.getInstance().getInitPlayerLifes(), Game.getInstance().getPlayerLifes());
+    }
+
+    @Test
+    public void testMove(){
+        Position newPos = Map.getInstance().getPositionContainer().get(1,1);
+        assertTrue(newPos.isMoveableTo());
+        instance.move(newPos);
+        assertTrue(newPos.getOnPosition().contains(instance));
+        assertFalse(pos.getOnPosition().contains(instance));
+    }
+
+    @Test
+    public void testMoveBlocked(){
+        Position newPos = Map.getInstance().getPositionContainer().get(0,1);
+        assertTrue(newPos.isMoveableTo());
+        Position wallPos = Map.getInstance().getPositionContainer().get(1, 0);
+        Wall wall = new Wall(wallPos);
+        assertFalse(wallPos.isMoveableTo());
+
+        assertEquals(1, Map.freeNeighbourFields(pos));
+        assertSame(newPos, Map.getPositionByDirectionIfMovableTo(pos, Map.Direction.SOUTH));
+
+        instance.move(wallPos);
+        assertSame(pos, instance.getPosition()); // Should not have moved since there was a wall on the target pos
+
+        instance.move(newPos);
+        assertSame(newPos, instance.getPosition()); // Should have moved well this time !
+        assertNotSame(pos, instance.getPosition());
+    }
+
+    @Test
+    public void testMoveToStartingPos(){
 
     }
 
     @Test
-    public void testReduceWaitingSeconds() {
+    public void testMoveToStartingPosWhenEaten(){
 
     }
+
 }

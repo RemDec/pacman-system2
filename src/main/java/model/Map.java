@@ -71,8 +71,8 @@ public class Map {
      */
     public void placeObjects() {
         MapPlacer.placeDynamicObjects();
-        MapPlacer.placeStaticObjects(this.positionContainer);
-        MapPlacer.spawnStaticTargets(this.positionContainer);
+        MapPlacer.placeStaticObjects();
+        MapPlacer.spawnStaticTargets();
         this.objectsPlaced = true;
         this.markAllForRendering();
     }
@@ -143,6 +143,17 @@ public class Map {
         return s;
     }
 
+    public String toString(boolean detailed){
+        StringBuilder s = new StringBuilder(this.toString());
+        for(int y=0; y < height; y++){
+            s.append("\n");
+            for(int x=0; x < width; x++){
+                s.append(positionContainer.get(x, y).toString(detailed)).append(" ");
+            }
+        }
+        return s.toString();
+    }
+
     /**
      * Get the number of free adjacent positions from a given one, meaning whether it is movable to.
      * @param pos The position to look for neighbouring free positions (so max. 4)
@@ -192,6 +203,23 @@ public class Map {
         }
     }
 
+    /**
+     * Verify that a dynamic target is on its starting position (where he spawned)
+     *
+     * @param t any target
+     * @return true iif the Position referenced by t is the same as the starting position in the map (same instances)
+     */
+    public boolean isOnStartingPos(DynamicTarget t){
+        return getStartingPos(t.getPosition()) == t.getPosition();
+    }
+
+    /**
+     * From a given arbitrary Position instance, retrieve the current Position instance referenced in the Map at
+     * the same coordinates
+     *
+     * @param pos any {@link Position} whose only x and y fields are taken into account
+     * @return The {@link Position} instance in the current {@link #positionContainer} of this Map, at (x, y)
+     */
     public Position getStartingPos(Position pos){
         return MapPlacer.getActualStartingPosition(this.positionContainer, pos);
     }

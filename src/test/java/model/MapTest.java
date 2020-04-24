@@ -51,6 +51,13 @@ public class MapTest {
     }
 
     @Test
+    public void placeAllObjects(){
+        Map.getInstance().placeObjects();
+        //System.out.println(Game.getInstance().getMap().toString(false));
+        //TODO
+    }
+
+    @Test
     public void testGetPositionByDirectionIfMoveableTo() {
         assertNull(Map.getPositionByDirectionIfMovableTo(Map.getInstance().getPositionContainer().get(0, 0), Direction.WEST));
         assertNotNull(Map.getPositionByDirectionIfMovableTo(Map.getInstance().getPositionContainer().get(3, 6), Direction.WEST));

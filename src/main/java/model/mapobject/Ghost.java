@@ -34,11 +34,7 @@ public class Ghost extends DynamicTarget implements Scorable {
 
     private double waitingSeconds = -1.;
 
-    private final static double WAIT_SECONDS = 4.;
-
-    private double speed = 1;
-
-    private final static double SPEED_FACTOR = 2.;
+    public final static double WAIT_SECONDS = 5.;
 
     private boolean movedInLastTurn = false;
 
@@ -118,18 +114,14 @@ public class Ghost extends DynamicTarget implements Scorable {
      * @param state The new state.
      */
     public void changeState(State state) {
-        if (state == State.WAITING) { // TODO : No treatment of case state becomes HUNTED, this is where speed should be lowered also, not here...
-            //this.speed *= 1. / SPEED_FACTOR;
+        if (state == State.WAITING) {
             if(this.waitingSeconds == -1.){
                 this.waitingSeconds = WAIT_SECONDS;
             } else {
                 this.waitingSeconds += WAIT_SECONDS;
             }
         } else if (state == State.HUNTER) {
-            this.speed *= SPEED_FACTOR;
             this.waitingSeconds = -1.;
-        } else if (state == State.HUNTED) {
-            this.speed *= 1. / SPEED_FACTOR;
         } else if (state == State.MUNCHED){
             // Has been eaten, increase the number of ghosts caught in a row by pacman for the current Coin time
             Coin.nbr_ghosts_eaten_in_a_row++;
@@ -179,12 +171,14 @@ public class Ghost extends DynamicTarget implements Scorable {
      * @param amount The number of seconds to reduce the counter
      */
     public void reduceWaitingSeconds(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("The amount has to be positive");
-        } else {
-            this.waitingSeconds -= amount;
-            if(this.waitingSeconds < 0) {
-                this.waitingSeconds = 0;
+        if (this.state == State.WAITING) {
+            if (amount <= 0) {
+                throw new IllegalArgumentException("The amount has to be positive");
+            } else {
+                this.waitingSeconds -= amount;
+                if (this.waitingSeconds < 0) {
+                    this.waitingSeconds = 0; // will be freed
+                }
             }
         }
     }

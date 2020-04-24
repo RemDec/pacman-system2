@@ -33,7 +33,7 @@ public abstract class MapObject {
         return position;
     }
 
-    protected void setPosition(Position pos) {
+    public void setPosition(Position pos) {
         if (pos == null) {
             throw new IllegalArgumentException("Position cannot be null.");
         }

@@ -17,6 +17,8 @@ public class Settings {
 
     private Game.Mode gameMode = Game.Mode.SINGLEPLAYER;
 
+    private int initPlayerLifes = 3;
+
     private static Settings instance = new Settings();
 
     public Settings() {
@@ -38,4 +40,9 @@ public class Settings {
     public void setGameMode(Game.Mode gameMode) {
         this.gameMode = gameMode;
     }
+
+    public int getInitPlayerLifes(){return initPlayerLifes;}
+
+    public void setInitPlayerLifes(int initPlayerLifes){this.initPlayerLifes = initPlayerLifes;}
+
 }

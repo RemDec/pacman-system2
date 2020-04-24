@@ -10,8 +10,7 @@ package model;
 
 import model.container.Containers;
 import model.container.ObjectContainer;
-import model.mapobject.MapObject;
-import model.mapobject.Wall;
+import model.mapobject.*;
 
 /**
  * The position class represents a point on the map (x, y). IT SHOULD NOT BE CONSTRUCTED OUTSIDE THE {@link Map} CLASS.
@@ -95,6 +94,27 @@ public class Position {
 
     public String toString() {
         return x + "|" + y + " contains " + this.onPosition.size();
+    }
+
+    public String toString(boolean detailed){
+        String contentRepr = "#";
+        for(MapObject m: onPosition){
+            if(m instanceof Wall)
+                contentRepr = "W";
+            if(m instanceof Placeholder)
+                contentRepr = "+";
+            if (detailed){
+                if (m instanceof Point)
+                    contentRepr = ".";
+                if(m instanceof Coin)
+                    contentRepr = "*";
+                if(m instanceof Ghost)
+                    contentRepr = "g";
+                if(m instanceof Pacman)
+                    contentRepr = "p";
+            }
+        }
+        return contentRepr;
     }
 
 }

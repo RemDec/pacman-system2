@@ -8,6 +8,10 @@ import model.mapobject.*;
 
 public class MapPlacer {
 
+    /**
+     * Place new instances of actors in the game (Pacmans and Ghosts) in the current {@link Map}, at the predefined
+     * {@link StartingPositions}.
+     */
     public static void placeDynamicObjects() {
         Game g = Game.getInstance();
         Map m = Map.getInstance();
@@ -29,10 +33,23 @@ public class MapPlacer {
         gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_RED), Ghost.Colour.RED));
     }
 
+    /**
+     * From an arbitrary Position considered for holding (x,y) couple, retrieve the corresponding indexed one in
+     * a {@link PositionContainer}
+     *
+     * @param positionContainer The container holding {@link Position}s instances to look in
+     * @param sPos An arbitrary position whose coordinates are looked up for corresponding entry
+     * @return positionContainer.get(sPos.getX(), sPos.getY())
+     */
     public static Position getActualStartingPosition(PositionContainer positionContainer, Position sPos){
         return positionContainer.get(sPos.getX(), sPos.getY());
     }
 
+    /**
+     * Statically predefined starting positions for all actors of the game, stocked as {@link Position}s standing
+     * as (x, y) couples
+     *
+     */
     public static class StartingPositions {
 
         public static final Position GHOST_RED = new Position(11, 3);
@@ -45,40 +62,94 @@ public class MapPlacer {
 
     }
 
-    public static void replaceDynamicObjects() {
+    /**
+     * Replace a any actor to its {@link StartingPositions} for the current {@link Map}.
+     * @param t
+     */
+    public static void respawnDynamicObject(DynamicTarget t){
         Map m = Map.getInstance();
-        LimitedObjectContainer<Ghost> gC = Game.getInstance().getGhostContainer();
-        for(Ghost g : gC) {
-            switch(g.getColour()) {
-                case RED: g.move(m.getStartingPos(StartingPositions.GHOST_RED));
+        if(t instanceof Ghost){
+            switch(((Ghost)t).getColour()) {
+                case RED: t.setPosition(m.getStartingPos(StartingPositions.GHOST_RED));
                     break;
-                case PINK: g.move(m.getStartingPos(StartingPositions.GHOST_PINK));
+                case PINK: t.setPosition(m.getStartingPos(StartingPositions.GHOST_PINK));
                     break;
-                case BLUE: g.move(m.getStartingPos(StartingPositions.GHOST_BLUE));
+                case BLUE: t.setPosition(m.getStartingPos(StartingPositions.GHOST_BLUE));
                     break;
-                case ORANGE: g.move(m.getStartingPos(StartingPositions.GHOST_ORANGE));
+                case ORANGE: t.setPosition(m.getStartingPos(StartingPositions.GHOST_ORANGE));
                     break;
                 default:
                     throw new RuntimeException("Unknown ghost color");
             }
-        }
-
-        LimitedObjectContainer<Pacman> pC = Game.getInstance().getPacmanContainer();
-        for(Pacman p : pC) {
-            switch(p.getSex()) {
+        } else if (t instanceof Pacman){
+            switch(((Pacman)t).getSex()) {
                 case MALE:
-                    p.move(m.getStartingPos(StartingPositions.PACMAN_MALE));
+                    t.setPosition(m.getStartingPos(StartingPositions.PACMAN_MALE));
                     break;
                 case FEMALE:
-                    p.move(m.getStartingPos(StartingPositions.PACMAN_FEMALE));
+                    t.setPosition(m.getStartingPos(StartingPositions.PACMAN_FEMALE));
                     break;
                 default:
                     throw new RuntimeException("Unknown Pacman sex");
             }
         }
+        // By default, every target must spawn heading to NORTH
+        t.setHeadingTo(Map.Direction.NORTH);
     }
 
-    public static void placeStaticObjects(PositionContainer positionContainer) {
+    /**
+     * Replace all actors of the game, see {@link #respawnDynamicObject}
+     */
+    public static void replaceDynamicObjects() {
+        LimitedObjectContainer<Ghost> gC = Game.getInstance().getGhostContainer();
+        for(Ghost g : gC) {
+            respawnDynamicObject(g);
+        }
+
+        LimitedObjectContainer<Pacman> pC = Game.getInstance().getPacmanContainer();
+        for(Pacman p : pC) {
+            respawnDynamicObject(p);
+        }
+    }
+
+    public static void placeAllStaticTargets(){
+
+    }
+
+    /**
+     * Place all static eatable elements (Coins and Points) in the current {@link Map}.
+     */
+    public static void spawnStaticTargets() {
+        PositionContainer positionContainer = Map.getInstance().getPositionContainer();
+
+        // Origin is leftmost upper point
+        // --------- COINS ---------
+        LimitedObjectContainer<Coin> cC = Game.getInstance().getCoinContainer();
+        PointContainer pC = Game.getInstance().getPointContainer();
+
+        cC.removeAll();
+        pC.removeAll();
+
+        cC.add(new Coin(positionContainer.get(1, 1)));
+        cC.add(new Coin(positionContainer.get(1, 8)));
+        cC.add(new Coin(positionContainer.get(18, 1)));
+        cC.add(new Coin(positionContainer.get(18, 8)));
+
+        // --------- POINTS ---------
+        for (Position p : positionContainer) {
+            if (p.getOnPosition().size() == 0) {
+                pC.add(new Point(p));
+
+            }
+        }
+    }
+
+    /**
+     * Place all static non-eatable elements (Walls and Placeholders) in the current {@link Map}.
+     */
+    public static void placeStaticObjects() {
+        PositionContainer positionContainer = Map.getInstance().getPositionContainer();
+
         // Origin is leftmost upper point
         // --------- WALLS ---------
         int width = positionContainer.getWidth();
@@ -247,29 +318,6 @@ public class MapPlacer {
 
         for (Position p : placeholderPositions) {
             new Placeholder(p);
-        }
-    }
-
-    public static void spawnStaticTargets(PositionContainer positionContainer) {
-        // Origin is leftmost upper point
-        // --------- COINS ---------
-        LimitedObjectContainer<Coin> cC = Game.getInstance().getCoinContainer();
-        PointContainer pC = Game.getInstance().getPointContainer();
-
-        cC.removeAll();
-        pC.removeAll();
-
-        cC.add(new Coin(positionContainer.get(1, 1)));
-        cC.add(new Coin(positionContainer.get(1, 8)));
-        cC.add(new Coin(positionContainer.get(18, 1)));
-        cC.add(new Coin(positionContainer.get(18, 8)));
-
-        // --------- POINTS ---------
-        for (Position p : positionContainer) {
-            if (p.getOnPosition().size() == 0) {
-                pC.add(new Point(p));
-
-            }
         }
     }
 
