@@ -127,12 +127,23 @@ public class Ghost extends DynamicTarget implements Scorable {
             }
         } else if (state == State.HUNTER) {
             this.speed *= SPEED_FACTOR;
+            System.out.println(this.speed);
             this.waitingSeconds = -1.;
         } else if (state == State.MUNCHED){
             // Has been eaten, increase the number of ghosts caught in a row by pacman for the current Coin time
             Coin.nbr_ghosts_eaten_in_a_row++;
+        } else if (state == State.HUNTED_STOP || state == State.HUNTER_STOP){
+            this.speed = 0;
         }
         this.state = state;
+    }
+
+    public void changeSpeed(int speed){
+        this.speed = speed;
+    }
+
+    public void setWaitingSeconds(int waitingSeconds){
+        this.waitingSeconds = waitingSeconds;
     }
 
     /**

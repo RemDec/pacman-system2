@@ -55,10 +55,12 @@ public class ImageOrganizer {
         //          WAITING : stays BLUE
         if (mO instanceof Ghost) {
             Ghost g = (Ghost) mO;
-            if (g.getState() == DynamicTarget.State.HUNTER) {
+            if (g.getState() == DynamicTarget.State.HUNTER || g.getState() == DynamicTarget.State.HUNTER_STOP ) {
                 key += ">" + g.getColour();
                 key += ">" + g.getHeadingTo();
-            } else if (g.getState() == DynamicTarget.State.HUNTED) {
+            } else if (g.getState() == DynamicTarget.State.HUNTED_STOP ) {
+                key += ">SCARE>BLUE";
+            }else if (g.getState() == DynamicTarget.State.HUNTED) {
                 key += ">SCARE>" + (g.getMovedInLastTurn() ? "BLUE" : "WHITE");
             } else if (g.getState() == DynamicTarget.State.WAITING) {
                 key += ">WAITING";
@@ -68,6 +70,14 @@ public class ImageOrganizer {
         if (mO instanceof Pacman) {
             Pacman p = (Pacman) mO;
             key += ">" + p.getHeadingTo();
+        }
+
+        if (mO instanceof Teleporter) {
+            Teleporter t = (Teleporter) mO;
+            if (t.isPrincipal)
+                key += ">" + "PRINCIPAL";
+            else
+                key += ">" + "ARRIVAL";
         }
 
         if (images.containsKey(key)) {
@@ -87,9 +97,20 @@ public class ImageOrganizer {
         Class<?> c = this.getClass();
 
         ArrayList<String[]> data = new ArrayList<>();
+        // Teleporter
+        data.add(
+                new String[]{"/graphics/primitive/teleporter.png", Teleporter.class.getCanonicalName() + ">PRINCIPAL"}
+        );
+        data.add(
+                new String[]{"/graphics/primitive/teleporter2.png", Teleporter.class.getCanonicalName() + ">ARRIVAL"}
+        );
         // WALL
         data.add(
                 new String[]{"/graphics/primitive/black_big.png", Wall.class.getCanonicalName()}
+        );
+        // Trap
+        data.add(
+                new String[]{"/graphics/primitive/trap.png", Trap.class.getCanonicalName()}
         );
         // PACMAN
         data.add(

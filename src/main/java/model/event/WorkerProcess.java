@@ -158,6 +158,9 @@ public class WorkerProcess implements Process {
         for (Pacman p : pacmans) {
             performCollision(p);
         }
+        for (Ghost g : ghosts) {
+            performCollision(g);
+        }
     }
 
     private void performCollision(Pacman pac) {
@@ -180,6 +183,20 @@ public class WorkerProcess implements Process {
                 } else if (g.getState() == DynamicTarget.State.HUNTER) {
                     g.eat(pac);
                 }
+            } else if (mO instanceof Boxes) {
+                Boxes b = (Boxes) mO;
+                b.action(pac);
+            }
+        }
+    }
+
+    private void performCollision(Ghost g) {
+        ObjectContainer<MapObject> mapObjectsOnPos = g.getPosition().getOnPosition();
+
+        for (MapObject mO : mapObjectsOnPos.getAll()) {
+            if (mO instanceof Boxes) {
+                Boxes b = (Boxes) mO;
+                b.action(g);
             }
         }
     }

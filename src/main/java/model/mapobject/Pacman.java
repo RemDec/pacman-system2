@@ -85,7 +85,7 @@ public class Pacman extends DynamicTarget {
                 Game.getInstance().gameOver();
             }
             Game.getInstance().onPacmanGotEaten();
-            this.changeState(prevState);
+            this.changeState(State.HUNTED);
         } else {
             this.state = s;
         }

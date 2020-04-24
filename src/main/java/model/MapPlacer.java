@@ -182,6 +182,33 @@ public class MapPlacer {
             new Wall(p);
         }
 
+        PositionContainer trapPositions = Containers.getPositionContainer(width, height);
+        trapPositions.add(
+                        positionContainer.get(8, 1)
+        );
+        for (Position p : trapPositions) {
+            new Trap(p);
+        }
+
+        PositionContainer telePositions = Containers.getPositionContainer(width, height);
+        telePositions.add(
+                positionContainer.get(4, 1)
+        );
+        telePositions.add(
+                positionContainer.get(12, 1)
+        );
+        Teleporter linked = null;
+        // All Teleporter placed on even position are linked to the next one
+        for (Position p : telePositions) {
+            if (linked == null) {
+                linked = new Teleporter(p);
+            } else {
+                new Teleporter(p, linked);
+                linked = null;
+            }
+        }
+
+
         // ------- PLACEHOLDER -------
 
         PositionContainer placeholderPositions = Containers.getPositionContainer(width, height);

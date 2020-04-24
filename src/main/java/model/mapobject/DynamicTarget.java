@@ -135,7 +135,17 @@ public abstract class DynamicTarget extends Target {
         /**
          * The object is waiting, for example to respawn.
          */
-        WAITING
+        WAITING,
+
+        /**
+         * The object is stopped.
+         */
+        HUNTED_STOP,
+
+        /**
+         * The object is stopped.
+         */
+        HUNTER_STOP
 
     }
 }
