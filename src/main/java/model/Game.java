@@ -14,10 +14,7 @@ import model.event.RendererProcess;
 import model.event.Timer;
 import model.event.WorkerProcess;
 import model.exception.ObjectAlreadyInListException;
-import model.mapobject.Coin;
-import model.mapobject.Ghost;
-import model.mapobject.Pacman;
-import model.mapobject.Point;
+import model.mapobject.*;
 
 /**
  * The Game class is kind of a <i>master</i>-class, organizing all other business logic objects.
@@ -53,6 +50,7 @@ public class Game {
      * A container of all coins.
      */
     private LimitedObjectContainer<Coin> coinContainer;
+    private ObjectContainer<MapObject> specialObjectContainer;
 
     /**
      * A container of all points.
@@ -131,6 +129,7 @@ public class Game {
 
         this.ghostContainer = Containers.getGhostContainer();
         this.coinContainer = Containers.getCoinContainer();
+        this.specialObjectContainer = Containers.getSpecialObjectsContainer();
         this.pointContainer = Containers.getPointContainer();
         this.pacmanContainer = Containers.getPacmanContainer();
         this.level = Level.getInstance();
@@ -248,6 +247,15 @@ public class Game {
      */
     public LimitedObjectContainer<Coin> getCoinContainer() {
         return coinContainer;
+    }
+
+    /**
+     * Gets the special objects container.
+     *
+     * @return The container used to manage all instance of {@link Grenade}'s in the object tree.
+     */
+    public ObjectContainer<MapObject> getSpecialObjectsContainer() {
+        return specialObjectContainer;
     }
 
     /**

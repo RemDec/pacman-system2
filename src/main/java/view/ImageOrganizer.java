@@ -97,6 +97,31 @@ public class ImageOrganizer {
         Class<?> c = this.getClass();
 
         ArrayList<String[]> data = new ArrayList<>();
+
+        // GRENADE
+        data.add(
+                new String[]{"/graphics/resized/specials/grenade.png", Grenade.class.getCanonicalName()}
+        );
+        // FISH
+        data.add(
+                new String[]{"/graphics/resized/specials/fish.png", Fish.class.getCanonicalName()}
+        );
+        // PEPPER
+        data.add(
+                new String[]{"/graphics/resized/specials/pepper.png", Pepper.class.getCanonicalName()}
+        );
+        // POTATO
+        data.add(
+                new String[]{"/graphics/resized/specials/potato.png", Potato.class.getCanonicalName()}
+        );
+        // REDBEAN
+        data.add(
+                new String[]{"/graphics/resized/specials/red_bean.png", RedBean.class.getCanonicalName()}
+        );
+        // TOMATO
+        data.add(
+                new String[]{"/graphics/resized/specials/tomato.png", Tomato.class.getCanonicalName()}
+        );
         // Teleporter
         data.add(
                 new String[]{"/graphics/primitive/teleporter.png", Teleporter.class.getCanonicalName() + ">PRINCIPAL"}

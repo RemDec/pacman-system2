@@ -29,13 +29,11 @@ public class Trap extends Boxes {
         if (someoneOn == 0) {
             someoneOn = 2;
             pacman.changeState(DynamicTarget.State.WAITING);
-            System.out.println("a");
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
 
                 @Override
                 public void run() {
-                    System.out.println("aa");
                     pacman.changeState(DynamicTarget.State.HUNTED);
                     someoneOn -= 1;
                 }
@@ -53,7 +51,6 @@ public class Trap extends Boxes {
                 ghost.changeState(DynamicTarget.State.HUNTED_STOP);
             else if (ghost.state == DynamicTarget.State.HUNTER)
                 ghost.changeState(DynamicTarget.State.HUNTER_STOP);
-            System.out.println(ghost.state);
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
 

@@ -45,7 +45,7 @@ public class Score implements Serializable, Comparable<Score>{
      * @throws java.lang.IllegalArgumentException When <i>i</i> is not positive.
      */
     private void addToScore(int i) {
-        if (i > 0) {
+        if (i >= 0) {
             this.score += i;
         } else {
             throw new IllegalArgumentException("The amount of points must be positive.");

@@ -1,9 +1,6 @@
 package model.container;
 
-import model.mapobject.Coin;
-import model.mapobject.Ghost;
-import model.mapobject.MapObject;
-import model.mapobject.Pacman;
+import model.mapobject.*;
 
 
 public class Containers {
@@ -22,6 +19,10 @@ public class Containers {
 
     public static LimitedObjectContainer<Coin> getCoinContainer() {
         return new LimitedObjectContainer<Coin>(4);
+    }
+
+    public static ObjectContainer<MapObject> getSpecialObjectsContainer() {
+        return new ObjectContainer<MapObject>();
     }
 
     public static LimitedObjectContainer<Pacman> getPacmanContainer(){

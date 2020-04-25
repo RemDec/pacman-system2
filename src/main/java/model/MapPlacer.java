@@ -1,9 +1,6 @@
 package model;
 
-import model.container.Containers;
-import model.container.LimitedObjectContainer;
-import model.container.PointContainer;
-import model.container.PositionContainer;
+import model.container.*;
 import model.mapobject.*;
 
 public class MapPlacer {
@@ -281,6 +278,7 @@ public class MapPlacer {
         // Origin is leftmost upper point
         // --------- COINS ---------
         LimitedObjectContainer<Coin> cC = Game.getInstance().getCoinContainer();
+        ObjectContainer<MapObject> sObjs = Game.getInstance().getSpecialObjectsContainer();
         PointContainer pC = Game.getInstance().getPointContainer();
 
         cC.removeAll();
@@ -290,6 +288,9 @@ public class MapPlacer {
         cC.add(new Coin(positionContainer.get(1, 8)));
         cC.add(new Coin(positionContainer.get(18, 1)));
         cC.add(new Coin(positionContainer.get(18, 8)));
+
+        sObjs.add(new Grenade(positionContainer.get(18, 5)));
+        sObjs.add(new Fish(positionContainer.get(18, 8)));
 
         // --------- POINTS ---------
         for (Position p : positionContainer) {
