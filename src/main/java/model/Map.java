@@ -18,6 +18,7 @@ import model.mapobject.*;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modification)
  */
 public class Map {
 
@@ -59,11 +60,7 @@ public class Map {
         this.positionContainer = Containers.getPositionContainer(width, height);
 
         // Create all position instances for this map
-        for (int actX = 0; actX < width; actX++) {
-            for (int actY = 0; actY < height; actY++) {
-                this.positionContainer.add(new Position(actX, actY));
-            }
-        }
+        positionContainer.fill();
     }
 
     /**

@@ -3,6 +3,10 @@ package model.event;
 import model.Game;
 import model.Timer;
 
+/**
+ * @author Rémy Decocq
+ *
+ */
 public class TimerProcess implements Process {
 
     private Timer timer;

@@ -5,8 +5,16 @@ import model.mapobject.Ghost;
 import model.mapobject.MapObject;
 import model.mapobject.Pacman;
 
-
+/**
+ * Class serving as an instantiation point for Containers specific to the game
+ *
+ * @author Rémy Decocq
+ */
 public class Containers {
+
+    public static final int NBR_MAX_COIN = 4;
+    public static final int NBR_MAX_PACMAN = 2;
+    public static final int NBR_MAX_GHOST = 4;
 
     public static PositionContainer getPositionContainer(int width, int height){
         return new PositionContainer(width, height);
@@ -21,15 +29,15 @@ public class Containers {
     }
 
     public static LimitedObjectContainer<Coin> getCoinContainer() {
-        return new LimitedObjectContainer<Coin>(4);
+        return new LimitedObjectContainer<Coin>(NBR_MAX_COIN);
     }
 
     public static LimitedObjectContainer<Pacman> getPacmanContainer(){
-        return new LimitedObjectContainer<Pacman>(2);
+        return new LimitedObjectContainer<Pacman>(NBR_MAX_PACMAN);
     }
 
     public static LimitedObjectContainer<Ghost> getGhostContainer(){
-        return new LimitedObjectContainer<Ghost>(4);
+        return new LimitedObjectContainer<Ghost>(NBR_MAX_GHOST);
     }
 
 }

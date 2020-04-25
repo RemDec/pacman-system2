@@ -16,6 +16,7 @@ import model.container.Container;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modification)
  * @see Container
  */
 public class ObjectAlreadyInListException extends ListException {

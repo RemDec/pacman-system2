@@ -7,6 +7,10 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author Rémy Decocq (built from original implementation)
+ *
+ */
 public class PositionContainer implements Container<Position> {
 
     private ConcurrentHashMap<String, Position> positions;
@@ -42,6 +46,11 @@ public class PositionContainer implements Container<Position> {
         return val;
     }
 
+    @Override
+    public Vector<Position> getAll() {
+        return new Vector<>(this.positions.values());
+    }
+
     /**
      * Adds a position to the container. DO NOT USE THIS OUTSIDE {@link Map}.
      *
@@ -64,9 +73,16 @@ public class PositionContainer implements Container<Position> {
         }
     }
 
-    @Override
-    public Vector<Position> getAll() {
-        return new Vector<>(this.positions.values());
+    /**
+     * Instantiate all possible {@link Position}s from {@link #width} and {@link #height}
+     * and add them
+     */
+    public void fill(){
+        for (int actX = 0; actX < width; actX++) {
+            for (int actY = 0; actY < height; actY++) {
+                this.add(new Position(actX, actY));
+            }
+        }
     }
 
     /**

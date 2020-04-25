@@ -7,6 +7,10 @@ import model.exception.ObjectAlreadyInListException;
 import java.util.Iterator;
 import java.util.Vector;
 
+/**
+ * @author Rémy Decocq (built from original implementation)
+ *
+ */
 public class ObjectContainer<E extends MapObject> implements Container<E> {
 
     protected Vector<E> elmts;

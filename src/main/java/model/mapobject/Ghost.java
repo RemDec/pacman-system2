@@ -17,6 +17,7 @@ import model.Scorable;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modification)
  */
 public class Ghost extends DynamicTarget implements Scorable {
 

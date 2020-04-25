@@ -18,6 +18,7 @@ import model.mapobject.*;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modifications)
  */
 public class WorkerProcess implements Process {
 

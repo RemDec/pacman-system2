@@ -9,6 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
+/**
+ * @author Rémy Decocq
+ *
+ */
 public class TimerTest {
 
     private Timer timer;

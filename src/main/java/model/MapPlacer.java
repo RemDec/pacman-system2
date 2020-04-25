@@ -6,6 +6,10 @@ import model.container.PointContainer;
 import model.container.PositionContainer;
 import model.mapobject.*;
 
+/**
+ * @author Rémy Decocq
+ *
+ */
 public class MapPlacer {
 
     /**

@@ -17,6 +17,7 @@ import model.Position;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq
  * @see Ghost
  * @see Pacman
  */

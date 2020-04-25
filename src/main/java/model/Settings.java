@@ -12,6 +12,7 @@ package model;
  * Global Settings for the gameplay of the {@link Game}.
  *
  * @author Philipp Winter
+ * @author Rémy Decocq (modification)
  */
 public class Settings {
 
