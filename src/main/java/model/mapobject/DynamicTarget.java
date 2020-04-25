@@ -149,7 +149,11 @@ public abstract class DynamicTarget extends Target {
         /**
          * The object is stopped.
          */
-        HUNTER_STOP
+        HUNTER_STOP,
 
+        /**
+         * The object is invisible.
+         */
+        INVINSIBLE;
     }
 }

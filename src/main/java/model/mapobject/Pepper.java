@@ -4,12 +4,15 @@ import model.Game;
 import model.Position;
 import model.Scorable;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * If Pacman eats it, its speed increases for a certain period of time.
  */
 public class Pepper extends StaticTarget implements Scorable {
 
-    private int stillTime = 3000;
+    private int duration = 5000;
 
     public Pepper(Position pos) {
         this.state = StaticTarget.State.AVAILABLE;
@@ -46,6 +49,12 @@ public class Pepper extends StaticTarget implements Scorable {
      * Make the pacman that is on the fish's position still for a period of time
      */
     private void makePacmanFaster(final Pacman pacman) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+            }
+        }, duration);
     }
 
     @Override

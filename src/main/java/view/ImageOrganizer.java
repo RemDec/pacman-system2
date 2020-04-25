@@ -69,6 +69,9 @@ public class ImageOrganizer {
 
         if (mO instanceof Pacman) {
             Pacman p = (Pacman) mO;
+            if (p.getState() == DynamicTarget.State.INVINSIBLE ) {
+                key += ">INV";
+            }
             key += ">" + p.getHeadingTo();
         }
 
@@ -149,6 +152,18 @@ public class ImageOrganizer {
         );
         data.add(
                 new String[]{"/graphics/resized/pacman/4_west.png", Pacman.class.getCanonicalName() + ">WEST"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/inv4_north.png", Pacman.class.getCanonicalName() + ">INV>NORTH"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/inv4_east.png", Pacman.class.getCanonicalName() + ">INV>EAST"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/inv4_south.png", Pacman.class.getCanonicalName() + ">INV>SOUTH"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/inv4_west.png", Pacman.class.getCanonicalName() + ">INV>WEST"}
         );
 
         // SCARED GHOST

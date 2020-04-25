@@ -140,6 +140,10 @@ public class MapPlacer {
 
         sObjs.add(new Grenade(positionContainer.get(18, 5)));
         sObjs.add(new Fish(positionContainer.get(18, 8)));
+        sObjs.add(new RedBean(positionContainer.get(3, 8)));
+        sObjs.add(new Pepper(positionContainer.get(1, 8)));
+        sObjs.add(new Potato(positionContainer.get(10, 5)));
+        sObjs.add(new Tomato(positionContainer.get(15, 8)));
 
         // --------- POINTS ---------
         for (Position p : positionContainer) {

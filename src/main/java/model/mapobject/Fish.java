@@ -8,7 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * If Pacman eats it, he becomes ”still” for a certain period of time.
+ * If Pacman eats it, he becomes still for a certain period of time.
  */
 public class Fish extends StaticTarget implements Scorable {
 

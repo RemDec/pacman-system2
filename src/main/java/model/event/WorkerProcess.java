@@ -181,7 +181,7 @@ public class WorkerProcess implements Process {
                 Ghost g = (Ghost) mO;
                 if (g.getState() == DynamicTarget.State.HUNTED) {
                     pac.eat(g);
-                } else if (g.getState() == DynamicTarget.State.HUNTER) {
+                } else if (g.getState() == DynamicTarget.State.HUNTER || g.getState() == DynamicTarget.State.HUNTER_STOP && pac.getState() != DynamicTarget.State.INVINSIBLE) {
                     g.eat(pac);
                 }
             } else if (mO instanceof Boxes) {
