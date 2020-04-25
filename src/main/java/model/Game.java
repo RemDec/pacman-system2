@@ -11,10 +11,12 @@ package model;
 import controller.MainController;
 import model.container.*;
 import model.event.RendererProcess;
-import model.event.Timer;
+import model.event.Scheduler;
+import model.event.TimerProcess;
 import model.event.WorkerProcess;
 import model.exception.ObjectAlreadyInListException;
 import model.mapobject.*;
+import java.util.ArrayList;
 
 /**
  * The Game class is kind of a <i>master</i>-class, organizing all other business logic objects.
@@ -22,14 +24,13 @@ import model.mapobject.*;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modification)
  */
 public class Game {
 
     static {
         Game.reset();
     }
-
-    public final static Settings settings = Settings.getInstance();
 
     /**
      * The singleton instance.
@@ -40,6 +41,11 @@ public class Game {
      * Whether the game was initialized already.
      */
     private static boolean initialized;
+
+    /**
+     * A timer used in game
+     */
+    private Timer timer;
 
     /**
      * A container of all ghosts.
@@ -65,7 +71,7 @@ public class Game {
     /**
      * The event handler reacts on events happening in the game.
      */
-    private Timer eventHandlerManager;
+    private Scheduler eventHandlerManager;
 
     /**
      * The map is like a two dimensional array of positions, containing all map objects
@@ -89,7 +95,7 @@ public class Game {
 
     private boolean isOver = false;
 
-    private int playerLifes = 3;
+    private int playerLifes;
 
     /**
      * Constructs a new Game object.
@@ -121,9 +127,14 @@ public class Game {
      * The internal initialization method.
      */
     private synchronized void initializeInternal() {
+        Timer.reset();
         Map.reset();
         Coin.resetCoinsState();
         Level.reset();
+
+        this.playerLifes = Settings.getInstance().getInitPlayerLifes();
+
+        this.timer = Timer.getInstance();
 
         this.map = Map.getInstance();
 
@@ -134,9 +145,10 @@ public class Game {
         this.pacmanContainer = Containers.getPacmanContainer();
         this.level = Level.getInstance();
 
-        this.eventHandlerManager = new Timer();
+        this.eventHandlerManager = new Scheduler();
         this.eventHandlerManager.register(new WorkerProcess());
         this.eventHandlerManager.register(new RendererProcess());
+        this.eventHandlerManager.register(new TimerProcess());
 
     }
 
@@ -175,28 +187,24 @@ public class Game {
     /**
      * Starts the game, in detail it causes all {@link model.event.WorkerProcess}'s to start working.
      *
-     * @see model.event.Timer#startExecution()
+     * @see Scheduler#startExecution()
      */
     public void start() {
         if(pointContainer.size() == 0){
-            String sOld = "ok";
-            try {
-                sOld = this.toString();
-                this.map.placeObjects();
-            }catch (ObjectAlreadyInListException e){
-                System.out.println(e.getMessage() + "\n" + sOld);
-                throw e;
-            }
+            this.map.placeObjects();
         }
+        this.playerLifes = Settings.getInstance().getInitPlayerLifes();
+        this.timer.resume_increment();
         this.eventHandlerManager.startExecution();
     }
 
     /**
      * Pauses the game, by stopping/pausing all {@link model.event.WorkerProcess}'s.
      *
-     * @see model.event.Timer#pauseExecution()
+     * @see Scheduler#pauseExecution()
      */
     public void pause() {
+        this.timer.pause_increment();
         this.eventHandlerManager.pauseExecution();
     }
 
@@ -220,6 +228,10 @@ public class Game {
 
     public boolean isGameOver() {
         return this.isOver;
+    }
+
+    public Timer getTimer(){
+        return timer;
     }
 
     /**
@@ -294,8 +306,17 @@ public class Game {
         return this.refreshRate;
     }
 
-    public Timer getEventHandlerManager() {
+    public Scheduler getEventHandlerManager() {
         return eventHandlerManager;
+    }
+
+    public ArrayList<ObjectContainer<? extends MapObject>> getAllMapobjecContainers(){
+        ArrayList<ObjectContainer<? extends MapObject>> all = new ArrayList<ObjectContainer<? extends MapObject>>();
+        all.add(pacmanContainer);
+        all.add(ghostContainer);
+        all.add(pointContainer);
+        all.add(coinContainer);
+        return all;
     }
 
     /**
@@ -322,7 +343,7 @@ public class Game {
         s += "\n +- Ghosts : " + this.ghostContainer;
         s += "\n +- Coins : " + this.coinContainer;
         s += "\n +- Points : " + this.pointContainer;
-        s += "\n + current map\n" + this.map;
+        s += "\n + current map\n" + this.map.toString(true);
         return s;
     }
 

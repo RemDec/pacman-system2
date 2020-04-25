@@ -18,14 +18,17 @@ import java.util.Date;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modification)
  */
 
 public class Score implements Serializable, Comparable<Score>{
 
+    public static final int INIT_SCORE = 0;
+
     /**
      * The score, starting at zero.
      */
-    private long score = 0;
+    private long score = INIT_SCORE;
 
     private Date time;
 

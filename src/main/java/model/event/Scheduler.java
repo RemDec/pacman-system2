@@ -18,15 +18,15 @@ import java.util.concurrent.TimeUnit;
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
  */
-public class Timer {
+public class Scheduler {
 
     private ArrayList<Process> eventObjects;
 
     private ScheduledThreadPoolExecutor executor;
 
-    private int startPoolSize = 3;
+    private final int startPoolSize = 3;
 
-    public Timer() {
+    public Scheduler() {
         this.eventObjects = new ArrayList<>(startPoolSize);
         this.executor = new ScheduledThreadPoolExecutor(startPoolSize);
     }

@@ -10,8 +10,13 @@ package model;
 
 import controller.MainController;
 import model.Map.Direction;
+import model.container.ObjectContainer;
+import model.mapobject.MapObject;
+import model.mapobject.Wall;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -21,6 +26,7 @@ import static org.junit.Assert.*;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modification)
  */
 public class MapTest {
 
@@ -51,8 +57,33 @@ public class MapTest {
     }
 
     @Test
+    public void testPlaceAllObjects(){
+        for (Position pos: instance.getPositionContainer()){
+            assertEquals(0, pos.getOnPosition().size());
+        }
+        instance.placeObjects();
+        assertTrue(instance.isObjectsPlaced());
+        ArrayList<ObjectContainer<? extends MapObject>> conts = Game.getInstance().getAllMapobjecContainers();
+        for (ObjectContainer<? extends MapObject> container: conts) {
+            for (MapObject mo : container) {
+                Position pos = mo.getPosition();
+                assertNotNull(pos);
+                assertTrue(instance.getPositionContainer().contains(pos));
+            }
+        }
+    }
+
+    @Test
     public void testGetPositionByDirectionIfMoveableTo() {
-        assertNull(Map.getPositionByDirectionIfMovableTo(Map.getInstance().getPositionContainer().get(0, 0), Direction.WEST));
-        assertNotNull(Map.getPositionByDirectionIfMovableTo(Map.getInstance().getPositionContainer().get(3, 6), Direction.WEST));
+        for(Direction d: Direction.values()) {
+            //Still nothing placed, being in the middle ..
+            assertNotNull(Map.getPositionByDirectionIfMovableTo(instance.getPositionContainer().get(5, 5), d));
+        }
+        //On border
+        assertNull(Map.getPositionByDirectionIfMovableTo(instance.getPositionContainer().get(0, 0), Direction.NORTH));
+        assertNotNull(Map.getPositionByDirectionIfMovableTo(instance.getPositionContainer().get(0, 0), Direction.EAST));
+        //Placing a Wall on previous free pos
+        new Wall(instance.getPositionContainer().get(1,0));
+        assertNull(Map.getPositionByDirectionIfMovableTo(instance.getPositionContainer().get(0, 0), Direction.EAST));
     }
 }

@@ -8,7 +8,6 @@
 
 package model.mapobject;
 
-import model.Map;
 import model.Map.Direction;
 import model.Position;
 
@@ -18,6 +17,7 @@ import model.Position;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq
  * @see Ghost
  * @see Pacman
  */
@@ -37,16 +37,20 @@ public abstract class DynamicTarget extends Target {
      * @param pos The new position of this object.
      */
     public void move(Position pos) {
-        boolean placeholderOnPosition = false;
+        boolean wallOnPosition = false;
+        boolean placeHolderOnPosition = false;
         for(MapObject m : pos.getOnPosition()){
-            if (m instanceof Placeholder) {
-                placeholderOnPosition = true;
+            if (m instanceof Wall) {
+                wallOnPosition = true; // this position allow a dynamic target to be located on
                 break;
+            } else if(m instanceof Placeholder){
+                placeHolderOnPosition = true;
             }
         }
-        if(!placeholderOnPosition || this.isHeadingTo(Map.Direction.NORTH)){
-            // if Position is free for moving to or ???
+        if(!wallOnPosition && !placeHolderOnPosition){
             this.setPosition(pos);
+        } else if (placeHolderOnPosition && isHeadingTo(Direction.NORTH) && this instanceof Ghost){
+            this.setPosition(pos); // Ghosts allowed to go on PlaceHolder in order to leave their spawn
         }
     }
 

@@ -16,6 +16,7 @@ import model.*;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modification)
  */
 public class Pacman extends DynamicTarget {
 

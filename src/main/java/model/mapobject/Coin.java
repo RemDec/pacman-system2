@@ -18,6 +18,7 @@ import model.Scorable;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modification)
  */
 public class Coin extends StaticTarget implements Scorable {
 
@@ -66,10 +67,25 @@ public class Coin extends StaticTarget implements Scorable {
     public static void reduceActiveSeconds(double value) {
         double result = activeSeconds - value;
         if (result <= 0) {
-            result = PACMAN_AINT_EATER;
-            Coin.nbr_ghosts_eaten_in_a_row = 0;
+            Coin.switchToPacmanNonEater();
+        }else {
+            activeSeconds = result;
         }
-        activeSeconds = result;
+    }
+
+    public static double getSecondsGain(){
+        return Coin.nbr_eaten <= 2 ? SECONDS_PER_2_FIRST_COIN : SECONDS_PER_2_LAST_COIN;
+    }
+
+    private static void switchToPacmanEater(){
+        Coin.activeSeconds = Coin.getSecondsGain(); // a current value != -1 means pacman is hunting
+        Game.getInstance().getTimer().pause_increment();
+    }
+
+    private static void switchToPacmanNonEater(){
+        activeSeconds = PACMAN_AINT_EATER; // pacman is no more hunting. RUN LITTLE PACMAN !!
+        Coin.nbr_ghosts_eaten_in_a_row = 0;
+        Game.getInstance().getTimer().resume_increment();
     }
 
     public Coin(Position pos) {
@@ -91,14 +107,11 @@ public class Coin extends StaticTarget implements Scorable {
         }
         if (state == State.EATEN) {
             Coin.nbr_eaten++;
-            double seconds_gain = SECONDS_PER_2_FIRST_COIN;
-            if (Coin.nbr_eaten > 2)
-                seconds_gain = SECONDS_PER_2_LAST_COIN;
             setVisible(false);
             if (Coin.activeSeconds == Coin.PACMAN_AINT_EATER) {
-                Coin.activeSeconds = seconds_gain;
+                Coin.switchToPacmanEater();
             } else {
-                Coin.activeSeconds += seconds_gain;
+                Coin.activeSeconds += Coin.getSecondsGain(); // adding more to current seconds
             }
             this.makePacmansHunters();
         } else if (state == State.AVAILABLE) {

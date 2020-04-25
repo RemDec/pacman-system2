@@ -3,33 +3,54 @@ package model;
 import model.container.*;
 import model.mapobject.*;
 
+/**
+ * @author Rémy Decocq
+ *
+ */
 public class MapPlacer {
 
-    public static void placeDynamicObjects() {
+    /**
+     * Place new instances of actors in the game (Pacmans and Ghosts) in the current {@link Map}, at the predefined
+     * {@link StartingPositions}.
+     */
+    public static void placeAllDynamicObjects() {
         Game g = Game.getInstance();
         Map m = Map.getInstance();
 
         // --------- PACMANS ---------
         LimitedObjectContainer<Pacman> pacC = g.getPacmanContainer();
 
-        pacC.add(new Pacman(m.getStartingPos(StartingPositions.PACMAN_MALE), Pacman.Sex.MALE));
+        pacC.add(new Pacman(m.getActualPosition(StartingPositions.PACMAN_MALE), Pacman.Sex.MALE));
 
         if (Settings.getInstance().getGameMode() == Game.Mode.MULTIPLAYER) {
-            pacC.add(new Pacman(m.getStartingPos(StartingPositions.PACMAN_FEMALE), Pacman.Sex.FEMALE));
+            pacC.add(new Pacman(m.getActualPosition(StartingPositions.PACMAN_FEMALE), Pacman.Sex.FEMALE));
         }
 
         // --------- GHOSTS ---------
         LimitedObjectContainer<Ghost> gC = g.getGhostContainer();
-        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_BLUE), Ghost.Colour.BLUE));
-        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_ORANGE), Ghost.Colour.ORANGE));
-        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_PINK), Ghost.Colour.PINK));
-        gC.add(new Ghost(m.getStartingPos(StartingPositions.GHOST_RED), Ghost.Colour.RED));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_BLUE), Ghost.Colour.BLUE));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_ORANGE), Ghost.Colour.ORANGE));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_PINK), Ghost.Colour.PINK));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_RED), Ghost.Colour.RED));
     }
 
-    public static Position getActualStartingPosition(PositionContainer positionContainer, Position sPos){
+    /**
+     * From an arbitrary Position considered for holding (x,y) couple, retrieve the corresponding indexed one in
+     * a {@link PositionContainer}
+     *
+     * @param positionContainer The container holding {@link Position}s instances to look in
+     * @param sPos An arbitrary position whose coordinates are looked up for corresponding entry
+     * @return positionContainer.get(sPos.getX(), sPos.getY())
+     */
+    public static Position getActualPosition(PositionContainer positionContainer, Position sPos){
         return positionContainer.get(sPos.getX(), sPos.getY());
     }
 
+    /**
+     * Statically predefined starting positions for all actors of the game, stocked as {@link Position}s standing
+     * as (x, y) couples
+     *
+     */
     public static class StartingPositions {
 
         public static final Position GHOST_RED = new Position(11, 3);
@@ -40,42 +61,101 @@ public class MapPlacer {
         public static final Position PACMAN_MALE = new Position(13, 8);
         public static final Position PACMAN_FEMALE = new Position(6, 8);
 
+        public static Position getCoordStartingPosition(DynamicTarget t){
+            if(t instanceof Ghost){
+                switch(((Ghost)t).getColour()) {
+                    case RED: return GHOST_RED;
+                    case PINK: return GHOST_PINK;
+                    case BLUE: return GHOST_BLUE;
+                    case ORANGE: return GHOST_ORANGE;
+                    default:
+                        throw new RuntimeException("Unknown ghost color " + t);
+                }
+            } else if (t instanceof Pacman){
+                switch(((Pacman)t).getSex()) {
+                    case MALE: return PACMAN_MALE;
+                    case FEMALE: return PACMAN_FEMALE;
+                    default:
+                        throw new RuntimeException("Unknown Pacman sex " + t);
+                }
+            }
+            throw new RuntimeException("Unknown DynamicTarget " + t);
+        }
     }
 
-    public static void replaceDynamicObjects() {
+    /**
+     * Replace a any actor to its {@link StartingPositions} for the current {@link Map} (setting its heading
+     * to NORTH also).
+     *
+     * @param t
+     */
+    public static void replaceDynamicObject(DynamicTarget t){
         Map m = Map.getInstance();
+        Position startingPos = StartingPositions.getCoordStartingPosition(t);
+        t.setPosition(m.getActualPosition(startingPos));
+        // By default, every target must spawn heading to NORTH
+        t.setHeadingTo(Map.Direction.NORTH);
+    }
+
+    /**
+     * Replace all actors of the game, see {@link MapPlacer#replaceDynamicObject}
+     */
+    public static void replaceDynamicObjects() {
         LimitedObjectContainer<Ghost> gC = Game.getInstance().getGhostContainer();
         for(Ghost g : gC) {
-            switch(g.getColour()) {
-                case RED: g.move(m.getStartingPos(StartingPositions.GHOST_RED));
-                    break;
-                case PINK: g.move(m.getStartingPos(StartingPositions.GHOST_PINK));
-                    break;
-                case BLUE: g.move(m.getStartingPos(StartingPositions.GHOST_BLUE));
-                    break;
-                case ORANGE: g.move(m.getStartingPos(StartingPositions.GHOST_ORANGE));
-                    break;
-                default:
-                    throw new RuntimeException("Unknown ghost color");
-            }
+            replaceDynamicObject(g);
         }
 
         LimitedObjectContainer<Pacman> pC = Game.getInstance().getPacmanContainer();
         for(Pacman p : pC) {
-            switch(p.getSex()) {
-                case MALE:
-                    p.move(m.getStartingPos(StartingPositions.PACMAN_MALE));
-                    break;
-                case FEMALE:
-                    p.move(m.getStartingPos(StartingPositions.PACMAN_FEMALE));
-                    break;
-                default:
-                    throw new RuntimeException("Unknown Pacman sex");
+            replaceDynamicObject(p);
+        }
+    }
+
+    public static void placeAllStaticObjects(){
+        MapPlacer.placeStaticObjects();
+        MapPlacer.spawnStaticTargets();
+    }
+
+    /**
+     * Place all static eatable elements (Coins and Points) in the current {@link Map}.
+     */
+    public static void spawnStaticTargets() {
+        PositionContainer positionContainer = Map.getInstance().getPositionContainer();
+
+        // Origin is leftmost upper point
+        // --------- COINS ---------
+        LimitedObjectContainer<Coin> cC = Game.getInstance().getCoinContainer();
+        PointContainer pC = Game.getInstance().getPointContainer();
+        ObjectContainer<MapObject> sObjs = Game.getInstance().getSpecialObjectsContainer();
+
+        cC.removeAll();
+        pC.removeAll();
+
+        cC.add(new Coin(positionContainer.get(1, 1)));
+        cC.add(new Coin(positionContainer.get(1, 8)));
+        cC.add(new Coin(positionContainer.get(18, 1)));
+        cC.add(new Coin(positionContainer.get(18, 8)));
+
+
+        sObjs.add(new Grenade(positionContainer.get(18, 5)));
+        sObjs.add(new Fish(positionContainer.get(18, 8)));
+
+        // --------- POINTS ---------
+        for (Position p : positionContainer) {
+            if (p.getOnPosition().size() == 0) {
+                pC.add(new Point(p));
+
             }
         }
     }
 
-    public static void placeStaticObjects(PositionContainer positionContainer) {
+    /**
+     * Place all static non-eatable elements (Walls and Placeholders) in the current {@link Map}.
+     */
+    public static void placeStaticObjects() {
+        PositionContainer positionContainer = Map.getInstance().getPositionContainer();
+
         // Origin is leftmost upper point
         // --------- WALLS ---------
         int width = positionContainer.getWidth();
@@ -273,32 +353,4 @@ public class MapPlacer {
             new Placeholder(p);
         }
     }
-
-    public static void spawnStaticTargets(PositionContainer positionContainer) {
-        // Origin is leftmost upper point
-        // --------- COINS ---------
-        LimitedObjectContainer<Coin> cC = Game.getInstance().getCoinContainer();
-        ObjectContainer<MapObject> sObjs = Game.getInstance().getSpecialObjectsContainer();
-        PointContainer pC = Game.getInstance().getPointContainer();
-
-        cC.removeAll();
-        pC.removeAll();
-
-        cC.add(new Coin(positionContainer.get(1, 1)));
-        cC.add(new Coin(positionContainer.get(1, 8)));
-        cC.add(new Coin(positionContainer.get(18, 1)));
-        cC.add(new Coin(positionContainer.get(18, 8)));
-
-        sObjs.add(new Grenade(positionContainer.get(18, 5)));
-        sObjs.add(new Fish(positionContainer.get(18, 8)));
-
-        // --------- POINTS ---------
-        for (Position p : positionContainer) {
-            if (p.getOnPosition().size() == 0) {
-                pC.add(new Point(p));
-
-            }
-        }
-    }
-
 }

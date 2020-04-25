@@ -14,6 +14,7 @@ import model.Position;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modification)
  */
 public abstract class StaticTarget extends Target {
 
@@ -26,7 +27,7 @@ public abstract class StaticTarget extends Target {
     public abstract void changeState(State state);
 
     @Override
-    protected void setPosition(Position pos) {
+    public void setPosition(Position pos) {
         this.position = pos; // Set the position now to prevent the equals() method of the respective object to cause a NullPointerException
         if (pos.getOnPosition().contains(this)) {
             String err = "There cannot be more than one StaticTarget on a position! other targets: " + pos.getOnPosition();

@@ -6,6 +6,10 @@ import model.exception.ObjectAlreadyInListException;
 
 import java.util.Vector;
 
+/**
+ * @author Rémy Decocq (built from original implementation)
+ *
+ */
 public class LimitedObjectContainer<E extends MapObject> extends ObjectContainer<E> {
 
     public final int max;

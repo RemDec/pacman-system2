@@ -11,7 +11,8 @@ package model.mapobject;
 import model.Position;
 
 /**
- * Placeholder concrete class for a MapObject, linked to a specific {@link Position}.
+ * A Placeholder stands for a Position that isn't intended to contain a Wall but where no DynamicTarget should
+ * be movable to. An exception is allowed for ghosts respawning, see {@link DynamicTarget#move}.
  *
  * @author Philipp Winter
  */

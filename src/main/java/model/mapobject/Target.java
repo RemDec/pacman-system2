@@ -14,6 +14,7 @@ package model.mapobject;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modification)
  */
 public abstract class Target extends MapObject {
 

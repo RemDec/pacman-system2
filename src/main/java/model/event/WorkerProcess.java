@@ -18,6 +18,7 @@ import model.mapobject.*;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modifications)
  */
 public class WorkerProcess implements Process {
 
@@ -202,38 +203,27 @@ public class WorkerProcess implements Process {
     }
 
     private void handleGhost(Ghost g) {
-        Position newPosition = Map.getPositionByDirectionIfMovableTo(g.getPosition(), g.getHeadingTo());
+        Position newPosition;
+        newPosition = Map.getPositionByDirectionIfMovableTo(g.getPosition(), g.getHeadingTo());
 
-        // If the Ghost stands in front of a wall OR it could take another way
+        // If the Ghost stands in front of a wall OR it could take another way (0.5 probability)
         if (newPosition == null || (Map.freeNeighbourFields(g.getPosition()) > 1 && Math.round(Math.random()) == 1)) {
             Direction guessedDirection = Map.Direction.guessDirection(g);
             g.setHeadingTo(guessedDirection);
             newPosition = Map.getPositionByDirectionIfMovableTo(g.getPosition(), guessedDirection);
         }
-
+        if (newPosition == null)
+            throw new RuntimeException("A Ghost is blocked :" + g);
 
         if (g.getState() == DynamicTarget.State.HUNTER) {
             g.move(newPosition);
         } else if (g.getState() == DynamicTarget.State.MUNCHED) {
             g.changeState(DynamicTarget.State.WAITING);
+            MapPlacer.replaceDynamicObject(g);
         } else if (g.getState() == DynamicTarget.State.WAITING) {
             if (g.getWaitingSeconds() > 0) {
                 g.reduceWaitingSeconds(1 / Game.getInstance().getRefreshRate());
             } else if (g.getWaitingSeconds() == 0) {
-                Map m = Map.getInstance();
-                switch (g.getColour()) {
-                    case RED:
-                        g.move(m.getStartingPos(MapPlacer.StartingPositions.GHOST_RED));
-                        break;
-                    case BLUE:
-                        g.move(m.getStartingPos(MapPlacer.StartingPositions.GHOST_BLUE));
-                        break;
-                    case ORANGE:
-                        g.move(m.getStartingPos(MapPlacer.StartingPositions.GHOST_ORANGE));
-                        break;
-                    case PINK:
-                        g.move(m.getStartingPos(MapPlacer.StartingPositions.GHOST_PINK));
-                }
                 g.changeState(DynamicTarget.State.HUNTER);
             }
         } else if (g.getState() == DynamicTarget.State.HUNTED) {

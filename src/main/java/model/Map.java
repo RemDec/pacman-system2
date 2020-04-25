@@ -18,6 +18,7 @@ import model.mapobject.*;
  * @author Philipp Winter
  * @author Jonas Heidecke
  * @author Niklas Kaddatz
+ * @author Rémy Decocq (modification)
  */
 public class Map {
 
@@ -59,20 +60,15 @@ public class Map {
         this.positionContainer = Containers.getPositionContainer(width, height);
 
         // Create all position instances for this map
-        for (int actX = 0; actX < width; actX++) {
-            for (int actY = 0; actY < height; actY++) {
-                this.positionContainer.add(new Position(actX, actY));
-            }
-        }
+        positionContainer.fill();
     }
 
     /**
      * Place all objects in {@link Game}'s containers and mark them for rendering
      */
     public void placeObjects() {
-        MapPlacer.placeDynamicObjects();
-        MapPlacer.placeStaticObjects(this.positionContainer);
-        MapPlacer.spawnStaticTargets(this.positionContainer);
+        MapPlacer.placeAllDynamicObjects();
+        MapPlacer.placeAllStaticObjects();
         this.objectsPlaced = true;
         this.markAllForRendering();
     }
@@ -143,6 +139,17 @@ public class Map {
         return s;
     }
 
+    public String toString(boolean detailed){
+        StringBuilder s = new StringBuilder(this.toString());
+        for(int y=0; y < height; y++){
+            s.append("\n");
+            for(int x=0; x < width; x++){
+                s.append(positionContainer.get(x, y).toString(detailed)).append(" ");
+            }
+        }
+        return s.toString();
+    }
+
     /**
      * Get the number of free adjacent positions from a given one, meaning whether it is movable to.
      * @param pos The position to look for neighbouring free positions (so max. 4)
@@ -192,8 +199,29 @@ public class Map {
         }
     }
 
-    public Position getStartingPos(Position pos){
-        return MapPlacer.getActualStartingPosition(this.positionContainer, pos);
+    /**
+     * Verify that a dynamic target is on its starting position (where he spawned)
+     *
+     * @param t any target
+     * @return true iif the Position referenced by t is the same as the starting position in the map (same instances)
+     */
+    public boolean isOnStartingPos(DynamicTarget t){
+        return getStartingPosition(t) == t.getPosition();
+    }
+
+    /**
+     * From a given arbitrary Position instance, retrieve the current Position instance referenced in the Map at
+     * the same coordinates
+     *
+     * @param pos any {@link Position} whose only x and y fields are taken into account
+     * @return The {@link Position} instance in the current {@link #positionContainer} of this Map, at (x, y)
+     */
+    public Position getActualPosition(Position pos){
+        return MapPlacer.getActualPosition(this.positionContainer, pos);
+    }
+
+    public Position getStartingPosition(DynamicTarget t){
+        return getActualPosition(MapPlacer.StartingPositions.getCoordStartingPosition(t));
     }
 
 
