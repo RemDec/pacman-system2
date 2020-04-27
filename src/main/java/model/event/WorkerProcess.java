@@ -14,6 +14,9 @@ import model.Map.Direction;
 import model.container.*;
 import model.mapobject.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Philipp Winter
  * @author Jonas Heidecke
@@ -30,6 +33,8 @@ public class WorkerProcess implements Process {
 
     private LimitedObjectContainer<Pacman> pacmans;
 
+    private ObjectContainer<DynamicTarget> dynamicTargets;
+
     private Map map;
 
     private final int TIME_SEC_FACTOR = 1000;
@@ -38,7 +43,8 @@ public class WorkerProcess implements Process {
 
     @Override
     public long getTiming() {
-        return (long) (TIME_SEC_FACTOR / Game.getInstance().getRefreshRate());
+        //return (long) (TIME_SEC_FACTOR / Game.getInstance().getRefreshRate());
+        return 100;
     }
 
     @Override
@@ -52,6 +58,7 @@ public class WorkerProcess implements Process {
         this.coins = Game.getInstance().getCoinContainer();
         this.ghosts = Game.getInstance().getGhostContainer();
         this.pacmans = Game.getInstance().getPacmanContainer();
+        this.dynamicTargets = Game.getInstance().getSpecialDynamicTargetContainer();
         this.map = Game.getInstance().getMap();
     }
 
@@ -64,6 +71,7 @@ public class WorkerProcess implements Process {
                 this.handleCoins();
                 this.performCollisions();
                 this.handlePacmans();
+                this.handleDynamicTargets();
                 this.performCollisions(); // Must be done two times to prevent two objects moving through each other
                 this.handleGhosts();
 
@@ -115,6 +123,41 @@ public class WorkerProcess implements Process {
         }
     }
 
+    /**
+     * Handle dynamics targets of the dynamic targets container
+     */
+    private void handleDynamicTargets() {
+        ObjectContainer<DynamicTarget> dynamicTargets = Game.getInstance().getSpecialDynamicTargetContainer();
+        List<Fireball> fireballs = new ArrayList<>();
+
+        for (DynamicTarget t : dynamicTargets) {
+            if (t instanceof Fireball){
+                fireballs.add((Fireball) t);
+            }
+        }
+        // Because destroying a fireball while
+        for (Fireball fireball : fireballs) {
+            this.handleFireball(fireball);
+        }
+    }
+
+    /**
+     * Handle a fireball, a fireball moves and is destroyed if going in a wall
+     * @param f the fireball
+     */
+    private void handleFireball(Fireball f) {
+        ObjectContainer<DynamicTarget> dynamicTargets = Game.getInstance().getSpecialDynamicTargetContainer();
+
+        Position newPosition = Map.getPositionByDirectionIfMovableTo(f.getPosition(), f.getHeadingTo());
+        if (newPosition != null) {
+            f.tryMoving(newPosition);
+        } else {
+            //Remove the fireball from the containers
+            dynamicTargets.remove(f);
+            Map.getInstance().getPositionContainer().get(f.getPosition().getX(), f.getPosition().getY()).remove(f);
+        }
+    }
+
     public void handleCoins() {
         double activeSeconds = Coin.getActiveSeconds();
 
@@ -145,13 +188,14 @@ public class WorkerProcess implements Process {
 
     private void handlePacman(Pacman pac) {
         if (pac.getState() != DynamicTarget.State.MUNCHED && pac.getState() != DynamicTarget.State.WAITING) {
-            Position newPosition = Map.getPositionByDirectionIfMovableTo(pac.getPosition(), pac.getHeadingTo());
-
-            if (newPosition != null) {
-                pac.move(newPosition);
+            List allowedDirections = pac.getAllowedDirections();
+            if (allowedDirections.contains(pac.getHeadingTo())){
+                Position newPosition = Map.getPositionByDirectionIfMovableTo(pac.getPosition(), pac.getHeadingTo());
+                if (newPosition != null) {
+                    pac.tryMoving(newPosition);
+                }
             }
         }
-
         Map.positionsToRender.add(pac.getPosition());
     }
 
@@ -161,6 +205,9 @@ public class WorkerProcess implements Process {
         }
         for (Ghost g : ghosts) {
             performCollision(g);
+        }
+        for (DynamicTarget dt : dynamicTargets) {
+            performCollision(dt);
         }
     }
 
@@ -175,14 +222,20 @@ public class WorkerProcess implements Process {
                     if (t instanceof Coin) {
                         checkCoinSeconds = true;
                     }
-                    pac.eat(t);
+                    if (pac.canTouch(t)) {
+                        pac.eat(t);
+                    }
                 }
             } else if (mO instanceof Ghost) {
                 Ghost g = (Ghost) mO;
                 if (g.getState() == DynamicTarget.State.HUNTED) {
-                    pac.eat(g);
-                } else if (g.getState() == DynamicTarget.State.HUNTER || g.getState() == DynamicTarget.State.HUNTER_STOP && pac.getState() != DynamicTarget.State.INVINSIBLE) {
-                    g.eat(pac);
+                    if (pac.canTouch(g)) {
+                        pac.eat(g);
+                    }
+                } else if ((g.getState() == DynamicTarget.State.HUNTER || g.getState() == DynamicTarget.State.HUNTER_STOP) && pac.getState() != DynamicTarget.State.INVINSIBLE) {
+                    if (g.canTouch(pac)) {
+                        g.eat(pac);
+                    }
                 }
             } else if (mO instanceof Boxes) {
                 Boxes b = (Boxes) mO;
@@ -202,6 +255,23 @@ public class WorkerProcess implements Process {
         }
     }
 
+    private void performCollision(DynamicTarget dt) {
+        if (dt instanceof Fireball){
+            performCollision((Fireball)dt);
+        }
+    }
+
+    private void performCollision(Fireball f) {
+        ObjectContainer<MapObject> mapObjectsOnPos = f.getPosition().getOnPosition();
+
+        for (MapObject mO : mapObjectsOnPos.getAll()) {
+            if (mO instanceof Ghost) {
+                Ghost g = (Ghost) mO;
+                g.changeState(DynamicTarget.State.KILLED);
+            }
+        }
+    }
+
     private void handleGhost(Ghost g) {
         Position newPosition;
         newPosition = Map.getPositionByDirectionIfMovableTo(g.getPosition(), g.getHeadingTo());
@@ -215,9 +285,7 @@ public class WorkerProcess implements Process {
         if (newPosition == null)
             throw new RuntimeException("A Ghost is blocked :" + g);
 
-        if (g.getState() == DynamicTarget.State.HUNTER) {
-            g.move(newPosition);
-        } else if (g.getState() == DynamicTarget.State.MUNCHED) {
+        if (g.getState() == DynamicTarget.State.MUNCHED || g.getState() == DynamicTarget.State.KILLED) {
             g.changeState(DynamicTarget.State.WAITING);
             MapPlacer.replaceDynamicObject(g);
         } else if (g.getState() == DynamicTarget.State.WAITING) {
@@ -226,12 +294,12 @@ public class WorkerProcess implements Process {
             } else if (g.getWaitingSeconds() == 0) {
                 g.changeState(DynamicTarget.State.HUNTER);
             }
-        } else if (g.getState() == DynamicTarget.State.HUNTED) {
-            if (g.getMovedInLastTurn()) {
-                g.setMovedInLastTurn(false);
-            } else {
-                g.move(newPosition);
-                g.setMovedInLastTurn(true);
+        } else {
+            List allowedDirections = g.getAllowedDirections();
+            if (allowedDirections.contains(g.getHeadingTo())) {
+                if (newPosition != null) {
+                    g.tryMoving(newPosition);
+                }
             }
         }
     }

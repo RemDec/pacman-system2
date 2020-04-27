@@ -28,10 +28,10 @@ public class MapPlacer {
 
         // --------- GHOSTS ---------
         LimitedObjectContainer<Ghost> gC = g.getGhostContainer();
-        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_BLUE), Ghost.Colour.BLUE));
-        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_ORANGE), Ghost.Colour.ORANGE));
-        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_PINK), Ghost.Colour.PINK));
-        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_RED), Ghost.Colour.RED));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_BLUE), Ghost.Colour.BLUE, 2));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_ORANGE), Ghost.Colour.ORANGE, 2));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_PINK), Ghost.Colour.PINK, 2));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_RED), Ghost.Colour.RED, 2));
     }
 
     /**
@@ -58,7 +58,7 @@ public class MapPlacer {
         public static final Position GHOST_BLUE = new Position(8, 3);
         public static final Position GHOST_ORANGE = new Position(9, 3);
 
-        public static final Position PACMAN_MALE = new Position(13, 8);
+        public static final Position PACMAN_MALE = new Position(11, 6);
         public static final Position PACMAN_FEMALE = new Position(6, 8);
 
         public static Position getCoordStartingPosition(DynamicTarget t){
@@ -140,7 +140,7 @@ public class MapPlacer {
 
         sObjs.add(new Grenade(positionContainer.get(18, 5)));
         sObjs.add(new Fish(positionContainer.get(18, 8)));
-        sObjs.add(new RedBean(positionContainer.get(3, 8)));
+        sObjs.add(new RedBean(positionContainer.get(13, 6)));
         sObjs.add(new Pepper(positionContainer.get(1, 8)));
         sObjs.add(new Potato(positionContainer.get(10, 5)));
         sObjs.add(new Tomato(positionContainer.get(15, 8)));
@@ -265,10 +265,18 @@ public class MapPlacer {
 
         PositionContainer trapPositions = Containers.getPositionContainer(width, height);
         trapPositions.add(
-                        positionContainer.get(8, 1)
+                positionContainer.get(8, 1)
         );
         for (Position p : trapPositions) {
             new Trap(p);
+        }
+
+        PositionContainer bridgePositions = Containers.getPositionContainer(width, height);
+        bridgePositions.add(
+                positionContainer.get(13, 5)
+        );
+        for (Position p : bridgePositions) {
+            new Bridge(p, Bridge.Type.NORTH_SOUTH);
         }
 
         PositionContainer telePositions = Containers.getPositionContainer(width, height);

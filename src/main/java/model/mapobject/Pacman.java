@@ -9,6 +9,8 @@
 package model.mapobject;
 
 import model.*;
+import model.container.ObjectContainer;
+import model.exception.ObjectAlreadyInListException;
 
 /**
  * Pacman is playable as male/female and both can be played in the same time in MULTIPLAYER mode
@@ -27,8 +29,13 @@ public class Pacman extends DynamicTarget {
     private Sex sex;
 
     public Pacman(Position pos, Sex sex) {
+        this(pos, sex, 10);
+    }
+
+    public Pacman(Position pos, Sex sex, int speed) {
         this.score = new Score();
         this.state = State.HUNTED;
+        this.setSpeed(speed);
         switch (sex) {
             case MALE:
                 this.setName("Mr. Pacman");
@@ -44,6 +51,33 @@ public class Pacman extends DynamicTarget {
         }
         this.sex = sex;
         this.setPosition(pos);
+    }
+
+    @Override
+    public void tryMoving(Position pos){
+        Position prevPos = this.getPosition();
+        if (canMove()){
+            move(pos);
+            makeSpecialAction(pos);
+            if (prevPos != this.getPosition() && this.getBridgeState() != Bridge.BridgeState.NOT_ON_BRIDGE){
+                this.changeBridgeState(Bridge.BridgeState.NOT_ON_BRIDGE);
+            }
+        }
+    }
+
+    private void makeSpecialAction(Position pos) {
+        if (this.getState() == State.FIRE){
+            this.createFireball(pos);
+        }
+    }
+
+    private void createFireball(Position pos){
+        ObjectContainer<DynamicTarget> dynamicTargets = Game.getInstance().getSpecialDynamicTargetContainer();
+        try {
+            dynamicTargets.add(new Fireball(pos, this.getHeadingTo()));
+        } catch (ObjectAlreadyInListException e) {
+            //doesn't create the fireball
+        }
     }
 
     @Override

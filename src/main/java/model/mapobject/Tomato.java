@@ -8,12 +8,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * If Pacman eats it, it becomes ”invisible” for a certain period of time.
+ * If Pacman eats it, it becomes invisible for a certain period of time.
  * This invisibility allows Pacman to cross ghosts without being killed.
  */
 public class Tomato extends StaticTarget implements Scorable {
 
-    private int duration = 10000;
+    private int duration = 4000;
 
     public Tomato(Position pos) {
         this.state = StaticTarget.State.AVAILABLE;

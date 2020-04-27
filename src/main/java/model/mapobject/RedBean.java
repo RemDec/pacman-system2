@@ -13,7 +13,7 @@ import java.util.TimerTask;
  */
 public class RedBean extends StaticTarget implements Scorable {
 
-    private int duration = 10000;
+    private int duration = 30000;
 
     public RedBean(Position pos) {
         this.state = StaticTarget.State.AVAILABLE;
@@ -47,10 +47,10 @@ public class RedBean extends StaticTarget implements Scorable {
     }
 
     /**
-     * Make the pacman invinsible, it makes him invulnerable
+     * Make the pacman go in FIRE MODE
      */
     private void makePacmanThrowFire(final Pacman pacman) {
-        //pacman.changeState(DynamicTarget.State.INVINSIBLE);
+        pacman.changeState(DynamicTarget.State.FIRE);
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override

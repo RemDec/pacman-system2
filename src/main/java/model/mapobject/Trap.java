@@ -11,7 +11,7 @@ import java.util.TimerTask;
  */
 public class Trap extends Boxes {
 
-    private int trapTime = 5000;
+    private int trapTime = 3000;
     private int someoneOn = 0;
 
     public Trap(Position position) {
@@ -47,16 +47,14 @@ public class Trap extends Boxes {
     public void action(final Ghost ghost) {
         if (someoneOn == 0) {
             someoneOn = 2;
-            if (ghost.state == DynamicTarget.State.HUNTED)
-                ghost.changeState(DynamicTarget.State.HUNTED_STOP);
-            else if (ghost.state == DynamicTarget.State.HUNTER)
-                ghost.changeState(DynamicTarget.State.HUNTER_STOP);
+            ghost.changeSpeed(0);
+            ghost.lockSpeed();
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
-
                 @Override
                 public void run() {
-                    ghost.changeState(DynamicTarget.State.HUNTER);
+                    ghost.unlockSpeed();
+                    ghost.changeSpeed(ghost.getInitialSpeed());
                     someoneOn -= 1;
                 }
             }, trapTime);

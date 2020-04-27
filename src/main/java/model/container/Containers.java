@@ -33,6 +33,10 @@ public class Containers {
         return new ObjectContainer<MapObject>();
     }
 
+    public static ObjectContainer<DynamicTarget> getSpecialDynamicTargetContainer() {
+        return new ObjectContainer<DynamicTarget>();
+    }
+
     public static LimitedObjectContainer<Pacman> getPacmanContainer(){
         return new LimitedObjectContainer<Pacman>(NBR_MAX_PACMAN);
     }

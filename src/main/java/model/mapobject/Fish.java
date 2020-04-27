@@ -49,12 +49,12 @@ public class Fish extends StaticTarget implements Scorable {
      * Make the pacman that is on the fish's position still for a period of time
      */
     private void stopPacman(final Pacman pacman){
-        pacman.changeState(DynamicTarget.State.WAITING);
+        pacman.changeSpeed(0);
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                pacman.changeState(DynamicTarget.State.HUNTED);
+                pacman.changeSpeed(pacman.getInitialSpeed());
             }
         }, stillTime);
     }

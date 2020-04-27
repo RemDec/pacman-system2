@@ -71,6 +71,8 @@ public class ImageOrganizer {
             Pacman p = (Pacman) mO;
             if (p.getState() == DynamicTarget.State.INVINSIBLE ) {
                 key += ">INV";
+            } else if (p.getState() == DynamicTarget.State.FIRE ) {
+                key += ">FIRE";
             }
             key += ">" + p.getHeadingTo();
         }
@@ -81,6 +83,13 @@ public class ImageOrganizer {
                 key += ">" + "PRINCIPAL";
             else
                 key += ">" + "ARRIVAL";
+        }
+        if (mO instanceof Bridge) {
+            Bridge b = (Bridge) mO;
+            if (b.getType() == Bridge.Type.NORTH_SOUTH)
+                key += ">" + "NS";
+            else
+                key += ">" + "WE";
         }
 
         if (images.containsKey(key)) {
@@ -101,6 +110,18 @@ public class ImageOrganizer {
 
         ArrayList<String[]> data = new ArrayList<>();
 
+
+        // Bridge
+        data.add(
+                new String[]{"/graphics/primitive/ns_bridge.png", Bridge.class.getCanonicalName() + ">NS"}
+        );
+        data.add(
+                new String[]{"/graphics/primitive/we_bridge.png", Bridge.class.getCanonicalName() + ">WE"}
+        );
+        // FIREBALL
+        data.add(
+                new String[]{"/graphics/resized/specials/fireball.png", Fireball.class.getCanonicalName()}
+        );
         // GRENADE
         data.add(
                 new String[]{"/graphics/resized/specials/grenade.png", Grenade.class.getCanonicalName()}
@@ -164,6 +185,18 @@ public class ImageOrganizer {
         );
         data.add(
                 new String[]{"/graphics/resized/pacman/inv4_west.png", Pacman.class.getCanonicalName() + ">INV>WEST"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/fire4_north.png", Pacman.class.getCanonicalName() + ">FIRE>NORTH"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/fire4_east.png", Pacman.class.getCanonicalName() + ">FIRE>EAST"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/fire4_south.png", Pacman.class.getCanonicalName() + ">FIRE>SOUTH"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/fire4_west.png", Pacman.class.getCanonicalName() + ">FIRE>WEST"}
         );
 
         // SCARED GHOST
