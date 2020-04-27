@@ -73,7 +73,7 @@ public class GhostContainerTest {
         instance.add(g1);
 
         for (Ghost gg : instance) {
-            System.out.println(gg);
+            assertSame(g1, gg);
         }
 
         Vector<Ghost> retrieved = instance.getAll(g1.getPosition());
