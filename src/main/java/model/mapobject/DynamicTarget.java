@@ -155,7 +155,6 @@ public abstract class DynamicTarget extends Target {
      * Verify if the target will move
      */
     public boolean canMove() {
-        System.out.println(next_action_timer);
         if (next_action_timer == 1){
             next_action_timer =  (int) Math.ceil(10/actual_speed);
             return true;

@@ -58,7 +58,7 @@ public class MapPlacer {
         public static final Position GHOST_BLUE = new Position(8, 3);
         public static final Position GHOST_ORANGE = new Position(9, 3);
 
-        public static final Position PACMAN_MALE = new Position(11, 6);
+        public static final Position PACMAN_MALE = new Position(13, 8);
         public static final Position PACMAN_FEMALE = new Position(6, 8);
 
         public static Position getCoordStartingPosition(DynamicTarget t){
@@ -139,7 +139,7 @@ public class MapPlacer {
 
 
         sObjs.add(new Grenade(positionContainer.get(18, 5)));
-        sObjs.add(new Fish(positionContainer.get(18, 8)));
+        sObjs.add(new Fish(positionContainer.get(17, 8)));
         sObjs.add(new RedBean(positionContainer.get(13, 6)));
         sObjs.add(new Pepper(positionContainer.get(1, 8)));
         sObjs.add(new Potato(positionContainer.get(10, 5)));

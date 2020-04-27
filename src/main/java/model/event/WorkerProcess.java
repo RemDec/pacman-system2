@@ -16,6 +16,7 @@ import model.mapobject.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author Philipp Winter
@@ -74,11 +75,92 @@ public class WorkerProcess implements Process {
                 this.handleDynamicTargets();
                 this.performCollisions(); // Must be done two times to prevent two objects moving through each other
                 this.handleGhosts();
-
+                this.trySpawnNewFruits();
                 this.markDynamicObjectsForRendering();
             }
         } catch (Throwable t) {
             MainController.uncaughtExceptionHandler.uncaught(t);
+        }
+    }
+
+    /**
+     * Try to spawn a fruit
+     */
+    private void trySpawnNewFruits() {
+        boolean elligible = false;
+        // A pacman is elligible to the fruit lottery if he has a ceratin score
+        for(Pacman p : Game.getInstance().getPacmanContainer()){
+            if (p.getScore().getScore() > 100)
+                elligible = true;
+        }
+        if (elligible) {
+            // On each run() there is 1 chance on 200 that a fruit spawn
+            Random rand = new Random();
+            if(rand.nextInt(50) == 0){
+                Position pos = chooseRandomPosition();
+                if (pos != null)
+                    spawnRandomFruit(pos);
+            }
+        }
+    }
+
+    /**
+     * Choose a random empty position on the board
+     * @return the position
+     */
+    private Position chooseRandomPosition() {
+        int width = map.width;
+        int height = map.height;
+        int randomWidth, randomHeight;
+        Random rand = new Random();
+        int numberTest = 100;
+        while(true){
+            // Just try 100 random position to make sur it doesn't loop when all cases have something in them
+            numberTest--;
+            if (numberTest ==0)
+                break;
+            randomWidth = rand.nextInt(width);
+            randomHeight = rand.nextInt(height);
+            Position pos = Map.getInstance().getPositionContainer().get(randomWidth, randomHeight);
+            if (!pos.isMoveableTo())
+                break;
+            //Look a every object on the position to make sure they are invisible
+            for (MapObject onPosition: pos.getOnPosition()) {
+                if (pos.getOnPosition().get(0).isVisible())
+                    break;
+            }
+            return pos;
+        }
+        return null;
+    }
+
+    /**
+     * Spawn a random fruit on a board position
+     * @param pos
+     */
+    private void spawnRandomFruit(Position pos) {
+        ObjectContainer<MapObject> sObjs = Game.getInstance().getSpecialObjectsContainer();
+        String[] fruits = {"Grenade", "Tomato", "Fish", "Pepper", "RedBean", "Potato"};
+        int rnd = new Random().nextInt(fruits.length);
+        switch (fruits[rnd]) {
+            case "Grenade":
+                sObjs.add(new Grenade(pos));
+                break;
+            case "Tomato":
+                sObjs.add(new Tomato(pos));
+                break;
+            case "Fish":
+                sObjs.add(new Fish(pos));
+                break;
+            case "Pepper":
+                sObjs.add(new Pepper(pos));
+                break;
+            case "":
+                sObjs.add(new RedBean(pos));
+                break;
+            case "Potato":
+                sObjs.add(new Potato(pos));
+                break;
         }
     }
 

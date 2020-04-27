@@ -46,7 +46,7 @@ public class Potato extends StaticTarget implements Scorable {
      */
     private void makeGhostsFaster() {
         for (final Ghost g : Game.getInstance().getGhostContainer()) {
-            g.changeSpeed(3);
+            g.changeSpeed(7);
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
