@@ -120,7 +120,7 @@ public abstract class DynamicTarget extends Target {
                 if (speed == 0)
                     this.next_action_timer = 0;
                 else
-                    this.next_action_timer = (int) Math.ceil(10 / speed);
+                    this.next_action_timer = 11 - speed;
             }
         }
     }
@@ -156,7 +156,7 @@ public abstract class DynamicTarget extends Target {
      */
     public boolean canMove() {
         if (next_action_timer == 1){
-            next_action_timer =  (int) Math.ceil(10/actual_speed);
+            this.next_action_timer = 11 - this.actual_speed;
             return true;
         } else {
             next_action_timer -= 1;

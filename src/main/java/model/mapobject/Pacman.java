@@ -29,7 +29,7 @@ public class Pacman extends DynamicTarget {
     private Sex sex;
 
     public Pacman(Position pos, Sex sex) {
-        this(pos, sex, 5);
+        this(pos, sex, 7);
     }
 
     public Pacman(Position pos, Sex sex, int speed) {

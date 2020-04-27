@@ -27,7 +27,7 @@ public class BasicFruitTest {
 
         tomato.makePacmanInvisible(pacman);
         assertSame(pacman.getState(), DynamicTarget.State.INVINSIBLE);
-        Thread.sleep(tomato.duration + 10);
+        Thread.sleep(tomato.duration + 1000);
         assertSame(pacman.getState(), DynamicTarget.State.HUNTED);
     }
 
@@ -39,7 +39,7 @@ public class BasicFruitTest {
         assertEquals(5, pacman.getActual_speed());
         pepper.makePacmanFaster(pacman);
         assertEquals(10, pacman.getActual_speed());
-        Thread.sleep(pepper.duration + 10);
+        Thread.sleep(pepper.duration + 1000);
         assertEquals(5, pacman.getActual_speed());
     }
 
@@ -51,7 +51,8 @@ public class BasicFruitTest {
         assertEquals(5, pacman.getActual_speed());
         fish.stopPacman(pacman);
         assertEquals(0, pacman.getActual_speed());
-        Thread.sleep(fish.duration + 10);
+        Thread.sleep(fish.duration + 1000);
+        System.out.println(pacman.getActual_speed());
         assertEquals(5, pacman.getActual_speed());
     }
 
@@ -63,7 +64,7 @@ public class BasicFruitTest {
 
         redBean.makePacmanThrowFire(pacman);
         assertSame(pacman.getState(), DynamicTarget.State.FIRE);
-        Thread.sleep(redBean.duration + 10);
+        Thread.sleep(redBean.duration + 1000);
         assertSame(pacman.getState(), DynamicTarget.State.HUNTED);
     }
 }

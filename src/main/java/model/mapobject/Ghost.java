@@ -40,7 +40,7 @@ public class Ghost extends DynamicTarget implements Scorable {
     private boolean movedInLastTurn = false;
 
     public Ghost(Position pos, Colour colour) {
-        this(pos, colour, 4);
+        this(pos, colour, 6);
     }
 
     public Ghost(Position pos, Colour colour, int speed) {

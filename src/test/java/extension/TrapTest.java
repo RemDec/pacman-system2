@@ -35,7 +35,7 @@ public class TrapTest {
 
         trap.action(pacman);
         assertFalse(pacman.canMove());
-        Thread.sleep(trap.trapTime + 10) ;
+        Thread.sleep(trap.trapTime + 1000) ;
         assertTrue(pacman.canMove());
     }
     @Test
@@ -45,7 +45,7 @@ public class TrapTest {
 
         trap.action(this.ghost);
         assertFalse(this.ghost.canMove());
-        Thread.sleep(trap.trapTime + 10) ;
+        Thread.sleep(trap.trapTime + 1000) ;
         assertTrue(this.ghost.canMove());
     }
 }
