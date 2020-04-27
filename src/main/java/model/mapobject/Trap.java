@@ -11,7 +11,7 @@ import java.util.TimerTask;
  */
 public class Trap extends Boxes {
 
-    private int trapTime = 3000;
+    public int trapTime = 3000;
     private int someoneOn = 0;
 
     public Trap(Position position) {
@@ -28,13 +28,13 @@ public class Trap extends Boxes {
         // So a True/False would not work properly if the timer was doing pacmanOn = False
         if (someoneOn == 0) {
             someoneOn = 2;
-            pacman.changeState(DynamicTarget.State.WAITING);
+            pacman.changeSpeed(0);
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
 
                 @Override
                 public void run() {
-                    pacman.changeState(DynamicTarget.State.HUNTED);
+                    pacman.changeSpeed(pacman.getInitialSpeed());
                     someoneOn -= 1;
                 }
             }, trapTime);

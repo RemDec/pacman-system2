@@ -12,7 +12,7 @@ import java.util.TimerTask;
  */
 public class Pepper extends StaticTarget implements Scorable {
 
-    private int duration = 10000;
+    public int duration = 10000;
 
     public Pepper(Position pos) {
         this.state = StaticTarget.State.AVAILABLE;
@@ -48,7 +48,7 @@ public class Pepper extends StaticTarget implements Scorable {
     /**
      * Make the pacman that is on the fish's position still for a period of time
      */
-    private void makePacmanFaster(final Pacman pacman) {
+    public void makePacmanFaster(final Pacman pacman) {
         pacman.changeSpeed(10);
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {

@@ -132,6 +132,10 @@ public abstract class DynamicTarget extends Target {
         return this.initial_speed;
     }
 
+    public int getActual_speed(){
+        return this.actual_speed;
+    }
+
     /**
      * Try to move the object to the new position if he can on this refresh.
      *
@@ -151,6 +155,7 @@ public abstract class DynamicTarget extends Target {
      * Verify if the target will move
      */
     public boolean canMove() {
+        System.out.println(next_action_timer);
         if (next_action_timer == 1){
             next_action_timer =  (int) Math.ceil(10/actual_speed);
             return true;

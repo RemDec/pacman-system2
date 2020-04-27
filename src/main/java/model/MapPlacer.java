@@ -205,7 +205,7 @@ public class MapPlacer {
                 positionContainer.get(4, 5)
         ));
         wallPositions.add(positionContainer.getRange(
-                positionContainer.get(2, 7),
+                positionContainer.get(3, 7),
                 positionContainer.get(5, 7)
         ));
 
@@ -228,7 +228,7 @@ public class MapPlacer {
         ));
         wallPositions.add(positionContainer.getRange(
                 positionContainer.get(14, 7),
-                positionContainer.get(17, 7)
+                positionContainer.get(16, 7)
         ));
 
         // Center Top
@@ -281,21 +281,13 @@ public class MapPlacer {
 
         PositionContainer telePositions = Containers.getPositionContainer(width, height);
         telePositions.add(
-                positionContainer.get(4, 1)
+                positionContainer.get(17, 7)
         );
         telePositions.add(
-                positionContainer.get(12, 1)
+                positionContainer.get(2, 7)
         );
-        Teleporter linked = null;
-        // All Teleporter placed on even position are linked to the next one
-        for (Position p : telePositions) {
-            if (linked == null) {
-                linked = new Teleporter(p);
-            } else {
-                new Teleporter(p, linked);
-                linked = null;
-            }
-        }
+        Teleporter linked = new Teleporter(positionContainer.get(17, 7));
+        new Teleporter(positionContainer.get(2, 7), linked);
 
 
         // ------- PLACEHOLDER -------

@@ -13,7 +13,7 @@ import java.util.TimerTask;
  */
 public class Tomato extends StaticTarget implements Scorable {
 
-    private int duration = 4000;
+    public int duration = 4000;
 
     public Tomato(Position pos) {
         this.state = StaticTarget.State.AVAILABLE;
@@ -49,7 +49,7 @@ public class Tomato extends StaticTarget implements Scorable {
     /**
      * Make the pacman invinsible, it makes him invulnerable
      */
-    private void makePacmanInvisible(final Pacman pacman) {
+    public void makePacmanInvisible(final Pacman pacman) {
         pacman.changeState(DynamicTarget.State.INVINSIBLE);
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
