@@ -160,6 +160,8 @@ public class Coin extends StaticTarget implements Scorable {
         for (Ghost g : Game.getInstance().getGhostContainer()) {
             if (g.getState() == DynamicTarget.State.HUNTER) { // TODO : Waiting ghosts won't be hunted if went out Waiting state before end of hunting by pacman
                 g.changeState(DynamicTarget.State.HUNTED);
+            }else if (g.getState() == DynamicTarget.State.HUNTER_STOP) {
+                g.changeState(DynamicTarget.State.HUNTED_STOP);
             }
         }
     }

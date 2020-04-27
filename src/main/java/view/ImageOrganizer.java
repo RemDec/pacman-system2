@@ -55,10 +55,12 @@ public class ImageOrganizer {
         //          WAITING : stays BLUE
         if (mO instanceof Ghost) {
             Ghost g = (Ghost) mO;
-            if (g.getState() == DynamicTarget.State.HUNTER) {
+            if (g.getState() == DynamicTarget.State.HUNTER || g.getState() == DynamicTarget.State.HUNTER_STOP ) {
                 key += ">" + g.getColour();
                 key += ">" + g.getHeadingTo();
-            } else if (g.getState() == DynamicTarget.State.HUNTED) {
+            } else if (g.getState() == DynamicTarget.State.HUNTED_STOP ) {
+                key += ">SCARE>BLUE";
+            }else if (g.getState() == DynamicTarget.State.HUNTED) {
                 key += ">SCARE>" + (g.getMovedInLastTurn() ? "BLUE" : "WHITE");
             } else if (g.getState() == DynamicTarget.State.WAITING) {
                 key += ">WAITING";
@@ -67,7 +69,27 @@ public class ImageOrganizer {
 
         if (mO instanceof Pacman) {
             Pacman p = (Pacman) mO;
+            if (p.getState() == DynamicTarget.State.INVINSIBLE ) {
+                key += ">INV";
+            } else if (p.getState() == DynamicTarget.State.FIRE ) {
+                key += ">FIRE";
+            }
             key += ">" + p.getHeadingTo();
+        }
+
+        if (mO instanceof Teleporter) {
+            Teleporter t = (Teleporter) mO;
+            if (t.isPrincipal)
+                key += ">" + "PRINCIPAL";
+            else
+                key += ">" + "ARRIVAL";
+        }
+        if (mO instanceof Bridge) {
+            Bridge b = (Bridge) mO;
+            if (b.getType() == Bridge.Type.NORTH_SOUTH)
+                key += ">" + "NS";
+            else
+                key += ">" + "WE";
         }
 
         if (images.containsKey(key)) {
@@ -87,9 +109,57 @@ public class ImageOrganizer {
         Class<?> c = this.getClass();
 
         ArrayList<String[]> data = new ArrayList<>();
+
+
+        // Bridge
+        data.add(
+                new String[]{"/graphics/primitive/ns_bridge.png", Bridge.class.getCanonicalName() + ">NS"}
+        );
+        data.add(
+                new String[]{"/graphics/primitive/we_bridge.png", Bridge.class.getCanonicalName() + ">WE"}
+        );
+        // FIREBALL
+        data.add(
+                new String[]{"/graphics/resized/specials/fireball.png", Fireball.class.getCanonicalName()}
+        );
+        // GRENADE
+        data.add(
+                new String[]{"/graphics/resized/specials/grenade.png", Grenade.class.getCanonicalName()}
+        );
+        // FISH
+        data.add(
+                new String[]{"/graphics/resized/specials/fish.png", Fish.class.getCanonicalName()}
+        );
+        // PEPPER
+        data.add(
+                new String[]{"/graphics/resized/specials/pepper.png", Pepper.class.getCanonicalName()}
+        );
+        // POTATO
+        data.add(
+                new String[]{"/graphics/resized/specials/potato.png", Potato.class.getCanonicalName()}
+        );
+        // REDBEAN
+        data.add(
+                new String[]{"/graphics/resized/specials/red_bean.png", RedBean.class.getCanonicalName()}
+        );
+        // TOMATO
+        data.add(
+                new String[]{"/graphics/resized/specials/tomato.png", Tomato.class.getCanonicalName()}
+        );
+        // Teleporter
+        data.add(
+                new String[]{"/graphics/primitive/teleporter.png", Teleporter.class.getCanonicalName() + ">PRINCIPAL"}
+        );
+        data.add(
+                new String[]{"/graphics/primitive/teleporter2.png", Teleporter.class.getCanonicalName() + ">ARRIVAL"}
+        );
         // WALL
         data.add(
                 new String[]{"/graphics/primitive/black_big.png", Wall.class.getCanonicalName()}
+        );
+        // Trap
+        data.add(
+                new String[]{"/graphics/primitive/trap.png", Trap.class.getCanonicalName()}
         );
         // PACMAN
         data.add(
@@ -103,6 +173,30 @@ public class ImageOrganizer {
         );
         data.add(
                 new String[]{"/graphics/resized/pacman/4_west.png", Pacman.class.getCanonicalName() + ">WEST"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/inv4_north.png", Pacman.class.getCanonicalName() + ">INV>NORTH"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/inv4_east.png", Pacman.class.getCanonicalName() + ">INV>EAST"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/inv4_south.png", Pacman.class.getCanonicalName() + ">INV>SOUTH"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/inv4_west.png", Pacman.class.getCanonicalName() + ">INV>WEST"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/fire4_north.png", Pacman.class.getCanonicalName() + ">FIRE>NORTH"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/fire4_east.png", Pacman.class.getCanonicalName() + ">FIRE>EAST"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/fire4_south.png", Pacman.class.getCanonicalName() + ">FIRE>SOUTH"}
+        );
+        data.add(
+                new String[]{"/graphics/resized/pacman/fire4_west.png", Pacman.class.getCanonicalName() + ">FIRE>WEST"}
         );
 
         // SCARED GHOST

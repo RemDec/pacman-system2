@@ -40,6 +40,11 @@ public class Ghost extends DynamicTarget implements Scorable {
     private boolean movedInLastTurn = false;
 
     public Ghost(Position pos, Colour colour) {
+        this(pos, colour, 6);
+    }
+
+    public Ghost(Position pos, Colour colour, int speed) {
+        this.setSpeed(speed);
         switch (colour) {
             case RED:
                 this.setName("Blinky");
@@ -122,10 +127,15 @@ public class Ghost extends DynamicTarget implements Scorable {
                 this.waitingSeconds += WAIT_SECONDS;
             }
         } else if (state == State.HUNTER) {
+            this.changeSpeed(this.getInitialSpeed());
             this.waitingSeconds = -1.;
         } else if (state == State.MUNCHED){
             // Has been eaten, increase the number of ghosts caught in a row by pacman for the current Coin time
             Coin.nbr_ghosts_eaten_in_a_row++;
+        } else if (state == State.HUNTED_STOP || state == State.HUNTER_STOP) {
+            this.changeSpeed(0);
+        }else if (state == State.HUNTED) {
+            this.changeSpeed(1);
         }
         this.state = state;
     }

@@ -1,9 +1,6 @@
 package model;
 
-import model.container.Containers;
-import model.container.LimitedObjectContainer;
-import model.container.PointContainer;
-import model.container.PositionContainer;
+import model.container.*;
 import model.mapobject.*;
 
 /**
@@ -31,10 +28,10 @@ public class MapPlacer {
 
         // --------- GHOSTS ---------
         LimitedObjectContainer<Ghost> gC = g.getGhostContainer();
-        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_BLUE), Ghost.Colour.BLUE));
-        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_ORANGE), Ghost.Colour.ORANGE));
-        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_PINK), Ghost.Colour.PINK));
-        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_RED), Ghost.Colour.RED));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_BLUE), Ghost.Colour.BLUE, 2));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_ORANGE), Ghost.Colour.ORANGE, 2));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_PINK), Ghost.Colour.PINK, 2));
+        gC.add(new Ghost(m.getActualPosition(StartingPositions.GHOST_RED), Ghost.Colour.RED, 2));
     }
 
     /**
@@ -130,6 +127,7 @@ public class MapPlacer {
         // --------- COINS ---------
         LimitedObjectContainer<Coin> cC = Game.getInstance().getCoinContainer();
         PointContainer pC = Game.getInstance().getPointContainer();
+        ObjectContainer<MapObject> sObjs = Game.getInstance().getSpecialObjectsContainer();
 
         cC.removeAll();
         pC.removeAll();
@@ -138,6 +136,14 @@ public class MapPlacer {
         cC.add(new Coin(positionContainer.get(1, 8)));
         cC.add(new Coin(positionContainer.get(18, 1)));
         cC.add(new Coin(positionContainer.get(18, 8)));
+
+
+        sObjs.add(new Grenade(positionContainer.get(18, 5)));
+        sObjs.add(new Fish(positionContainer.get(17, 8)));
+        sObjs.add(new RedBean(positionContainer.get(13, 6)));
+        sObjs.add(new Pepper(positionContainer.get(1, 8)));
+        sObjs.add(new Potato(positionContainer.get(10, 5)));
+        sObjs.add(new Tomato(positionContainer.get(15, 8)));
 
         // --------- POINTS ---------
         for (Position p : positionContainer) {
@@ -199,7 +205,7 @@ public class MapPlacer {
                 positionContainer.get(4, 5)
         ));
         wallPositions.add(positionContainer.getRange(
-                positionContainer.get(2, 7),
+                positionContainer.get(3, 7),
                 positionContainer.get(5, 7)
         ));
 
@@ -222,7 +228,7 @@ public class MapPlacer {
         ));
         wallPositions.add(positionContainer.getRange(
                 positionContainer.get(14, 7),
-                positionContainer.get(17, 7)
+                positionContainer.get(16, 7)
         ));
 
         // Center Top
@@ -256,6 +262,33 @@ public class MapPlacer {
         for (Position p : wallPositions) {
             new Wall(p);
         }
+
+        PositionContainer trapPositions = Containers.getPositionContainer(width, height);
+        trapPositions.add(
+                positionContainer.get(8, 1)
+        );
+        for (Position p : trapPositions) {
+            new Trap(p);
+        }
+
+        PositionContainer bridgePositions = Containers.getPositionContainer(width, height);
+        bridgePositions.add(
+                positionContainer.get(13, 5)
+        );
+        for (Position p : bridgePositions) {
+            new Bridge(p, Bridge.Type.NORTH_SOUTH);
+        }
+
+        PositionContainer telePositions = Containers.getPositionContainer(width, height);
+        telePositions.add(
+                positionContainer.get(17, 7)
+        );
+        telePositions.add(
+                positionContainer.get(2, 7)
+        );
+        Teleporter linked = new Teleporter(positionContainer.get(17, 7));
+        new Teleporter(positionContainer.get(2, 7), linked);
+
 
         // ------- PLACEHOLDER -------
 
@@ -324,5 +357,4 @@ public class MapPlacer {
             new Placeholder(p);
         }
     }
-
 }

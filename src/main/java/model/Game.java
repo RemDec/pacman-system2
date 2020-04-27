@@ -14,9 +14,7 @@ import model.event.RendererProcess;
 import model.event.Scheduler;
 import model.event.TimerProcess;
 import model.event.WorkerProcess;
-import model.exception.ObjectAlreadyInListException;
 import model.mapobject.*;
-
 import java.util.ArrayList;
 
 /**
@@ -57,6 +55,8 @@ public class Game {
      * A container of all coins.
      */
     private LimitedObjectContainer<Coin> coinContainer;
+    private ObjectContainer<MapObject> specialObjectContainer;
+    private ObjectContainer<DynamicTarget> specialDynamicTargetContainer;
 
     /**
      * A container of all points.
@@ -140,6 +140,8 @@ public class Game {
 
         this.ghostContainer = Containers.getGhostContainer();
         this.coinContainer = Containers.getCoinContainer();
+        this.specialObjectContainer = Containers.getSpecialObjectsContainer();
+        this.specialDynamicTargetContainer = Containers.getSpecialDynamicTargetContainer();
         this.pointContainer = Containers.getPointContainer();
         this.pacmanContainer = Containers.getPacmanContainer();
         this.level = Level.getInstance();
@@ -258,6 +260,24 @@ public class Game {
      */
     public LimitedObjectContainer<Coin> getCoinContainer() {
         return coinContainer;
+    }
+
+    /**
+     * Gets the special objects container.
+     *
+     * @return The container used to manage all instance of {@link Grenade}'s in the object tree.
+     */
+    public ObjectContainer<MapObject> getSpecialObjectsContainer() {
+        return specialObjectContainer;
+    }
+
+    /**
+     * Gets the special dynamic target container.
+     *
+     * @return The container used to manage all instance of {@link DynamicTarget}'s in the object tree.
+     */
+    public ObjectContainer<DynamicTarget> getSpecialDynamicTargetContainer() {
+        return specialDynamicTargetContainer;
     }
 
     /**

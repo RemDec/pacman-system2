@@ -26,7 +26,8 @@ public class RendererProcess implements Process {
     @Override
     public long getTiming() {
         long refreshRate = (long) Game.getInstance().getRefreshRate();
-        return BASE_TIME/refreshRate;
+        //return BASE_TIME/refreshRate;
+        return 100;
     }
 
     @Override

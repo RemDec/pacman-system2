@@ -1,9 +1,6 @@
 package model.container;
 
-import model.mapobject.Coin;
-import model.mapobject.Ghost;
-import model.mapobject.MapObject;
-import model.mapobject.Pacman;
+import model.mapobject.*;
 
 /**
  * Class serving as an instantiation point for Containers specific to the game
@@ -30,6 +27,14 @@ public class Containers {
 
     public static LimitedObjectContainer<Coin> getCoinContainer() {
         return new LimitedObjectContainer<Coin>(NBR_MAX_COIN);
+    }
+
+    public static ObjectContainer<MapObject> getSpecialObjectsContainer() {
+        return new ObjectContainer<MapObject>();
+    }
+
+    public static ObjectContainer<DynamicTarget> getSpecialDynamicTargetContainer() {
+        return new ObjectContainer<DynamicTarget>();
     }
 
     public static LimitedObjectContainer<Pacman> getPacmanContainer(){

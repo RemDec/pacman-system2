@@ -19,6 +19,7 @@ import model.Position;
 public abstract class StaticTarget extends Target {
 
     protected State state;
+    protected Bridge.BridgeState onBridgeState = Bridge.BridgeState.NOT_ON_BRIDGE;
 
     public State getState() {
         return state;
@@ -39,6 +40,13 @@ public abstract class StaticTarget extends Target {
 
     public void deSpawn() {
         this.position.getOnPosition().remove(this);
+    }
+
+    /**
+     * @return the bridge state
+     */
+    public Bridge.BridgeState getBridgeState(){
+        return onBridgeState;
     }
 
     public enum State {
